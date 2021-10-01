@@ -33,9 +33,19 @@
     </properties>
 
 
+     <developers>
+
+        <developer>
+
+            <id>marmarave</id>
+            <name>Mariano Martín Avecilla</name>
+            <email>marmarave@alum.us.es</email>
+            <url>https://github.com/marmarave</url>
 
 
-    <developers>
+
+
+    
       <developer> 
         <id>Migue</id> 
         <name>Miguel Angel Gomez Gomez</name> 
@@ -56,6 +66,7 @@
             <name>Francisco Javier Vila Pavon</name>
             <email>kikovilapavon@gmail.com</email>
             <url>https://github.com/fravilpav</url>
+
             <roles>
                 <role>none</role>
             </roles>
@@ -64,7 +75,6 @@
 
     </developers>
 
-        <dependencies>
 
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
@@ -169,6 +179,8 @@
             <groupId>junit</groupId>
         </dependency>
         <!-- Development tools -->
+
+        
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
