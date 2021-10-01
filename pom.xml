@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<developers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.springframework.samples</groupId>
-    <artifactId>spring-petclinic</artifactId>
+    <artifactId>L8-02</artifactId>
     <version>2.2.0.BUILD-SNAPSHOT</version>
 
     <parent>
@@ -12,7 +12,7 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.4.RELEASE</version>
     </parent>
-    <name>petclinic</name>
+    <name>L8-02</name>
 
     <properties>
 
@@ -31,23 +31,41 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-    <developers> 
-    <developer> 
-      <id>Migue</id> 
-      <name>Miguel Angel Gomez Gomez</name> 
-      <email>magg260799@gmail.com</email> 
-      <url>https://www.lichess.org</url> 
-      <roles> 
-        <role>leader</role> 
-      </roles> 
-      <properties> 
-        <picUrl> 
-            https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfh0Jw0yLiZQQCwRo1Ktn-SQWalpm3Lz9lQ&usqp=CAU
-        </picUrl> 
-      </properties> 
+
+
+
+
+    <developers>
+      <developer> 
+        <id>Migue</id> 
+        <name>Miguel Angel Gomez Gomez</name> 
+        <email>magg260799@gmail.com</email> 
+        <url>https://www.lichess.org</url> 
+        <roles> 
+          <role>leader</role> 
+        </roles> 
+        <properties> 
+          <picUrl> 
+              https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfh0Jw0yLiZQQCwRo1Ktn-SQWalpm3Lz9lQ&usqp=CAU
+          </picUrl> 
+        </properties> 
     </developer> 
-    </developers> 
-    <dependencies>
+        <developer>
+
+            <id>fravilpav</id>
+            <name>Francisco Javier Vila Pavon</name>
+            <email>kikovilapavon@gmail.com</email>
+            <url>https://github.com/fravilpav</url>
+            <roles>
+                <role>none</role>
+            </roles>
+
+        </developer>
+
+    </developers>
+
+        <dependencies>
+
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -65,16 +83,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>  
-            <groupId>org.springframework.security</groupId>  
-            <artifactId>spring-security-taglibs</artifactId>  
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
         </dependency>
         <!-- Databases - Uses H2 by default -->
         <!-- dependency>
                 <groupId>org.hsqldb</groupId>
                 <artifactId>hsqldb</artifactId>
                 <scope>runtime</scope>
-        </dependency-->        
+        </dependency-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -84,7 +102,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!-- validation 
+        <!-- validation
         <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
@@ -169,7 +187,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <!-- Spring Boot Actuator displays build-related information if a META-INF/build-info.properties 
+                        <!-- Spring Boot Actuator displays build-related information if a META-INF/build-info.properties
                         file is present -->
                         <goals>
                             <goal>build-info</goal>
@@ -205,7 +223,7 @@
                 </executions>
             </plugin>
 
-            <!-- Spring Boot Actuator displays build-related information if a git.properties 
+            <!-- Spring Boot Actuator displays build-related information if a git.properties
             file is present at the classpath -->
             <plugin>
                 <groupId>pl.project13.maven</groupId>
