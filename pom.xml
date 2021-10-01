@@ -32,8 +32,24 @@
 
     </properties>
 
-    <developers>
 
+
+
+    <developers>
+      <developer> 
+        <id>Migue</id> 
+        <name>Miguel Angel Gomez Gomez</name> 
+        <email>magg260799@gmail.com</email> 
+        <url>https://www.lichess.org</url> 
+        <roles> 
+          <role>leader</role> 
+        </roles> 
+        <properties> 
+          <picUrl> 
+              https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLfh0Jw0yLiZQQCwRo1Ktn-SQWalpm3Lz9lQ&usqp=CAU
+          </picUrl> 
+        </properties> 
+    </developer> 
         <developer>
 
             <id>fravilpav</id>
@@ -49,6 +65,7 @@
     </developers>
 
         <dependencies>
+
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
