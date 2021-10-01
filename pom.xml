@@ -32,6 +32,21 @@
 
     </properties>
 
+    <developers>
+        <developer> 
+            <id>juagarrui6</id> 
+            <name>juagarrui6</name> 
+            <email>juagarrui6@alum.us.es</email> 
+            <url>http://www.tmht.com/juagarrui6</url> 
+            <roles> 
+                <role>leader</role> 
+            </roles> 
+            <properties> 
+                <picUrl> https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&name=large </picUrl> 
+            </properties>
+        </developer>
+    </developers>
+
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
