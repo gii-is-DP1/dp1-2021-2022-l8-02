@@ -139,6 +139,30 @@
 				</role>
 			</roles>
 		</developer>
+		<developer>
+			<id>
+				chemaccs
+			</id>
+			<name>
+				chemaccs
+			</name>
+			<email>
+				chemacontrerascervantes@gmail.com
+			</email>
+			<url>
+				http://github.com/chemaccs
+			</url>
+			<roles>
+				<role>
+					leader
+				</role>
+			</roles>
+			<properties>
+				<picUrl>
+					http://pm1.narvii.com/6788/9ea5cf7afcf0d37b3188dc323638fc765e65aa74v2_00.jpg
+				</picUrl>
+			</properties>
+		</developer>
 	</developers>
 	<dependencies>
 		<!-- Spring and Spring Boot dependencies -->
