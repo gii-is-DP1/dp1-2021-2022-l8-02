@@ -9,7 +9,7 @@ INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
 
 INSERT INTO users(username,password,enabled) VALUES ('juagarrui6','1234',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (3,'juagarrui6','admin');
+INSERT INTO authorities(id,username,authority) VALUES (4,'juagarrui6','admin');
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary');
