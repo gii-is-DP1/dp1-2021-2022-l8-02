@@ -86,4 +86,11 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
+INSERT INTO usuarios(username, password, email) VALUES ('kikovilapavon', '123admin', 'fravilpav@alum.us.es');
+INSERT INTO usuarios(username, password, email) VALUES ('chemaccs', 'admin123', 'josconsan1@alum.us.es');
+INSERT INTO usuarios(username, password, email) VALUES ('juagarrui', '3ad1min2', 'juagarrui@alum.us.es');
+INSERT INTO usuarios(username, password, email) VALUES ('martarl11', '1ad2min3', 'marreylop@alum.us.es');
+INSERT INTO usuarios(username, password, email) VALUES ('miguegomgom', '4dm1n', 'miggomgom@alum.us.es');
+INSERT INTO usuarios(username, password, email) VALUES ('mma12', '4dm1n123', 'marmarave@alum.us.es');
+
 
