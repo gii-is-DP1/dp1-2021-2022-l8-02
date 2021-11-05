@@ -12,7 +12,9 @@
         <tr>
             <th style="width: 20%;">Username</th>
             <th style="width: 20%;">Password</th>
-            <th style="width: 20%;">Email</th>            
+            <th style="width: 20%;">Email</th> 
+            <th style="width: 20%;">Edit</th> 
+            <th style="width: 20%;">Delete</th> 
         </tr>
         </thead>
         <tbody>
@@ -26,6 +28,16 @@
                 </td>                
                 <td>
                     <c:out value="${usuario.email}"/>
+                </td>
+                <td>
+                	<a href="/usuarios/${usuario.id}/edit">
+                	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                	</a>
+                </td>
+                <td>
+                	<a href="/usuarios/${usuario.id}/delete">
+                		<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                	</a>
                 </td>  
             </tr>
         </c:forEach>
