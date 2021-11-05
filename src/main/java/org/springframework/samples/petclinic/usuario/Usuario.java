@@ -34,6 +34,10 @@ public class Usuario{
 	@NotEmpty
     private String email;
 
+    public boolean isNew() {
+		return this.id == null;
+	}
+
     // public String getUsername() {
 	// 	return this.username;
 	// }
