@@ -21,6 +21,16 @@
             "request": "attach",
             "hostName": "localhost",
             "port": 0
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-PetclinicApplication<L8-02>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "org.springframework.samples.petclinic.PetclinicApplication",
+            "projectName": "L8-02",
+            "args": ""
         }
     ]
 }
