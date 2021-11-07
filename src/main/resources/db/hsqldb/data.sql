@@ -94,3 +94,4 @@ INSERT INTO usuarios(username, password, email) VALUES ('miguegomgom', '4dm1n', 
 INSERT INTO usuarios(username, password, email) VALUES ('mma12', '4dm1n123', 'marmarave@alum.us.es');
 
 
+INSERT INTO game(id,name,winner,game_status,start_game,end_game,turn) VALUES (1,'PARTIDA1',TRUE,'FINISHED','01:30:20','02:30:10',2);
