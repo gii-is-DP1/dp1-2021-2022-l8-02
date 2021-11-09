@@ -1,10 +1,14 @@
 package org.springframework.samples.petclinic.usuario;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -38,16 +42,7 @@ public class Usuario{
 		return this.id == null;
 	}
 
-    // public String getUsername() {
-	// 	return this.username;
-	// }
-
-	// public String getPassword(){
-    //     return this.password;
-    // }
-
-    // public String getEmail(){
-    //     return this.email;
-    // }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+	private Set<Authorities> authorities;
 
 }

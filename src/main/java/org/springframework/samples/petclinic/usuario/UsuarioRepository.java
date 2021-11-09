@@ -10,5 +10,7 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Integer>{
     public Collection<Usuario> findAll();
 
     public Optional<Usuario> findById(int id);
+
+    public Optional<Usuario> findByUsername(String username);
     
 }

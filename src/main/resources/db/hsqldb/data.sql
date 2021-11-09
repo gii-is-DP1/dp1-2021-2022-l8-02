@@ -8,16 +8,19 @@ INSERT INTO authorities(id,username,authority) VALUES (2,'owner1','owner');
 INSERT INTO users(username,password,enabled) VALUES ('vet1','v3t',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (3,'vet1','veterinarian');
 
--- Insert Migue
-INSERT INTO users(username,password,enabled) VALUES ('miggomgom1','1234',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (4,'miggomgom1','owner');
 
--- Insert Juan
-INSERT INTO users(username,password,enabled) VALUES ('juagarrui6','1234',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (5,'juagarrui6','admin');
--- Insert Kiko
-INSERT INTO users(username,password,enabled) VALUES ('fravilpav','fravilpav',TRUE);
-INSERT INTO authorities(id,username,authority) VALUES (6,'fravilpav','owner');
+INSERT INTO usuarios(username, password, email) VALUES ('kikovilapavon', '123admin', 'fravilpav@alum.us.es');
+INSERT INTO authorities(id,username,authority) VALUES (1,'kikovilapavon','admin');
+INSERT INTO usuarios(username, password, email) VALUES ('chemaccs', 'admin123', 'josconsan1@alum.us.es');
+INSERT INTO authorities(id,username,authority) VALUES (2,'chemaccs','admin');
+INSERT INTO usuarios(username, password, email) VALUES ('juagarrui', '3ad1min2', 'juagarrui@alum.us.es');
+INSERT INTO authorities(id,username,authority) VALUES (3,'juagarrui','admin');
+INSERT INTO usuarios(username, password, email) VALUES ('martarl11', '1ad2min3', 'marreylop@alum.us.es');
+INSERT INTO authorities(id,username,authority) VALUES (4,'martarl11','admin');
+INSERT INTO usuarios(username, password, email) VALUES ('miguegomgom', '4dm1n', 'miggomgom@alum.us.es');
+INSERT INTO authorities(id,username,authority) VALUES (5,'miguegomgom','admin');
+INSERT INTO usuarios(username, password, email) VALUES ('mma12', '4dm1n123', 'marmarave@alum.us.es');
+INSERT INTO authorities(id,username,authority) VALUES (6,'mma12','admin');
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');
 INSERT INTO vets VALUES (2, 'Helen', 'Leary');
@@ -86,11 +89,6 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
-INSERT INTO usuarios(username, password, email) VALUES ('kikovilapavon', '123admin', 'fravilpav@alum.us.es');
-INSERT INTO usuarios(username, password, email) VALUES ('chemaccs', 'admin123', 'josconsan1@alum.us.es');
-INSERT INTO usuarios(username, password, email) VALUES ('juagarrui', '3ad1min2', 'juagarrui@alum.us.es');
-INSERT INTO usuarios(username, password, email) VALUES ('martarl11', '1ad2min3', 'marreylop@alum.us.es');
-INSERT INTO usuarios(username, password, email) VALUES ('miguegomgom', '4dm1n', 'miggomgom@alum.us.es');
-INSERT INTO usuarios(username, password, email) VALUES ('mma12', '4dm1n123', 'marmarave@alum.us.es');
+
 
 

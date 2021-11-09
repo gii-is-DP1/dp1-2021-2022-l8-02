@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.user;
+package org.springframework.samples.petclinic.usuario;
 
 
 import java.util.Optional;
@@ -33,12 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthoritiesService {
 
 	private AuthoritiesRepository authoritiesRepository;
-	private UserService userService;
+	private UsuarioService usuarioService;
 
 	@Autowired
-	public AuthoritiesService(AuthoritiesRepository authoritiesRepository,UserService userService) {
+	public AuthoritiesService(AuthoritiesRepository authoritiesRepository,UsuarioService usuarService) {
 		this.authoritiesRepository = authoritiesRepository;
-		this.userService = userService;
+		this.usuarioService = usuarService;
 	}
 
 	@Transactional
@@ -49,14 +49,14 @@ public class AuthoritiesService {
 	@Transactional
 	public void saveAuthorities(String username, String role) throws DataAccessException {
 		Authorities authority = new Authorities();
-		Optional<User> user = userService.findUser(username);
-		if(user.isPresent()) {
-			authority.setUser(user.get());
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if(usuario.isPresent()) {
+			authority.setUsuario(usuario.get());
 			authority.setAuthority(role);
 			//user.get().getAuthorities().add(authority);
 			authoritiesRepository.save(authority);
 		}else
-			throw new DataAccessException("User '"+username+"' not found!") {};
+			throw new DataAccessException("Usuario '"+username+"' no encontrado!") {};
 	}
 
 
