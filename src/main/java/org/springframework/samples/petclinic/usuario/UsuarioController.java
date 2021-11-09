@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.usuario;
 
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    public static final String USUARIOS_FORM="usuarios/createOrUpdateUsuariosForm";
-	public static final String USUARIOS_LISTING="usuarios/UsuariosListing";
+    public static final String USUARIOS_FORM = "usuarios/createOrUpdateUsuariosForm";
+	public static final String USUARIOS_LISTING = "usuarios/UsuariosListing";
+	public static final String NEW_USUARIO_FORM = "usuarios/createUsuarioForm";
 
     @Autowired
     UsuarioService usuarioService;
 
+	@InitBinder
+	public void setAllowedFields(WebDataBinder dataBinder) {
+		dataBinder.setDisallowedFields("id");
+	}
+	
     @GetMapping
     public String listUsuarios(ModelMap model){
         model.addAttribute("usuarios", usuarioService.findAll());
@@ -65,6 +74,24 @@ public class UsuarioController {
 		}else {
 			model.addAttribute("message","We cannot find the user you tried to delete!");
 			return listUsuarios(model);
+		}
+	}
+
+	@GetMapping(value = "/usuarios/new")
+	public String initCreationForm(Map<String, Object> model) {
+		Usuario usuario = new Usuario();
+		model.put("usuario", usuario);
+		return NEW_USUARIO_FORM;
+	}
+
+	@PostMapping(value = "/usuarios/new")
+	public String processCreationForm(@Valid Usuario usuario, BindingResult result) {
+		if (result.hasErrors()) {
+			return NEW_USUARIO_FORM;
+		}
+		else {
+			this.usuarioService.save(usuario);
+			return "redirect:/";
 		}
 	}
 
