@@ -23,7 +23,7 @@ public class UsuarioService {
     }
 
     public void delete(Usuario usuario) {
-		usuarioRepo.deleteById(usuario.getId());
+		usuarioRepo.delete(usuario);
 
 	}
 

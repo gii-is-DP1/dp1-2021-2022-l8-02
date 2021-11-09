@@ -5,6 +5,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,9 +24,6 @@ import lombok.Setter;
 public class Usuario{
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
-
     @Column(name = "username")
 	@NotEmpty
     private String username;
@@ -37,10 +35,6 @@ public class Usuario{
     @Column(name = "email")
 	@NotEmpty
     private String email;
-
-    public boolean isNew() {
-		return this.id == null;
-	}
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
 	private Set<Authorities> authorities;
