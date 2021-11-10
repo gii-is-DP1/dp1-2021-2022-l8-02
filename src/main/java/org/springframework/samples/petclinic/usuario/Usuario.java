@@ -23,7 +23,7 @@ import lombok.Setter;
 @Table(name = "usuarios")
 public class Usuario{
 
-	@Id
+    @Id
     @Column(name = "username")
 	@NotEmpty
     private String username;

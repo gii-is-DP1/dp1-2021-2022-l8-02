@@ -8,7 +8,7 @@
 
 <petclinic:layout pageName="usuarios">
     <h2>
-        <c:if test="${usuario['new']}">New </c:if> Usuario
+        <c:if test="${usuario['new']}">New Usuario</c:if>
     </h2>
     <form:form modelAttribute="usuario" class="form-horizontal" id="add-owner-form">
         <div class="form-group has-feedback">
