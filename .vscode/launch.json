@@ -31,6 +31,16 @@
             "mainClass": "org.springframework.samples.petclinic.PetclinicApplication",
             "projectName": "L8-02",
             "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EndOfLineApplication<L8-02>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "org.springframework.endofline.EndOfLineApplication",
+            "projectName": "L8-02",
+            "args": ""
         }
     ]
 }
