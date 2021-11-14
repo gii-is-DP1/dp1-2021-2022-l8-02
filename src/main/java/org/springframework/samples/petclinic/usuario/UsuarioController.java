@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    public static final String USUARIOS_FORM = "usuarios/DeleteOrUpdateUsuariosForm";
+    public static final String USUARIOS_FORM = "usuarios/CUDUsuariosForm";
 	public static final String USUARIOS_LISTING = "usuarios/UsuariosListing";
 	public static final String NEW_USUARIO_FORM = "usuarios/createUsuarioForm";
 
@@ -30,7 +30,7 @@ public class UsuarioController {
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
-		dataBinder.setDisallowedFields("username");
+		dataBinder.setDisallowedFields("id");
 	}
 	
     @GetMapping
@@ -77,21 +77,21 @@ public class UsuarioController {
 		}
 	}
 
-	@GetMapping(value = "/usuarios/new")
+	@GetMapping(value = "/new")
 	public String initCreationForm(Map<String, Object> model) {
 		Usuario usuario = new Usuario();
 		model.put("usuario", usuario);
-		return NEW_USUARIO_FORM;
+		return USUARIOS_FORM;
 	}
 
-	@PostMapping(value = "/usuarios/new")
+	@PostMapping(value = "/new")
 	public String processCreationForm(@Valid Usuario usuario, BindingResult result) {
 		if (result.hasErrors()) {
-			return NEW_USUARIO_FORM;
+			return USUARIOS_FORM;
 		}
 		else {
 			this.usuarioService.save(usuario);
-			return "redirect:/";
+			return "redirect:/usuarios";
 		}
 	}
 
