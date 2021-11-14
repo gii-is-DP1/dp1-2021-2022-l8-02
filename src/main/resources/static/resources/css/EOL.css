@@ -12,7 +12,7 @@
   body {
     min-height: 100vh;
     display: grid;
-    place-items: center;
+    justify-content: center;
     background: var(--clr-bg);
     font-family: "Balsamiq Sans", cursive;
     color: var(--clr-neon);
@@ -21,7 +21,7 @@
   
   .neon-button {
     font-size: 4rem;
-  
+    margin-top: 50%;
     display: inline-block;
     cursor: pointer;
     text-decoration: none;
@@ -38,14 +38,12 @@
   }
   
   .neon-button2 {
-    font-size: 4rem;
-  
-    display: inline-block;
-    cursor: pointer;
+    font-size: 5rem;
+    cursor: default;
     text-decoration: none;
     color: var(--clr-neon);
     padding: 0.25em 1em;
-  
+    place-items: center;
     text-shadow: 0 0 0.125em hsl(0 0% 100% / 0.3), 0 0 0.45em currentColor;
     position: relative;
   }

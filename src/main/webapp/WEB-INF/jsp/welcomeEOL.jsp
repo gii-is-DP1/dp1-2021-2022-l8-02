@@ -7,7 +7,7 @@
 
 <endofline:layoutEOL pageName="home">
     <div class="row">
-        <p class="neon-button2">End of Line</p>
+        <p class="neon-button2" style="text-align:center;">End of Line</p>
     </div>
     <div class="row">
         <a href="#" class="neon-button">Acceder al juego</a>

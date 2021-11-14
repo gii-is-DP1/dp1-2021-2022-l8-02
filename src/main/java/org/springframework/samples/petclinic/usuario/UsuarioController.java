@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/usuarios")
 public class UsuarioController {
 
     public static final String USUARIOS_FORM = "usuarios/CUDUsuariosForm";
 	public static final String USUARIOS_LISTING = "usuarios/UsuariosListing";
 	public static final String NEW_USUARIO_FORM = "usuarios/createUsuarioForm";
+	public static final String REGISTER_USER = "usuarios/registerUser";
 
     @Autowired
     UsuarioService usuarioService;
@@ -33,13 +33,14 @@ public class UsuarioController {
 		dataBinder.setDisallowedFields("id");
 	}
 	
-    @GetMapping
+	
+    @GetMapping("/usuarios")
     public String listUsuarios(ModelMap model){
         model.addAttribute("usuarios", usuarioService.findAll());
         return USUARIOS_LISTING;
     }
 
-    @GetMapping("/{username}/edit")
+    @GetMapping("/usuarios/{username}/edit")
 	public String editUsuario(@PathVariable("username") String username,ModelMap model) {
 		Optional<Usuario> usuario=usuarioService.findByUsername(username);
 		if(usuario.isPresent()) {
@@ -51,7 +52,7 @@ public class UsuarioController {
 		}
 	}
 
-	@PostMapping("/{username}/edit")
+	@PostMapping("/usuarios/{username}/edit")
 	public String editUsuario(@PathVariable("username") String username, @Valid Usuario modifiedDisease, BindingResult binding, ModelMap model) {
 		Optional<Usuario> usuario=usuarioService.findByUsername(username);
 		if(binding.hasErrors()) {			
@@ -64,7 +65,7 @@ public class UsuarioController {
 		}
 	}
 
-	@GetMapping("/{username}/delete")
+	@GetMapping("/usuarios/{username}/delete")
 	public String deleteUsuario(@PathVariable("username") String username,ModelMap model) {
 		Optional<Usuario> usuario=usuarioService.findByUsername(username);
 		if(usuario.isPresent()) {
@@ -77,14 +78,14 @@ public class UsuarioController {
 		}
 	}
 
-	@GetMapping(value = "/new")
+	@GetMapping(value = "/usuarios/new")
 	public String initCreationForm(Map<String, Object> model) {
 		Usuario usuario = new Usuario();
 		model.put("usuario", usuario);
 		return USUARIOS_FORM;
 	}
 
-	@PostMapping(value = "/new")
+	@PostMapping(value = "/usuarios/new")
 	public String processCreationForm(@Valid Usuario usuario, BindingResult result) {
 		if (result.hasErrors()) {
 			return USUARIOS_FORM;
@@ -92,6 +93,23 @@ public class UsuarioController {
 		else {
 			this.usuarioService.save(usuario);
 			return "redirect:/usuarios";
+		}
+	}
+
+	@GetMapping("/register")
+    public String showRegisterForm(ModelMap model){
+        model.addAttribute("usuario", new Usuario());
+		return REGISTER_USER;
+    }
+
+	//Post para registrarse como nuevo usuario
+	@PostMapping("/register")
+	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
+		if(binding.hasErrors()) {			
+			return USUARIOS_FORM;
+		}else {
+			this.usuarioService.save(usuario);
+			return "redirect:/login";
 		}
 	}
 
