@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.user;
+package org.springframework.samples.petclinic.usuario;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -19,7 +19,7 @@ public class Authorities extends BaseEntity{
 	
 	@ManyToOne
 	@JoinColumn(name = "username")
-	User user;
+	Usuario usuario;
 	
 	@Size(min = 3, max = 50)
 	String authority;

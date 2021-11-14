@@ -58,6 +58,17 @@
 		</spring-format.version>
 	</properties>
 	<developers>
+    <developer>
+
+            <id>fravilpav</id>
+            <name>Francisco Javier Vila Pavon</name>
+            <email>kikovilapavon@gmail.com</email>
+            <url>https://github.com/fravilpav</url>
+            <roles>
+                <role>none</role>
+            </roles>
+
+        </developer>
 		<developer>
 			<id>
 				juagarrui6
