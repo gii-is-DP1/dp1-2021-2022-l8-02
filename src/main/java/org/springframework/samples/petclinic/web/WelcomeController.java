@@ -41,10 +41,10 @@ public class WelcomeController {
           people.add(person5);
           people.add(person6);
           model.put("people", people);
-          model.put("title", "PetClinic");
+          model.put("title", "End Of Line");
           model.put("group", "L8-02");
 
-	    return "welcome";
+	    return "welcomeEOL";
 	  }
 
 }
