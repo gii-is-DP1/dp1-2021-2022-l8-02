@@ -6,41 +6,48 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
 <petclinic:layout pageName="usuarios">
-	<h2>Usuarios</h2>
-	    <table id="usuariosTable" class="table table-striped">
+    <h2>Usuarios
+        <td>
+            <spring:url value="usuarios/new" var="createUrl"></spring:url>
+            <a href="${fn:escapeXml(createUrl)}" style="margin-left: 90%;">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            </a>
+        </td>
+    </h2>
+    <table id="usuariosTable" class="table table-striped">
         <thead>
-        <tr>
-            <th style="width: 20%;">Username</th>
-            <th style="width: 20%;">Password</th>
-            <th style="width: 20%;">Email</th> 
-            <th style="width: 20%;">Edit</th> 
-            <th style="width: 20%;">Delete</th> 
-        </tr>
+            <tr>
+                <th style="width: 25%;">Username</th>
+                <th style="width: 25%;">Password</th>
+                <th style="width: 25%;">Email</th>
+                <th style="width: 12.5%;">Edit</th>
+                <th style="width: 12.5%;">Delete</th>
+            </tr>
         </thead>
         <tbody>
-        <c:forEach items="${usuarios}" var="usuario">
-            <tr>
-                <td>                    
-                    <c:out value="${usuario.username}"/>
-                </td>
-                <td>
-                    <c:out value="${usuario.password}"/>
-                </td>                
-                <td>
-                    <c:out value="${usuario.email}"/>
-                </td>
-                <td>
-                	<a href="/usuarios/${usuario.id}/edit">
-                	<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                	</a>
-                </td>
-                <td>
-                	<a href="/usuarios/${usuario.id}/delete">
-                		<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-                	</a>
-                </td>  
-            </tr>
-        </c:forEach>
+            <c:forEach items="${usuarios}" var="usuario">
+                <tr>
+                    <td>
+                        <c:out value="${usuario.username}" />
+                    </td>
+                    <td>
+                        <c:out value="${usuario.password}" />
+                    </td>
+                    <td>
+                        <c:out value="${usuario.email}" />
+                    </td>
+                    <td>
+                        <a href="/usuarios/${usuario.username}/edit">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="/usuarios/${usuario.username}/delete">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                        </a>
+                    </td>
+                </tr>
+            </c:forEach>
         </tbody>
     </table>
-</petclinic:layout> 
+</petclinic:layout>

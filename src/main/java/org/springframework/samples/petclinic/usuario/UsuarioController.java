@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
-    public static final String USUARIOS_FORM = "usuarios/createOrUpdateUsuariosForm";
+    public static final String USUARIOS_FORM = "usuarios/CUDUsuariosForm";
 	public static final String USUARIOS_LISTING = "usuarios/UsuariosListing";
 	public static final String NEW_USUARIO_FORM = "usuarios/createUsuarioForm";
 
@@ -39,9 +39,9 @@ public class UsuarioController {
         return USUARIOS_LISTING;
     }
 
-    @GetMapping("/{id}/edit")
-	public String editUsuario(@PathVariable("id") int id,ModelMap model) {
-		Optional<Usuario> usuario=usuarioService.findById(id);
+    @GetMapping("/{username}/edit")
+	public String editUsuario(@PathVariable("username") String username,ModelMap model) {
+		Optional<Usuario> usuario=usuarioService.findByUsername(username);
 		if(usuario.isPresent()) {
 			model.addAttribute("usuario",usuario.get());
 			return USUARIOS_FORM;
@@ -51,22 +51,22 @@ public class UsuarioController {
 		}
 	}
 
-	@PostMapping("/{id}/edit")
-	public String editUsuario(@PathVariable("id") int id, @Valid Usuario modifiedDisease, BindingResult binding, ModelMap model) {
-		Optional<Usuario> usuario=usuarioService.findById(id);
+	@PostMapping("/{username}/edit")
+	public String editUsuario(@PathVariable("username") String username, @Valid Usuario modifiedDisease, BindingResult binding, ModelMap model) {
+		Optional<Usuario> usuario=usuarioService.findByUsername(username);
 		if(binding.hasErrors()) {			
 			return USUARIOS_FORM;
 		}else {
-			BeanUtils.copyProperties(modifiedDisease, usuario.get(), "id");
+			BeanUtils.copyProperties(modifiedDisease, usuario.get(), "username");
 			usuarioService.save(usuario.get());
 			model.addAttribute("message","User updated succesfully!");
 			return listUsuarios(model);
 		}
 	}
 
-	@GetMapping("/{id}/delete")
-	public String deleteUsuario(@PathVariable("id") int id,ModelMap model) {
-		Optional<Usuario> usuario=usuarioService.findById(id);
+	@GetMapping("/{username}/delete")
+	public String deleteUsuario(@PathVariable("username") String username,ModelMap model) {
+		Optional<Usuario> usuario=usuarioService.findByUsername(username);
 		if(usuario.isPresent()) {
 			usuarioService.delete(usuario.get());
 			model.addAttribute("message","The user was deleted successfully!");
@@ -77,21 +77,21 @@ public class UsuarioController {
 		}
 	}
 
-	@GetMapping(value = "/usuarios/new")
+	@GetMapping(value = "/new")
 	public String initCreationForm(Map<String, Object> model) {
 		Usuario usuario = new Usuario();
 		model.put("usuario", usuario);
-		return NEW_USUARIO_FORM;
+		return USUARIOS_FORM;
 	}
 
-	@PostMapping(value = "/usuarios/new")
+	@PostMapping(value = "/new")
 	public String processCreationForm(@Valid Usuario usuario, BindingResult result) {
 		if (result.hasErrors()) {
-			return NEW_USUARIO_FORM;
+			return USUARIOS_FORM;
 		}
 		else {
 			this.usuarioService.save(usuario);
-			return "redirect:/";
+			return "redirect:/usuarios";
 		}
 	}
 
