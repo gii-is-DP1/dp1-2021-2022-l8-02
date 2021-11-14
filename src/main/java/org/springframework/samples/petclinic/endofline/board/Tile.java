@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.game;
+package org.springframework.samples.petclinic.endofline.board;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
