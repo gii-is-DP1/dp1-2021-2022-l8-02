@@ -18,13 +18,8 @@ public class UsuarioService {
         return usuarioRepo.findAll();
     }
 
-    public Optional<Usuario> findById(int id){
-        return usuarioRepo.findById(id);
-    }
-
     public void delete(Usuario usuario) {
 		usuarioRepo.delete(usuario);
-
 	}
 
 	public void save(@Valid Usuario usuario) {
