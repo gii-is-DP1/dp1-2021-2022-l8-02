@@ -6,7 +6,6 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.endofline.board.BoardUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +21,7 @@ public class GameController {
     public static final String GAME_VIEW = "games/gameView";
     public static final String GAME_LIST = "games/gameList";
     public static final String GAME_CREATION = "games/gameCreationForm";
+    public static final String GAME_LOBBY = "games/gameLobby";
 
     private GameService gameService;
 
@@ -32,8 +32,7 @@ public class GameController {
 
     @GetMapping
     public String getGames(Model model) {
-        // Me gustaria hacer un pageable aqui :D
-        // Desde luego el que vea mi codigo con los comentarios solo puede reirse
+        // Me gustaria hacer el sistema de pageable aqui :D
         Collection<Game> games = gameService.getGames();
         model.addAttribute("games", games);
         return GAME_LIST;
@@ -41,9 +40,13 @@ public class GameController {
     
     @GetMapping("/{gameId}")
     public String getGame(@PathVariable("gameId") Integer gameId, Model model) {
-        // Game game = gameService.findGame(gameId);
-        // model.addAttribute("board", game.getBoard());
-        model.addAttribute("board", BoardUtils.emptyBoard(5));
+        Game game = gameService.findGame(gameId);
+        model.addAttribute("game", game);
+        System.out.println(game.getGameState());
+        
+        if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        
+        model.addAttribute("board", game.getBoard());
         return GAME_VIEW;
     }
 
@@ -61,16 +64,22 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public String createGame(@Valid Game game, BindingResult bindingResult, Model model) {
+    public String createGame(@Valid Game game, BindingResult result, Model model) {
 
-        if(bindingResult.hasErrors()) {
-            model.addAttribute("haha", "haha"); // Crear sistema de manejo de errores
+        if(result.hasErrors()) {
             return GAME_CREATION;
         }
 
         gameService.createGame(game);
 
-        return "redirect:/"; // Bup Hacer que te lleve a la sala :D
+        return "redirect:/games";
+    }
+
+    @GetMapping("/{gameId}/start")
+    public String startGame(@PathVariable("gameId") Integer gameId, Model model) {
+        // Cambiar a POST puede ser una mejor opcion
+        gameService.startGame(gameId);
+        return "redirect:/games/"+gameId;
     }
 
 }

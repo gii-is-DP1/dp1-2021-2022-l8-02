@@ -2,11 +2,13 @@ package org.springframework.samples.petclinic.endofline.game;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -34,13 +36,18 @@ public class Game extends BaseEntity {
     private String name;
 
     @NotNull
+    @Column(name = "hidden")
     private Boolean hidden;
 
-    @OneToOne
-    @NotNull
+    // @NotNull Si no se comenta falla al crear la sala del juego
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "game")
     private Board board;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private GameMode gameMode;
+
+    @Enumerated(EnumType.STRING)
+    private GameState GameState;
     
 }

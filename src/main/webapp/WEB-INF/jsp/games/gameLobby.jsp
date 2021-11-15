@@ -5,10 +5,6 @@
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
 <eol:layoutEOL>
-    <c:forEach items="${games}" var="game">
-        <div class="row">
-            <h3>${game.name}</h3>
-            <a href="games/${game.id}">Unirse</a>
-        </div>
-    </c:forEach>
+    <h2>Esto es un test</h2>
+    <a href="/games/${game.id}/start">Comenzar partida</a>
 </eol:layoutEOL>

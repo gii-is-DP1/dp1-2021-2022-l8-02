@@ -12,7 +12,7 @@
 
     var width = canvas.width;
     var height = canvas.height;
-    var size = ${board.size};
+    var size = Math.sqrt(${board.tiles.size()});
 
     var x_step = width/size;
     var y_step = height/size;
