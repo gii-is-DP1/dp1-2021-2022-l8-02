@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.endofline.game;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,10 @@ public class GameService {
     @Autowired
     private GameRepository gameRepository;
 
+    public Collection<Game> getGames() {
+        return gameRepository.findAll();
+    }
+
     public Game findGame(Integer id) {
         Optional<Game> game = gameRepository.findById(id);
         if(game.isPresent()) {
@@ -19,12 +25,8 @@ public class GameService {
         throw new IllegalArgumentException();
     }
 
-    /* 
-
-    TODO: metodos
-
-    createGame
-
-    */
+    public void createGame(Game game) {
+        gameRepository.save(game);
+    }
     
 }
