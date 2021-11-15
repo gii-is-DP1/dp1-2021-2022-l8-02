@@ -24,9 +24,13 @@ public class UsuarioController {
 	public static final String USUARIOS_LISTING = "usuarios/UsuariosListing";
 	public static final String NEW_USUARIO_FORM = "usuarios/createUsuarioForm";
 	public static final String REGISTER_USER = "usuarios/registerUser";
+	public static final String LOGIN_USER = "login";
 
     @Autowired
     UsuarioService usuarioService;
+
+	@Autowired
+	AuthoritiesService authoritiesSer;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -53,12 +57,12 @@ public class UsuarioController {
 	}
 
 	@PostMapping("/usuarios/{username}/edit")
-	public String editUsuario(@PathVariable("username") String username, @Valid Usuario modifiedDisease, BindingResult binding, ModelMap model) {
+	public String editUsuario(@PathVariable("username") String username, @Valid Usuario modifiedUsuario, BindingResult binding, ModelMap model) {
 		Optional<Usuario> usuario=usuarioService.findByUsername(username);
 		if(binding.hasErrors()) {			
 			return USUARIOS_FORM;
 		}else {
-			BeanUtils.copyProperties(modifiedDisease, usuario.get(), "username");
+			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
 			usuarioService.save(usuario.get());
 			model.addAttribute("message","User updated succesfully!");
 			return listUsuarios(model);
@@ -109,8 +113,14 @@ public class UsuarioController {
 			return USUARIOS_FORM;
 		}else {
 			this.usuarioService.save(usuario);
+			this.authoritiesSer.saveAuthorities(usuario.getUsername(),"jugador");
 			return "redirect:/login";
 		}
 	}
-
+/* 
+	@GetMapping("/login")
+	public String logUser(){
+		return LOGIN_USER;
+	}
+*/
 }
