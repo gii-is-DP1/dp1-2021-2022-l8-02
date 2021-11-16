@@ -110,17 +110,17 @@ public class UsuarioController {
 	@PostMapping("/register")
 	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
 		if(binding.hasErrors()) {			
-			return USUARIOS_FORM;
+			return REGISTER_USER;
 		}else {
 			this.usuarioService.save(usuario);
 			this.authoritiesSer.saveAuthorities(usuario.getUsername(),"jugador");
 			return "redirect:/login";
 		}
 	}
-/* 
+ 
 	@GetMapping("/login")
 	public String logUser(){
 		return LOGIN_USER;
 	}
-*/
+
 }

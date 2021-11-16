@@ -10,7 +10,7 @@
         <p class="neon-button2" style="text-align:center;">End of Line</p>
     </div>
     <div class="row">
-        <a href="#" class="neon-button">Acceder al juego</a>
+        <a href="/register" class="neon-button">Acceder al juego</a>
     </div>
 
     <!-- Google fonts -->
