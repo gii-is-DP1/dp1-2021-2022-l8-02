@@ -1,7 +1,7 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="endofline" tagdir="/WEB-INF/tags" %>
-<%@ attribute name="pageName" required="true" %>
+<%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
+<%@ attribute name="pageTitle" required="true" %>
 <%@ attribute name="customScript" required="false" fragment="true"%>
 
 <!doctype html>
