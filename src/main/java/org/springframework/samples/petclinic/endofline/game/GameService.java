@@ -1,8 +1,6 @@
 package org.springframework.samples.petclinic.endofline.game;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,34 +50,12 @@ public class GameService {
         board.setGame(game);
         boardService.save(board);
 
-        List<Tile> tiles = new ArrayList<>();
-
         switch(game.getGameMode()) {
             case VERSUS:
-                for(int x=0; x<5; x++) {
-                    for(int y=0; y<5; y++) {
-                        Tile tile = new Tile();
-                        tile.setX(x);
-                        tile.setY(y);
-                        tile.setTileState(TileState.FREE);
-                        tile.setBoard(board);
-                        tiles.add(tile);
-                        tileService.save(tile);
-                    }
-                }
+                generateVersusBoard(board, 2);
                 break;
             case PUZZLE:
-            for(int x=0; x<7; x++) {
-                for(int y=0; y<7; y++) {
-                    Tile tile = new Tile();
-                    tile.setX(x);
-                    tile.setY(y);
-                    tile.setTileState(TileState.FREE);
-                    tile.setBoard(board);
-                    tiles.add(tile);
-                    tileService.save(tile);
-                }
-            }
+                generatePuzzleBoard(board);
                 break;
             default:
                 throw new IllegalArgumentException(); // InvalidGameModeException
@@ -87,6 +63,41 @@ public class GameService {
 
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
+    }
+
+    // Auxiliar Methods
+    private void generateVersusBoard(Board board, int players) {
+
+        int size = 5;
+
+        for(int x=0; x<size; x++) {
+            for(int y=0; y<size; y++) {
+                Tile tile = new Tile();
+                tile.setX(x);
+                tile.setY(y);
+                tile.setTileState(TileState.FREE);
+                tile.setBoard(board);
+                tileService.save(tile);
+            }
+        }
+
+    }
+
+    private void generatePuzzleBoard(Board board) {
+
+        int size = 7;
+
+        for(int x=0; x<size; x++) {
+            for(int y=0; y<size; y++) {
+                Tile tile = new Tile();
+                tile.setX(x);
+                tile.setY(y);
+                tile.setTileState(TileState.FREE);
+                tile.setBoard(board);
+                tileService.save(tile);
+            }
+        }
+
     }
     
 }

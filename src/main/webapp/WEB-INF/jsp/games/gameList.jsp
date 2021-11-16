@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
-<eol:layoutEOL>
+<eol:layoutEOL pageTitle="Salas Disponibles">
     <c:forEach items="${games}" var="game">
         <div class="row">
             <h3>${game.name}</h3>

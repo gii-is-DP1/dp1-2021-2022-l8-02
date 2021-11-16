@@ -2,6 +2,7 @@
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<@ attribute name="pageTitle" required="true" description="Text for the title of the page" %>
 <%@ attribute name="customScript" required="false" fragment="true"%>
 
 <!doctype html>
@@ -9,23 +10,26 @@
 <eol:htmlHeader/>
 
 <body>
-<div class="container-fluid">
-    <div class="container xd-container">
-	<c:if test="${not empty message}" >
-	<div class="alert alert-${not empty messageType ? messageType : 'info'}" role="alert">
-  		<c:out value="${message}"></c:out>
-   		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    		<span aria-hidden="true">&times;</span>
-  		</button> 
+
+	<eol:bodyHeader pageTitle="${pageTitle}"></eol:bodyHeader>
+
+	<div class="container-fluid">
+		<div class="container xd-container">
+		<c:if test="${not empty message}" >
+		<div class="alert alert-${not empty messageType ? messageType : 'info'}" role="alert">
+			<c:out value="${message}"></c:out>
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button> 
+		</div>
+		</c:if>
+
+			<jsp:doBody/>
+
+		</div>
 	</div>
-	</c:if>
-
-        <jsp:doBody/>
-
-    </div>
-</div>
-<eol:footer/>
-<jsp:invoke fragment="customScript" />
+	<eol:footer/>
+	<jsp:invoke fragment="customScript" />
 
 </body>
 
