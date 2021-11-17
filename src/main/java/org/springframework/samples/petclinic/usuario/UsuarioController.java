@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class UsuarioController {
@@ -119,7 +118,8 @@ public class UsuarioController {
 	}
  
 	@GetMapping("/login")
-	public String logUser(){
+	public String logUser(ModelMap model){
+		model.addAttribute("usuario", new Usuario());
 		return LOGIN_USER;
 	}
 
