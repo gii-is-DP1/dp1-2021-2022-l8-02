@@ -24,6 +24,7 @@ public class UsuarioController {
 	public static final String NEW_USUARIO_FORM = "usuarios/createUsuarioForm";
 	public static final String REGISTER_USER = "usuarios/registerUser";
 	public static final String LOGIN_USER = "login";
+	public static final String INICIO = "inicio";
 
     @Autowired
     UsuarioService usuarioService;
@@ -121,6 +122,11 @@ public class UsuarioController {
 	public String logUser(ModelMap model){
 		model.addAttribute("usuario", new Usuario());
 		return LOGIN_USER;
+	}
+
+	@GetMapping("/inicio")
+	public String PagInicial(){
+		return INICIO;
 	}
 
 }
