@@ -83,3 +83,21 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04',
 
 
 
+INSERT INTO game(id,name,winner,game_status,start_game,end_game,turn) VALUES (1,'PARTIDA1',TRUE, 'FINISHED','01:30:20','02:30:10', 2);
+INSERT INTO game(id,name,winner,game_status,start_game,end_game,turn) VALUES (2,'PARTIDA2',FALSE, 'CURRENT','01:30:20','02:30:10', 5);
+INSERT INTO game(id,name,winner,game_status,start_game,end_game,turn) VALUES (3,'PARTIDA3',FALSE, 'FINISHED','02:30:20','04:30:30', 14);
+INSERT INTO game(id,name,winner,game_status,start_game,end_game,turn) VALUES (4,'PARTIDA4',TRUE, 'CURRENT','02:00:20','02:30:10', 6);
+INSERT INTO game(id,name,winner,game_status,start_game,end_game,turn) VALUES (5,'PARTIDA5',FALSE, 'CURRENT','01:50:50','02:00:00', 4);
+
+
+INSERT INTO gamer(id, name, usuario_id, game_id) VALUES (1, 'game1', 1, 1);
+INSERT INTO gamer(id, name, usuario_id, game_id) VALUES (2, 'game2', 2, 2);
+INSERT INTO gamer(id, name, usuario_id, game_id) VALUES (3, 'game3', 3, 3);
+INSERT INTO gamer(id, name, usuario_id, game_id) VALUES (4, 'game4', 4, 4);
+INSERT INTO gamer(id, name, usuario_id, game_id) VALUES (5, 'game5', 5, 5);
+
+INSERT INTO statistics(id, name,gamer_id, game_id) VALUES (1,'ESTADISTICA1',1, 1);
+INSERT INTO statistics(id, name,gamer_id, game_id) VALUES (2,'ESTADISTICA2',2, 2);
+INSERT INTO statistics(id, name,gamer_id, game_id) VALUES (3,'ESTADISTICA3',3, 3);
+INSERT INTO statistics(id, name,gamer_id, game_id) VALUES (4,'ESTADISTICA4',4, 4);
+INSERT INTO statistics(id, name,gamer_id, game_id) VALUES (5,'ESTADISTICA5',5, 5);
