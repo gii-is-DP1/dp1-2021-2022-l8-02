@@ -9,7 +9,7 @@
 <endofline:htmlHeaderEOL/>
 
 <body>
-
+    <jsp:doBody/>
 <div class="container-fluid">
     <div class="container xd-container">
     <c:if test="${not empty message}" >
@@ -21,10 +21,11 @@
     </div>
     </c:if>
 
-        <jsp:doBody/>
-
     </div>
 </div>
+
+
+
 <jsp:invoke fragment="customScript" />
 
 </body>

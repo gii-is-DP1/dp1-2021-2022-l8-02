@@ -14,7 +14,7 @@
         <label class="col-sm-2 control-label" for="${name}">${label}</label>
 
         <div class="col-sm-10">
-            <form:input class="form-control" path="${name}" style="${style}"/>
+            <form:input class="form-control inputFormu" path="${name}" style="${style}"/>
             <c:if test="${valid}">
                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
             </c:if>

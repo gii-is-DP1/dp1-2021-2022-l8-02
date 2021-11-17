@@ -13,14 +13,16 @@
             <div style="margin-top: 20%; margin-left: 30%;">
                 <h2 style="font-size: 30px;">Nombre de usuario</h2>
                 <endofline:inputFieldLogin name="username" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+                <br>
+                <br>
                 <label for="password" class="col-sm-2 control-label" style="font-size: 30px; margin-left: 7%;">Contrase&ntilde;a</label>
                 <br>
-                <form:password class="form-control" path="password" style="margin-top: 3%;width: 250px; height: 35px;border-radius: 25px;text-align: center;"/>
+                <form:password class="form-control inputFormu" path="password" style="margin-top: 3%;width: 250px; height: 35px;border-radius: 25px;text-align: center;"/>
             </div>           
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10" style="margin-left: 37%; margin-top: 3.5%;">
-                <button class="btn btn-default" type="submit" style="width: 150px; height: 30px; border-radius: 25px;">Iniciar sesi&oacute;n</button>
+                <button class="neon-button3" type="submit">Iniciar sesi&oacute;n</button>
             </div>
         </div>
     </form:form>
