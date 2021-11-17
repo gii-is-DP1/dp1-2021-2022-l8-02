@@ -3,8 +3,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ attribute name="name" required="true" rtexprvalue="true"
               description="Name of corresponding property in bean object" %>
-<%@ attribute name="label" required="true" rtexprvalue="true"
+<%@ attribute name="label" required="false" rtexprvalue="true"
               description="Label appears in red color if input is considered as invalid after submission" %>
+<%@ attribute name="style" required="false" rtexprvalue="true"%>
 
 <spring:bind path="${name}">
     <c:set var="cssGroup" value="form-group ${status.error ? 'has-error' : '' }"/>
@@ -13,7 +14,7 @@
         <label class="col-sm-2 control-label" for="${name}">${label}</label>
 
         <div class="col-sm-10">
-            <form:input class="form-control" path="${name}"/>
+            <form:input class="form-control" path="${name}" style="${style}"/>
             <c:if test="${valid}">
                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
             </c:if>
