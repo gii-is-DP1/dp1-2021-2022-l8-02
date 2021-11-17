@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.game;
+package org.springframework.samples.petclinic.endOnline.game;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
