@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.card;
+package org.springframework.samples.endofline.card;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.samples.petclinic.endofline.model.BaseEntity;
+import org.springframework.samples.endofline.model.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;

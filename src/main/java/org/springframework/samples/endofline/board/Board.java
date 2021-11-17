@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.board;
+package org.springframework.samples.endofline.board;
 
 import java.util.List;
 
@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import org.springframework.samples.petclinic.endofline.game.Game;
-import org.springframework.samples.petclinic.endofline.model.BaseEntity;
+import org.springframework.samples.endofline.game.Game;
+import org.springframework.samples.endofline.model.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;

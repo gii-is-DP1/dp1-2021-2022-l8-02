@@ -1,5 +1,6 @@
-package org.springframework.samples.petclinic.endofline.game;
+package org.springframework.samples.endofline.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,8 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.samples.petclinic.endofline.board.Board;
-import org.springframework.samples.petclinic.endofline.model.BaseEntity;
+import org.springframework.samples.endofline.board.Board;
+import org.springframework.samples.endofline.model.BaseEntity;
 import org.springframework.samples.petclinic.usuario.Usuario;
 
 import lombok.Getter;
@@ -27,9 +28,9 @@ import lombok.Setter;
 @Table(name = "games")
 public class Game extends BaseEntity {
 
-    // @ElementCollection
-    // @OneToMany(mappedBy = "username")
-    // List<Usuario> players;
+    @OneToMany
+    @ElementCollection
+    private List<Usuario> players = new ArrayList<>();
 
     @NotNull
     @Column(name = "name")

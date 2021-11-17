@@ -41,6 +41,36 @@
             "mainClass": "org.springframework.endofline.EndOfLineApplication",
             "projectName": "L8-02",
             "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EndOfLineApplication<L8-02>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "org.springframework.EndOfLineApplication",
+            "projectName": "L8-02",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EndOfLineApplication<L8-02>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "org.springframework.samples.petclinic.EndOfLineApplication",
+            "projectName": "L8-02",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-EndOfLineApplication<L8-02>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "org.springframework.samples.EndOfLineApplication",
+            "projectName": "L8-02",
+            "args": ""
         }
     ]
 }

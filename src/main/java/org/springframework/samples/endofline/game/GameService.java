@@ -1,14 +1,15 @@
-package org.springframework.samples.petclinic.endofline.game;
+package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.endofline.board.Board;
-import org.springframework.samples.petclinic.endofline.board.BoardService;
-import org.springframework.samples.petclinic.endofline.board.Tile;
-import org.springframework.samples.petclinic.endofline.board.TileService;
-import org.springframework.samples.petclinic.endofline.board.TileState;
+import org.springframework.samples.endofline.board.Board;
+import org.springframework.samples.endofline.board.BoardService;
+import org.springframework.samples.endofline.board.Tile;
+import org.springframework.samples.endofline.board.TileService;
+import org.springframework.samples.endofline.board.TileState;
+import org.springframework.samples.petclinic.usuario.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,6 +41,16 @@ public class GameService {
     public void createGame(Game game) {
         game.setGameState(GameState.LOBBY);
 
+        gameRepository.save(game);
+    }
+
+    public void joinGame(Game game, Usuario player) {
+        Game currentGame = gameRepository.getGameByPlayerUsername(player.getUsername());
+        if(currentGame != null) {
+            currentGame.getPlayers().remove(player);
+            gameRepository.save(currentGame);
+        }
+        game.getPlayers().add(player);
         gameRepository.save(game);
     }
 

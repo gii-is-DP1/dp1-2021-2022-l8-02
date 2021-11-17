@@ -1,13 +1,13 @@
-package org.springframework.samples.petclinic;
+package org.springframework.samples;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication()
-public class PetclinicApplication {
+public class EndOfLineApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PetclinicApplication.class, args);
+		SpringApplication.run(EndOfLineApplication.class, args);
 	}
 
 }

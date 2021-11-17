@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.game;
+package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,6 +6,11 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.usuario.Usuario;
+import org.springframework.samples.petclinic.usuario.UsuarioService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,9 +30,18 @@ public class GameController {
 
     private GameService gameService;
 
+    private UsuarioService userService;
+
     @Autowired
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, UsuarioService userService) {
         this.gameService = gameService;
+        this.userService = userService;
+    }
+
+    private Usuario getLoggedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        return userService.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
     }
 
     @GetMapping
@@ -70,16 +84,26 @@ public class GameController {
             return GAME_CREATION;
         }
 
+        // game.setPlayers(List.of(getLoggedUser()));
+
         gameService.createGame(game);
+
+        gameService.joinGame(game, getLoggedUser());
 
         return "redirect:/games";
     }
 
-    @GetMapping("/{gameId}/start")
-    public String startGame(@PathVariable("gameId") Integer gameId, Model model) {
-        // Cambiar a POST puede ser una mejor opcion
-        gameService.startGame(gameId);
-        return "redirect:/games/"+gameId;
+    @GetMapping("/join/{gameId}")
+    public String joinGame(@PathVariable("gameId") Game game) {
+        gameService.joinGame(game, getLoggedUser());
+        return "redirect:/games/"+game.getId();
     }
+
+    // @GetMapping("/{gameId}/start")
+    // public String startGame(@PathVariable("gameId") Integer gameId, Model model) {
+    //     // Cambiar a POST puede ser una mejor opcion
+    //     gameService.startGame(gameId);
+    //     return "redirect:/games/"+gameId;
+    // }
 
 }

@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.game;
+package org.springframework.samples.endofline.game;
 
 public enum GameMode {
 

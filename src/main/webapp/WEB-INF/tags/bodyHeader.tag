@@ -4,4 +4,8 @@
 <%@ attribute name="pageTitle" required="true" rtexprvalue="true"
               description="Text for the title of the page" %>
 
-<h3>${pageTitle}</h3>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="text-center">${pageTitle}</h2>
+    </div>
+</div>

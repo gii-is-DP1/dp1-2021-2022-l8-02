@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.board;
+package org.springframework.samples.endofline.board;
 
 import org.springframework.data.repository.CrudRepository;
 

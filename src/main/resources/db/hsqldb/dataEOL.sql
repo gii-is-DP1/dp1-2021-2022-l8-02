@@ -2,8 +2,8 @@ INSERT INTO usuarios(username, password, email) VALUES ('kikovilapavon', '123adm
 INSERT INTO authorities(id,username,authority) VALUES (1,'kikovilapavon','admin');
 INSERT INTO usuarios(username, password, email) VALUES ('chemaccs', 'admin123', 'josconsan1@alum.us.es');
 INSERT INTO authorities(id,username,authority) VALUES (2,'chemaccs','admin');
-INSERT INTO usuarios(username, password, email) VALUES ('juagarrui', '3ad1min2', 'juagarrui@alum.us.es');
-INSERT INTO authorities(id,username,authority) VALUES (3,'juagarrui','admin');
+INSERT INTO usuarios(username, password, email) VALUES ('Juangr4', '123', 'juagarrui@alum.us.es');
+INSERT INTO authorities(id,username,authority) VALUES (3,'Juangr4','admin');
 INSERT INTO usuarios(username, password, email) VALUES ('martarl11', '1ad2min3', 'marreylop@alum.us.es');
 INSERT INTO authorities(id,username,authority) VALUES (4,'martarl11','admin');
 INSERT INTO usuarios(username, password, email) VALUES ('miguegomgom', '4dm1n', 'miggomgom@alum.us.es');

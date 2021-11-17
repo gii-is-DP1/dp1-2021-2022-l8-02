@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.model;
+package org.springframework.samples.endofline.model;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

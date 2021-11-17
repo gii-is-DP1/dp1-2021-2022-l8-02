@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.board;
+package org.springframework.samples.endofline.board;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

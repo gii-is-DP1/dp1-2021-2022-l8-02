@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.card;
+package org.springframework.samples.endofline.card;
 
 import java.util.Collection;
 

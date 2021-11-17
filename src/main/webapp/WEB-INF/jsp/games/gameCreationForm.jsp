@@ -6,7 +6,7 @@
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
 <eol:layoutEOL pageTitle="Crear una partida">
-    <form:form modelAttribute="game" class="form-horizontal">
+    <form:form method="POST" modelAttribute="game" class="form-horizontal">
         <div class="form-group">
             <form:label path="name" class="form-label">Nombre de la sala</form:label>
             <form:input path="name" class="form-control"/>

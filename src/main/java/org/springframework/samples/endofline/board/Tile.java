@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.endofline.board;
+package org.springframework.samples.endofline.board;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,8 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.samples.petclinic.endofline.card.Card;
-import org.springframework.samples.petclinic.endofline.model.BaseEntity;
+import org.springframework.samples.endofline.card.Card;
+import org.springframework.samples.endofline.model.BaseEntity;
 
 import lombok.Getter;
 import lombok.Setter;
