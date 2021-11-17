@@ -7,29 +7,23 @@
 
 <eol:layoutEOL pageTitle="Crear una partida">
     <form:form method="POST" modelAttribute="game" class="form-horizontal">
-        <div class="form-group">
-            <form:label path="name" class="form-label">Nombre de la sala</form:label>
+        <eol:input label="Nombre de la sala" name="name">
             <form:input path="name" class="form-control"/>
-            <c:if test="${status.error}">
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
-                <span class="help-inline">${status.errorMessage}</span>
-            </c:if>
-        </div>
+        </eol:input>
 
-        <div class="form-group">
-            <form:label path="hidden" class="form-label">Sala oculta</form:label>
+        <eol:input label="Sala oculta" name="hidden">
             <form:checkbox path="hidden" value="boolean" class="form-control"/>
-        </div>
+        </eol:input>
 
-        <div class="form-group">
-            <form:label path="gameMode">Mode De Juego</form:label>
+        <eol:input label="Modo De Juego" name="gameMode">
+            <br>
             <form:select path="gameMode">
                 <form:options items="${modes}"/>
             </form:select>
-        </div>
+        </eol:input>
 
-        <div class="form-group">
-            <button class="btn btn-default" type="submit">Crear juego</button>
+        <div class="form-group text-center">
+            <button class="neon-button" type="submit">Crear juego</button>
         </div>
     </form:form>
 </eol:layoutEOL>

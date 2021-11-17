@@ -9,11 +9,7 @@ public class BoardService {
     @Autowired
     private BoardRepository boardRepository;
 
-    @Autowired
-    private TileService tileService;
-
     public void save(Board board) {
-        // board.getTiles().stream().forEach(tileService::save);
         boardRepository.save(board);
     }
     

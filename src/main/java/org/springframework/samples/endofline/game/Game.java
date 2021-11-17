@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.endofline.board.Board;
@@ -32,8 +33,8 @@ public class Game extends BaseEntity {
     @ElementCollection
     private List<Usuario> players = new ArrayList<>();
 
-    @NotNull
-    @Column(name = "name")
+    @NotEmpty
+    @Column(name = "name", unique = true)
     private String name;
 
     @NotNull
@@ -44,8 +45,8 @@ public class Game extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "game")
     private Board board;
 
-    @Enumerated(EnumType.STRING)
     @NotNull
+    @Enumerated(EnumType.STRING)
     private GameMode gameMode;
 
     @Enumerated(EnumType.STRING)

@@ -11,4 +11,7 @@
             <a href="/games/join/${game.id}">Unirse</a>
         </div>
     </c:forEach>
+    <div class="row text-center">
+        <a href="/games/new" class="neon-button">Crear Partida</a>
+    </div>
 </eol:layoutEOL>

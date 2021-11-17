@@ -32,7 +32,7 @@
     </div>
     <div class="row">
         <div class="col-md-4 text-center">
-            <a href="#" class="neon-button">Abandonar partida</a>
+            <a href="/games/leave" class="neon-button">Abandonar partida</a>
         </div>
         <div class="col-md-4 text-center">
             <a href="/games/${game.id}/start" class="neon-button">Comenzar partida</a>

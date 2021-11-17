@@ -1,10 +1,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
-<%@ attribute name="board" required="false" rtexprvalue="true" type="org.springframework.samples.petclinic.endofline.board.Board" description="Board to be rendered" %>
+<%@ attribute name="board" required="false" rtexprvalue="true" type="org.springframework.samples.endofline.board.Board" description="Board to be rendered" %>
 
-<canvas id="board" width="200px" height="200px"></canvas>
-<img id="red-start" src="/resources/images/cards/red_start.png" style="display:none">
+<canvas id="board" width="500px" height="500px"></canvas>
+<c:forEach items="${colors}" var="color">
+    <c:forEach items="${cardTypes}" var="cardType">
+        <img id="${color}_${cardType.name}" src="/resources/images/cards/${color}_${cardType.name}.png" style="display:none">
+    </c:forEach>
+</c:forEach>
 
 <script>
     var canvas = document.getElementById("board");
@@ -29,11 +33,8 @@
     ctx.stroke();
     ctx.closePath();
 
-    var image = document.getElementById("red-start");
-    ctx.drawImage(image, 2*x_step, 3*y_step, x_step, y_step);
-
     <c:forEach items="${board.tiles}" var="tile">
-        <eol:tile tile="${tile}"></eol:tile>
+        <eol:tile currentTile="${tile}"></eol:tile>
     </c:forEach>
 
 </script>

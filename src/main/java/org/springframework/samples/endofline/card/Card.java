@@ -20,11 +20,14 @@ import lombok.Setter;
 public class Card extends BaseEntity {
 
     @OneToOne
-    @JoinColumn(name = "id")
     private CardType cardType;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     private CardColor color;
+
+    public String getCardName() {
+        return color.toString().toLowerCase() + "_" + cardType.getName();
+    }
     
 }

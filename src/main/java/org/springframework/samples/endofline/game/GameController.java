@@ -2,10 +2,15 @@ package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.card.CardColor;
+import org.springframework.samples.endofline.card.CardService;
+import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.petclinic.usuario.Usuario;
 import org.springframework.samples.petclinic.usuario.UsuarioService;
 import org.springframework.security.core.Authentication;
@@ -14,7 +19,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,14 +37,20 @@ public class GameController {
     public static final String GAME_LOBBY = "games/gameLobby";
 
     private GameService gameService;
-
     private UsuarioService userService;
+    private CardService cardService;
 
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService) {
+    public GameController(GameService gameService, UsuarioService userService, CardService cardService) {
         this.gameService = gameService;
         this.userService = userService;
+        this.cardService = cardService;
     }
+
+    @InitBinder
+	public void setAllowedFields(WebDataBinder dataBinder) {
+		dataBinder.setDisallowedFields("id");
+	}
 
     private Usuario getLoggedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -52,15 +66,25 @@ public class GameController {
         return GAME_LIST;
     }
     
-    @GetMapping("/{gameId}")
-    public String getGame(@PathVariable("gameId") Integer gameId, Model model) {
-        Game game = gameService.findGame(gameId);
+    @GetMapping("/currentGame")
+    public String getGame(Model model) {
+        Game game = gameService.getGameByPlayer(getLoggedUser());
+
+        if(game == null) {
+            return GAME_LIST;
+        }
+
         model.addAttribute("game", game);
         System.out.println(game.getGameState());
         
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
         
         model.addAttribute("board", game.getBoard());
+
+        // For rendering card images
+        model.addAttribute("cardTypes", cardService.findAllCardTypes());
+        model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
+
         return GAME_VIEW;
     }
 
@@ -78,32 +102,44 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public String createGame(@Valid Game game, BindingResult result, Model model) {
+    public String createGame(@ModelAttribute("game") @Valid Game game, BindingResult result, Model model) {
 
         if(result.hasErrors()) {
             return GAME_CREATION;
         }
 
-        // game.setPlayers(List.of(getLoggedUser()));
+        model.addAttribute("game", game);
 
-        gameService.createGame(game);
+        try {
+            gameService.createGame(game);
+        } catch (DuplicatedGameNameException e) {
+            result.rejectValue("name", "duplicate", "Ya existe una sala con ese nombre");
+            return GAME_CREATION;
+        }
 
         gameService.joinGame(game, getLoggedUser());
 
-        return "redirect:/games";
+        return "redirect:/games/currentGame";
     }
 
     @GetMapping("/join/{gameId}")
     public String joinGame(@PathVariable("gameId") Game game) {
         gameService.joinGame(game, getLoggedUser());
-        return "redirect:/games/"+game.getId();
+        return "redirect:/games/currentGame";
     }
 
-    // @GetMapping("/{gameId}/start")
-    // public String startGame(@PathVariable("gameId") Integer gameId, Model model) {
-    //     // Cambiar a POST puede ser una mejor opcion
-    //     gameService.startGame(gameId);
-    //     return "redirect:/games/"+gameId;
-    // }
+    @GetMapping("/leave")
+    public String leaveGame() {
+        gameService.leaveGame(getLoggedUser());
+        return "redirect:/games";
+    }
+
+    @GetMapping("/{gameId}/start")
+    public String startGame(@PathVariable("gameId") Game game, Model model) {
+        // Cambiar a POST puede ser una mejor opcion
+        if(game.getPlayers().get(0).equals(getLoggedUser()))
+            gameService.startGame(game);
+        return "redirect:/games/currentGame";
+    }
 
 }

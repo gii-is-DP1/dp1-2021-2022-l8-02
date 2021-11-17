@@ -11,5 +11,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 
     @Query("SELECT game FROM Game game JOIN game.players player WHERE player.username = ?1")
     Game getGameByPlayerUsername(String username);
+
+    Game findByName(String name);
     
 }

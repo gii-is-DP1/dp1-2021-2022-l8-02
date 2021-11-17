@@ -23,7 +23,7 @@
 			</div>
 		</c:if>
 
-			<jsp:doBody/>
+		<jsp:doBody/>
 
 		</div>
 	</div>

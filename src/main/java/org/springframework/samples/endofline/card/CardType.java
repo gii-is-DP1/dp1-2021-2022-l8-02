@@ -28,5 +28,9 @@ public class CardType extends BaseEntity {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Direction> directions;
+
+    @NotEmpty
+    @Column(name = "name")
+    private String name;
     
 }
