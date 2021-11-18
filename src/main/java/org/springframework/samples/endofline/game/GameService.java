@@ -12,6 +12,7 @@ import org.springframework.samples.endofline.board.TileState;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
+import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.petclinic.usuario.Usuario;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,13 @@ public class GameService {
 
     private GameRepository gameRepository;
     private BoardService boardService;
-    private TileService tileService;
-    private CardService cardService;
+    private DeckService deckService;
 
     @Autowired
-    public GameService(GameRepository gameRepository, BoardService boardService, TileService tileService, CardService cardService) {
+    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService) {
         this.gameRepository = gameRepository;
         this.boardService = boardService;
-        this.tileService = tileService;
-        this.cardService = cardService;
+        this.deckService = deckService;
     }
 
     public Collection<Game> getGames() {
@@ -83,78 +82,21 @@ public class GameService {
 
         switch(game.getGameMode()) {
             case PUZZLE:
-                generatePuzzleBoard(board);
+                boardService.generatePuzzleBoard(board);
                 break;
             case SOLITAIRE:
-                generateSolitaireBoard(board);
+                boardService.generateSolitaireBoard(board);
                 break;
             default:
-                generateVersusBoard(board, 2);
+                boardService.generateVersusBoard(board, 2);
+        }
+
+        for(Usuario player: game.getPlayers()) {
+            deckService.generateDefaultDeck(player, CardColor.RED);
         }
 
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
-    }
-
-    // Auxiliar Methods
-    private void generateVersusBoard(Board board, int players) {
-
-        int size = 5;
-
-        for(int x=0; x<size; x++) {
-            for(int y=0; y<size; y++) {
-                Tile tile = new Tile();
-                tile.setX(x);
-                tile.setY(y);
-                tile.setTileState(TileState.FREE);
-                tile.setBoard(board);
-                tileService.save(tile);
-            }
-        }
-
-    }
-
-    private void generatePuzzleBoard(Board board) {
-
-        int size = 7;
-
-        for(int x=0; x<size; x++) {
-            for(int y=0; y<size; y++) {
-                Tile tile = new Tile();
-                tile.setX(x);
-                tile.setY(y);
-                tile.setTileState(TileState.FREE);
-                tile.setBoard(board);
-                tileService.save(tile);
-            }
-        }
-
-    }
-
-    private void generateSolitaireBoard(Board board) {
-
-        int size = 5;
-
-        for(int x=0; x<size; x++) {
-            for(int y=0; y<size; y++) {
-                Tile tile = new Tile();
-                tile.setX(x);
-                tile.setY(y);
-                tile.setTileState(TileState.FREE);
-                tile.setBoard(board);
-                if(x == 2 && y == 3) {
-                    // Creacion de cardType
-                    Card card = new Card();
-                    card.setColor(CardColor.RED);
-                    card.setCardType(cardService.findCardTypeByIniciative(-1));
-                    System.out.println(card.getCardType().getIniciative());
-                    cardService.save(card);
-                    tile.setCard(card);
-                }
-                tileService.save(tile);
-            }
-        }
-
     }
     
 }

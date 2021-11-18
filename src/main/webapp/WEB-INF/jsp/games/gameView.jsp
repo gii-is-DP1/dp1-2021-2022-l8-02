@@ -9,4 +9,7 @@
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
     </div>
+    <div class="row">
+        <eol:hand cards="${deck.cards}"></eol:hand>
+    </div>
 </eol:layoutEOL>

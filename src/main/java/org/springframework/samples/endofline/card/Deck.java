@@ -5,9 +5,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.endofline.model.BaseEntity;
+import org.springframework.samples.petclinic.usuario.Usuario;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,5 +24,9 @@ public class Deck extends BaseEntity {
     @ElementCollection
     @Column(name = "cards")
     private List<Card> cards;
+
+    @NotNull
+    @OneToOne
+    private Usuario user;
     
 }

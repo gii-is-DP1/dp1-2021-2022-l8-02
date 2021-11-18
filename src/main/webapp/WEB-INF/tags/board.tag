@@ -20,6 +20,12 @@
 
     var x_step = width/size;
     var y_step = height/size;
+
+    canvas.addEventListener("click", function(event) {
+        var x = Math.floor((event.pageX - canvas.offsetLeft)/x_step);
+        var y = Math.floor((event.pageY - canvas.offsetTop)/y_step);
+        $('<form action="/games/currentGame" method="POST"><input name="x" value="' + x + '"><input name="y" value="' + y + '"><input name="cardId" value="' + $(".active-card")[0].id + '"><input type="hidden" name="${_csrf.getParameterName()}" value="${_csrf.getToken()}"></form>').appendTo('body').submit();
+    });
     
     
     // dibujando el tablero

@@ -8,8 +8,15 @@ import java.util.stream.Stream;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.board.BoardService;
+import org.springframework.samples.endofline.board.Tile;
+import org.springframework.samples.endofline.board.TileService;
+import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
+import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
+import org.springframework.samples.endofline.card.Deck;
+import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.petclinic.usuario.Usuario;
 import org.springframework.samples.petclinic.usuario.UsuarioService;
@@ -26,6 +33,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/games")
@@ -39,12 +47,18 @@ public class GameController {
     private GameService gameService;
     private UsuarioService userService;
     private CardService cardService;
+    private DeckService deckService;
+    private BoardService boardService;
+    private TileService tileService;
 
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService, CardService cardService) {
+    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService) {
         this.gameService = gameService;
         this.userService = userService;
         this.cardService = cardService;
+        this.deckService = deckService;
+        this.boardService = boardService;
+        this.tileService = tileService;
     }
 
     @InitBinder
@@ -80,12 +94,26 @@ public class GameController {
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
         
         model.addAttribute("board", game.getBoard());
+        model.addAttribute("deck", deckService.getDeckFromPlayer(getLoggedUser()));
 
         // For rendering card images
         model.addAttribute("cardTypes", cardService.findAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
 
         return GAME_VIEW;
+    }
+
+    @PostMapping("/currentGame")
+    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model) {
+
+        try {
+            Tile tile = tileService.findTileByCoordsAndBoard(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
+            boardService.playCard(getLoggedUser() ,card, tile);
+        } catch (InvalidMoveException e) {
+            model.addAttribute("message", "No puedes realizar esa acción"); // Esto no se muestra si se hace un redirect
+        }
+
+        return getGame(model); // No se si esto es correcto o una buena forma de hacerlo
     }
 
     @GetMapping("/new")

@@ -9,6 +9,10 @@ public class TileService {
     @Autowired
     private TileRepository tileRepository;
 
+    public Tile findTileByCoordsAndBoard(Board board, Integer x, Integer y) {
+        return tileRepository.findTileByCoordsAndBoard(board, x, y);
+    }
+
     public void save(Tile tile) {
         tileRepository.save(tile);
     }
