@@ -12,4 +12,5 @@ public class GamerService {
     public Gamer findGamerId(Integer id){
         return gameRepository.findById(id).get();
     }
+
 }
