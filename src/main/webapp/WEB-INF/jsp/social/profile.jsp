@@ -6,22 +6,18 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="endofline" tagdir="/WEB-INF/tags" %> 
 
-<endofline:layoutEOL pageName="inicio">
+<endofline:layoutEOL pageName="perfil">
     <div class="row">
-        <p class="neon-button2" style="text-align:center;">End of Line</p>
-    </div>
-    <div class="row">
-        <div class="col">
-            <a href="/register" class="neon-button" style="font-size: 20px;">Registrarse</a>
+        <div class="row">
+            <p class="neon-button2" style="text-align:center;">Perfil de usuario</p>
         </div>
-        <div class="col">
-            <a href="/login" class="neon-button" style="font-size: 20px;">Iniciar sesi&oacute;n</a>
+        <div class="row">
+            <div class="col-md-2">
+                <p class="neon-button2" style="text-align:center;">Perfil de usuario</p>
+            </div>
+            <div class="col-md-2">
+                <p class="neon-button2" style="text-align:center;">Perfil de usuario</p>
+            </div>
         </div>
     </div>
-
-    <!-- Google fonts -->
-
-
-
-
 </endofline:layoutEOL>

@@ -40,4 +40,7 @@ public class Usuario{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
 	private Set<Authorities> authorities;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private Set<Usuario> friendsList;
+
 }
