@@ -1,16 +1,14 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
-<%@ attribute name="pageTitle" required="true" %>
+<%@ attribute name="pageName" required="false" %>
 <%@ attribute name="customScript" required="false" fragment="true"%>
 
 <!doctype html>
 <html>
-<eol:htmlHeader/>
+<eol:htmlHeaderEOL/>
 
 <body>
-
-	<eol:bodyHeader pageTitle="${pageTitle}"></eol:bodyHeader>
 
 	<div class="container-fluid">
 		<div class="container xd-container">

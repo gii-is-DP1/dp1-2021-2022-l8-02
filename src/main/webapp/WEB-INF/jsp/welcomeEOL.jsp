@@ -5,13 +5,12 @@
 <%@ taglib prefix="endofline" tagdir="/WEB-INF/tags" %>
 <!-- %@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %-->  
 
-<endofline:layoutEOL pageTitle="home">
+<endofline:layoutEOL pageName="home">
     <div class="row">
         <p class="neon-button2" style="text-align:center;">End of Line</p>
     </div>
     <div class="row">
-        <spring:url value="/games" var="gamesUrl" />
-        <a href="${gamesUrl}" class="neon-button">Acceder al juego</a>
+        <a href="/inicio" class="neon-button">Acceder al juego</a>
     </div>
 
 

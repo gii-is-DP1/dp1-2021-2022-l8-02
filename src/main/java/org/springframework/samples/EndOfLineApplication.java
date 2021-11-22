@@ -10,4 +10,4 @@ public class EndOfLineApplication {
 		SpringApplication.run(EndOfLineApplication.class, args);
 	}
 
-}
+} 
