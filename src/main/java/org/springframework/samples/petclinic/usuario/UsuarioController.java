@@ -25,6 +25,7 @@ public class UsuarioController {
 	public static final String REGISTER_USER = "usuarios/registerUser";
 	public static final String LOGIN_USER = "login";
 	public static final String INICIO = "inicio";
+	public static final String ERROR = "login-error";
 
     @Autowired
     UsuarioService usuarioService;
@@ -129,4 +130,9 @@ public class UsuarioController {
 		return INICIO;
 	}
 
+	@GetMapping("/login-error")
+	public String logError(ModelMap model){
+		model.addAttribute("usuario", new Usuario());
+		return ERROR;
+	}
 }
