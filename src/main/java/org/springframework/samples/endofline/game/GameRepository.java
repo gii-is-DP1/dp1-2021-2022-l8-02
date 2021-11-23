@@ -13,5 +13,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
     Game getGameByPlayerUsername(String username);
 
     Game findByName(String name);
+
+    
     
 }

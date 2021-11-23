@@ -18,6 +18,8 @@ import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.statistics.Statistics;
+import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.samples.petclinic.usuario.Usuario;
 import org.springframework.samples.petclinic.usuario.UsuarioService;
 import org.springframework.security.core.Authentication;
@@ -50,15 +52,17 @@ public class GameController {
     private DeckService deckService;
     private BoardService boardService;
     private TileService tileService;
+    private StatisticsService statisticsService;
 
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService) {
+    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsService statisticsService) {
         this.gameService = gameService;
         this.userService = userService;
         this.cardService = cardService;
         this.deckService = deckService;
         this.boardService = boardService;
         this.tileService = tileService;
+        this.statisticsService = statisticsService;;
     }
 
     @InitBinder
@@ -164,6 +168,10 @@ public class GameController {
 
     @GetMapping("/{gameId}/start")
     public String startGame(@PathVariable("gameId") Game game, Model model) {
+        Statistics s = statisticsService.findByUser(getLoggedUser());
+        s.setNumGames(s.getNumGames()+1);
+        s.setNumPlayers(game.getPlayers().size());
+        statisticsService.save(s);
         // Cambiar a POST puede ser una mejor opcion
         if(game.getPlayers().get(0).equals(getLoggedUser()))
             gameService.startGame(game);

@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.statistics.Statistics;
+import org.springframework.samples.endofline.statistics.StatisticsRepository;
+import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -31,6 +34,9 @@ public class UsuarioController {
 
 	@Autowired
 	AuthoritiesService authoritiesSer;
+
+	@Autowired
+    StatisticsService statisticsService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -109,13 +115,21 @@ public class UsuarioController {
 	//Post para registrarse como nuevo usuario
 	@PostMapping("/register")
 	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
+		
 		if(binding.hasErrors()) {			
 			return REGISTER_USER;
 		}else {
 			this.usuarioService.save(usuario);
 			this.authoritiesSer.saveAuthorities(usuario.getUsername(),"jugador");
+			Statistics s = new Statistics();
+			s.setUsuario(usuario);
+			s.setNumPlayers(0);
+			s.setNumGames(0);
+			s.setDuration(0);
+			statisticsService.save(s);
 			return "redirect:/login";
 		}
+		
 	}
  
 	@GetMapping("/login")
