@@ -5,7 +5,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
-<eol:layoutEOL pageTitle="Crear una partida">
+<eol:layoutEOL pageName="Crear una partida">
     <form:form method="POST" modelAttribute="game" class="form-horizontal">
         <eol:input label="Nombre de la sala" name="name">
             <form:input path="name" class="form-control"/>

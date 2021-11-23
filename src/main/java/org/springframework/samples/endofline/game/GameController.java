@@ -140,7 +140,6 @@ public class GameController {
 
     @PostMapping("/new")
     public String createGame(@ModelAttribute("game") @Valid Game game, BindingResult result, Model model) {
-        
         if(result.hasErrors()) {
             return GAME_CREATION;
         }

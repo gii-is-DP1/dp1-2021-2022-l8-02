@@ -4,7 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
-<eol:layoutEOL pageTitle="Salas Disponibles">
+<eol:layoutEOL pageName="Salas Disponibles">
     <c:forEach items="${games}" var="game">
         <div class="row">
             <h3>${game.name}</h3>

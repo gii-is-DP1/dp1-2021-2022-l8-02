@@ -59,9 +59,6 @@ public class GameService {
 
     public void joinGame(Game game, Usuario player) {
         leaveGame(player);
-        if(game.getPlayers()==null){            
-            game.setPlayers(new ArrayList<>());
-        }
         game.getPlayers().add(player);
         gameRepository.save(game);
     }

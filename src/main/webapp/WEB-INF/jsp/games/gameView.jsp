@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
-<eol:layoutEOL pageTitle="${game.name}">
+<eol:layoutEOL pageName="${game.name}">
     <h2><fmt:message key="welcome"/></h2>
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
