@@ -1,10 +1,12 @@
 package org.springframework.samples.petclinic.usuario;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -18,10 +20,7 @@ import lombok.Setter;
 @Table(name = "usuarios")
 public class Usuario{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	protected Integer id;
-
+    @Id
     @Column(name = "username")
 	@NotEmpty
     private String username;
@@ -35,19 +34,10 @@ public class Usuario{
     private String email;
 
     public boolean isNew() {
-		return this.id == null;
+		return this.username == null;
 	}
 
-    // public String getUsername() {
-	// 	return this.username;
-	// }
-
-	// public String getPassword(){
-    //     return this.password;
-    // }
-
-    // public String getEmail(){
-    //     return this.email;
-    // }
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+	private Set<Authorities> authorities;
 
 }

@@ -18,17 +18,15 @@ public class UsuarioService {
         return usuarioRepo.findAll();
     }
 
-    public Optional<Usuario> findById(int id){
-        return usuarioRepo.findById(id);
-    }
-
     public void delete(Usuario usuario) {
-		usuarioRepo.deleteById(usuario.getId());
-
+		usuarioRepo.delete(usuario);
 	}
 
 	public void save(@Valid Usuario usuario) {
 		usuarioRepo.save(usuario);
 	}
     
+    public Optional<Usuario> findByUsername(String username) {
+		return usuarioRepo.findByUsername(username);
+	}
 }

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.samples.endofline.configuration.GenericIdToEntityConverter2;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,11 +20,15 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Autowired
 	GenericIdToEntityConverter idToEntityConverter;
+
+    // @Autowired
+    // GenericIdToEntityConverter2 idToEntityConverter2;
 	
     @Override
     public void addFormatters(FormatterRegistry registry) {
     	
         registry.addConverter(idToEntityConverter);
+        // registry.addConverter(idToEntityConverter2);
     }
     
     @Override

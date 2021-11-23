@@ -1,7 +1,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<%@ attribute name="menuName" required="true" rtexprvalue="true"
-              description="Name of the active menu: home, owners, vets or error" %>
+<%@ attribute name="pageTitle" required="true" rtexprvalue="true"
+              description="Text for the title of the page" %>
 
-<petclinic:menu name="${menuName}"/>
+<div class="container-fluid">
+    <div class="row">
+        <h2 class="text-center">${pageTitle}</h2>
+    </div>
+</div>
