@@ -1,0 +1,29 @@
+Objetivo: Cortarle la línea o el paso al rival. (ÁREA DE JUEGO PARA 2 JUGADORES 7X7)
+
+Empieza a jugar el jugador que saque una carta con menos iniciativa.
+
+5 Cartas en la mano (se pueden descartar todas y volver a coger 5 una sola vez al principio de la partida)
+
+Primera ronda: se juega una carta.
+
+A partir de la segunda ronda: se juegan dos cartas.
+
+La dinámica es ir siguiendo el sentido de la línea que vas creando... (Se entenderá en MARCHA ATRÁS por qué comento esto)
+
+Juega el siguiente turno el jugador que jugó la carta con menos iniciativa.
+
+Es importante respetar las flechas de salida y entrada.
+
+A partir de la ronda 3 puedes usar la energía.
+
+Energía comienza en 3.
+
+4 MANERAS DISTINTAS DE GASTAR ENERGÍA:
+
+-ACELERÓN: PONER 3 CARTAS EN VEZ DE 2. (GASTA 1)
+
+-FRENAZO: PONER 1 CARTA EN VEZ DE 2. (GASTA 1)
+
+-MARCHA ATRÁS: en vez de seguir la línea por dodne ibas, sigues por otro caminito posible que dejases antes abierto y no continuases.
+
+-GAS EXTRA: podemos robar una carta adicional del mazo.

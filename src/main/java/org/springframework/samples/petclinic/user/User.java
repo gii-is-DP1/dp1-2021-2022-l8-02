@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.samples.petclinic.usuario.Authorities;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +25,4 @@ public class User{
 	
 	boolean enabled;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Authorities> authorities;
 }

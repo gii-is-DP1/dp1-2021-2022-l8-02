@@ -58,6 +58,17 @@
 		</spring-format.version>
 	</properties>
 	<developers>
+    <developer>
+
+            <id>fravilpav</id>
+            <name>Francisco Javier Vila Pavon</name>
+            <email>kikovilapavon@gmail.com</email>
+            <url>https://github.com/fravilpav</url>
+            <roles>
+                <role>none</role>
+            </roles>
+
+        </developer>
 		<developer>
 			<id>
 				juagarrui6
@@ -138,20 +149,6 @@
 					none
 				</role>
 			</roles>
-		</developer>
-		<developer>
-			<id>
-				marreylop4
-			</id>
-			<name>
-				Marta Reyes López
-			</name>
-			<email>
-				marreylop4@alum.us.es
-			</email>
-			<url>
-				https://github.com/martirl11
-			</url>
 		</developer>
 		<developer>
 			<id>

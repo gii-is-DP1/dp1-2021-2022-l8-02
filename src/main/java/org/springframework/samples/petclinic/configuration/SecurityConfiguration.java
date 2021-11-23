@@ -35,14 +35,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/resources/**","/webjars/**","/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
-				.antMatchers("/users/new").permitAll()
+				.antMatchers("/register").permitAll()
+				.antMatchers("/usuarios/**").hasAnyAuthority("admin")
 				.antMatchers("/admin/**").hasAnyAuthority("admin")
-				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")				
+				.antMatchers("/owners/**").hasAnyAuthority("owner","admin","jugador")				
 				.antMatchers("/vets/**").authenticated()
+				.antMatchers("/games/**").authenticated()
 				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
-				 	/*.loginPage("/login")*/
+				 	//.loginPage("/login")
 				 	.failureUrl("/login-error")
 				.and()
 					.logout()
@@ -60,8 +62,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication()
 	      .dataSource(dataSource)
 	      .usersByUsernameQuery(
-	       "select username,password,enabled "
-	        + "from users "
+	       "select username,password,true "
+	        + "from usuarios "
 	        + "where username = ?")
 	      .authoritiesByUsernameQuery(
 	       "select username, authority "
