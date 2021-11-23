@@ -12,11 +12,11 @@
 
     <title>End Of Line :: L8-02</title>
 
-    <!--
+    
     <%-- CSS generated from LESS --%>
-    <spring:url value="/resources/css/petclinic.css" var="petclinicCss"/>
-    <link href="${petclinicCss}" rel="stylesheet"/>
-    -->
+    <!-- <spring:url value="/resources/css/endofline.css" var="endoflineCss"/>
+    <link href="${endoflineCss}" rel="stylesheet"/> -->
+    
 
     <!-- CSS EOL-->
     <spring:url value="/resources/css/EOL.css" var="eolCSS"/>

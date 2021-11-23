@@ -13,8 +13,6 @@
         <a href="/inicio" class="neon-button">Acceder al juego</a>
     </div>
 
-    <!-- Google fonts -->
-
 
 
 
