@@ -1,0 +1,357 @@
+
+
+DP1 2020-2021
+Documento de Requisitos y Análisis del Sistema
+
+
+Proyecto EndOf(On)Line
+
+
+
+https://github.com/gii-is-DP1/dp1-2021-2022-l8-02.git
+
+Miembros:
+Contreras-Cervantes Santos, Jose María
+García Ruiz, Juan Antonio
+Gómez Gómez, Miguel Ángel 
+Matín Avecilla, Mariano
+Reyes López, Marta
+Vila Pavón, Francisco Javie
+
+
+Tutor: José Antonio Parejo
+
+
+
+GRUPO L8-02
+Versión 1.0
+08/10/2021
+
+Historial de versiones
+
+Fecha
+Versión
+Descripción de los cambios
+Sprint
+08/10/2021
+V1
+Creación del documento
+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Descripción general del proyecto
+En esta sección debes describir de manera general cual es la funcionalidad del proyecto a rasgos generales. ¿Qué valor puede aportar? ¿Qué objetivos pretendemos alcanzar con su implementación? ¿Cuántos jugadores pueden intervenir en una partida como máximo y como mínimo? ¿Cómo se desarrolla normalmente una partida?¿Cuánto suelen durar?¿Cuando termina la partida?¿Cuántos puntos gana cada jugador o cuál es el criterio para elegir al vencedor?
+
+Este proyecto pretende crear una versión funcional y atractiva del juego de mesa End Of Line. Además supone un reto de aprendizaje inequívoco para los desarrolladores (y una opción de ocio distendido para los jugadores).
+
+Una partida puede ser individual(modo puzzle) o multijugador (modo versus de 2 a 8 jugadores), y la duración de una partida estándar de 2 jugadores es de unos 5-10 minutos incluyendo ya la preparación del juego.
+
+El objetivo del juego en el modo puzzle es rellenar todas las casillas del área de juego siguiendo la línea hasta la carta de fin  --Migue here--: no se como llamar a esa carta.
+En el modo versus, el objetivo es hacer que tu rival no pueda continuar su línea.
+
+Tipos de Usuario / Roles
+
+Jugador: Persona logueada dispuesta a jugar a End Of Line.
+
+Administrador: Persona encargada de revisar y gestionar la información de los usuarios registrados en la aplicación y el correcto funcionamiento de esta.
+
+Historias de Usuario
+Definir todas las historias de usuario a implementar usando la siguiente plantilla:
+
+
+H-1 Alta de usuario
+Como jugador deseo que el sistema  me permita registrarme con un correo, un nombre de usuario y una contraseña para poder jugar y almacenar las estadísticas de mis partidas. 
+ 
+Escenarios Positivos:
+H1-E1- Alta de usuario
+Como usuario quiero registrarme en el sistema usando un gmail con un formato correcto y no repetido, una contraseña y un nombre de usuario distinto con el que jugaré. tras pulsar el botón de registrar usuario ya puedo buscar partida, entre los tres modos de juego.
+--Migue here--: vamos a implementar un sistema de búsqueda de partidas? No creéis que deberíamos poner “email” en vez de “gmail”? O solo permitimos el registro con direcciones de correo de google
+
+Escenarios Negativos:
+H1-E2- Alta de usuario con correo ya existente
+Como usuario quiero volver a registrarme usando el mismo gmail que ya utilicé en otra 
+cuenta, aunque distinto nombre de usuario. Al dar al botón de registrar usuario, la aplicación vuelve a mostrar el formulario de registro dando el mensaje de error de “un usuario ya ha utilizado esa cuenta de correo electrónico”.
+
+H1-E3- Alta de usuario con nombre de usuario ya existente
+Como usuario quiero registrarme usando un gmail, nombre de usuario y contraseña. Al dar al botón de registrar usuario, la aplicación vuelve a mostrar el formulario de registro dando el mensaje de error de “un usuario ya ha utilizado ese nombre de usuario”.
+
+H1-E4- Alta de usuario con nombre de usuario y correo electrónico ya existente
+Como usuario quiero volver a registrarme usando el mismo gmail y nombre de usuario que ya utilicé en otra cuenta ya que se me olvidó la contraseña de mi antigua cuenta. Al dar al botón de registrar usuario, la aplicación vuelve a mostrar el formulario de registro dando los mensajes de error de “un usuario ya ha utilizado esa cuenta de correo electrónico” y “un usuario ya ha utilizado ese nombre de usuario”. 
+
+
+Descripción del escenario con datos concretos a introducir y comportamiento esperado de la aplicación. Siguiendo el siguiente este esquema: 
+“Dado un conjunto de precondiciones concretas (por ejemplo un estado concreto de la partida) cuando acciones concretas a realizar durante el escenario, entonces descripción del resultado/comportamiento esperado”
+…
+
+H-2 Login como admin
+Para entrar en la aplicación con una cuenta de administrador, quiero que los desarrolladores del sistema informático me faciliten unas credenciales para acceder a una cuenta con permisos de administración y que esta sea personal y usada solo por mi.
+CREEMOS ENTRE UNOS CUANTOS QUE EL ADMIN NO DEBE REGISTRARSE, DEBE ESTAR YA EN LA APP DESDE EL INICIO, ya lo hablamos. --Migue here--: ¿Qué os parece ahora?
+
+Escenarios Positivos:
+H2+E1 Login correcto
+Se puede iniciar sesión con las credenciales recibidas y es posible desempeñar todas las funciones de administración permitidas por el sistema informático.
+
+Escenarios Negativos:
+H2-E2 – Login incorrecto
+El inicio de sesión falla y el sistema indica que las credenciales no son correctas.
+
+H2-E3 – Falta de permisos
+El inicio de sesión ha sido correcto pero no es posible realizar alguna tarea de administración.
+
+H-3 Jugar una partida contra otro jugador
+Como usuario logueado deseo poder jugar una partida contra… 
+--Migue here--: ¿Cómo vamos a implementar esto? Vamos a jugar solo partidas contra amigos? Vamos a implementar un sistema de búsqueda de partidas? Vamos a invitar al otro jugador aunque no sea “un amigo”? Vamos a compartir un enlace y cualquiera que lo tenga podrá unirse a la partida para jugar?
+
+HISTORIAS INGAME
+
+H-4 Cambiar mano inicial
+Como jugador quiero poder cambiar mi mano inicial si no me gusta la obtenida.
+
+Escenarios Positivos:
+H4+E1 – Cambiar mano inicial con éxito
+Se descartan las 5 cartas de la mano y se obtienen otras 5 cartas de manera aleatoria  con éxito.
+
+H4+E2 – No permitir un segundo cambio
+El sistema detecta que el jugador ya ha cambiado de mano una vez y no permite hacerlo de nuevo mostrando un mensaje que lo explique.
+
+
+Escenarios Negativos:
+H4-E3 – Cambiar mano inicial falla
+El sistema no permite cambiar la mano inicial.
+
+
+H-5 Crear una partida
+Como jugador quiero poder crear una partida seleccionando el modo de juego que yo quiera.
+
+Escenarios Positivos:
+H5+E1 – Crear partida con éxito
+Se crea una partida con el modo de juego seleccionado por el usuario.
+
+Escenarios Negativos:
+H5-E2 – Crear partida falla
+El sistema falla al intentar crear una partida.
+
+H5-E3 – Crear partida modo incorrecto
+El sistema crea una partida pero en un modo que no es el seleccionado.
+
+H-6 Jugar una carta
+Como jugador quiero poder jugar cartas y que el sistema no se equivoque.
+
+Escenarios Positivos:
+H6+E1 – Jugar una carta con éxito
+Se pone en juego la carta que el jugador selecciona.
+
+Escenarios Negativos:
+H6-E2 – Jugar una carta falla
+El sistema falla al intentar jugar una carta.
+
+H6-E3 – Jugar carta errónea
+El sistema juega una carta que no es la seleccionada.
+
+H-7 Energía
+Como jugador quiero que el sistema me permita hacer uso de la energía correctamente en todo momento.
+
+Escenarios Positivos:
+H7+E1 – Usar la energía con éxito
+El usuario es capaz de usar la energía con éxito.
+
+Escenarios Negativos:
+H7-E2 – Poder de energía erróneo
+El sistema usa un poder que no es el elegido por el jugador.
+
+H7-E3 – Energía ilimitada
+El sistema no resta puntos de energía cuando el jugador usa un poder.
+
+H7-E4 – Energía precoz
+El sistema permite usar poderes antes de la ronda 3.
+
+H7-E5 – Energía para todos
+El sistema todavía permite usar energía cuando ya no queda.
+
+H7-E6 – Energía de sobra
+El sistema permite usar más de un poder en una ronda.
+
+
+H-7 Jugar una partida
+Como jugador quiero poder jugar una partida y que se desarrolle sin ningún tipo de fallo.
+
+Escenarios Positivos:
+H7+E1 – Jugar una partida con éxito
+El usuario es capaz de jugar una partida con éxito y sin fallos del sistema.
+
+
+
+Escenarios Negativos:
+H7-E2 – Cambiar de fase falla
+El sistema falla al intentar cambiar de fase.
+
+H7-E3 – Jugar carta falla 
+El sistema falla al intentar jugar una carta.
+
+H7-E4 – Terminar partida falla
+El sistema no detecta que la partida termina y no devuelve un ganador.
+
+
+
+
+
+
+<Descripción de la historia siguiendo el esquema:  “Como rol quiero que el sistema funcionalidad  para poder objetivo/beneficio.”>  
+
+Mockup de Interfaz de usuario de la historia
+…
+
+
+Ej: H1- Edición de usuario
+Como usuario deseo que el sistema me permita editar mis datos de registro, para poder cambiarlos en caso de que me sea necesario
+Escenarios Positivos
+ H2+E1 – Editar nombre de usuario
+Dado que estamos autenticados en el sistema como usuario1 y que estemos registrados  en el sistema, cuando pulsamos en editar nuestro perfil, una vez que cambiemos el nombre de usuario a usuario2 , tras pulsar el botón de editar, entonces se apliquen los cambios.
+H2+E2 – Editar nombre de usuario
+Dado que estamos autenticados en el sistema como usuario1 y que estemos registrados  en el sistema, cuando pulsamos en editar nuestro perfil, una vez que cambiemos el correo, tras pulsar el botón de editar, entonces se apliquen los cambios.
+H2+E3 – Editar contraseña de usuario
+Dado que estamos autenticados en el sistema como usuario1 y que estemos registrados  en el sistema, cuando pulsamos en editar nuestro perfil, una vez que cambiemos la contraseña, tras pulsar el botón de editar, entonces se apliquen los cambios.
+Escenarios Negativos
+H2-E1 – Editar usuario con un nombre ya existente
+Dado que estamos autenticados en el sistema como usuario1 y que estemos registrados  en el sistema, cuando pulsamos en editar nuestro perfil, una vez que cambiemos usuario a usuario2 y usuario2 esté registrado en el sistema  , tras pulsar el botón de editar, entonces la aplicación nos muestra el formulario de edición de nuevo y nos indica que el usuario ya existe.
+
+
+
+
+Ej: H1- Alta de enfermedades
+Como veterinario deseo que el sistema me permita consultar un listado de enfermedades con su descripción y darlas de alta, para mejorar la velocidad y precisión de los diagnósticos que se realizan en la clínica
+Escenarios Positivos
+ H1+E1 – Alta de Diabetes
+Dado que estamos autenticados en el sistema como vet1 y que la diabetes no está ya registrada como enfermedad en el sistema, cuando pulsamos en el enlace de enfermedades del vademécum y pulsamos el botón de añadir enfermedad, una vez que ponemos como nombre de enfermedad “Diabetes” y como descripción “La diabetes en perros es una enfermedad compleja causada por la falta de insulina o la respuesta inadecuada de esta. Cuando la mascota come, su sistema digestivo rompe los alimentos en varios componentes, incluyendo la glucosa, que es transportada a las células por la insulina, una hormona que segrega el páncreas. Cuando el animal no produce insulina o no puede utilizarla con normalidad, sus niveles de azúcar en sangre se elevan. El resultado es la hiperglucemia que si no se trata puede causar complicaciones.”, tras pulsar el botón de grabar enfermedad, entonces la aplicación nos muestra el listado de enfermedades y la Diabetes aparece en el listado con la descripción proporcionada
+H1+E2 – Alta de COVID-19
+Dado que estamos autenticados en el sistema como vet1 y que la diabetes no está ya registrada como enfermedad en el sistema, cuando pulsamos en el enlace de enfermedades del vademécum y pulsamos el botón de añadir enfermedad, una vez que ponemos como nombre de enfermedad “COVID-19” y como descripción “Es una ‎enfermedad infecciosa causada por un ‎coronavirus recientemente descubierto. ‎De acuerdo a los Centros para el Control y la Prevención de Enfermedades de los Estados Unidos, algunas mascotas — incluyendo perros y gatos — también se han infectado con el virus que causa la COVID-19. ‎Sin embargo, en base a la información limitada que existe, se considera poco el riesgo de que los animales trasmitan la COVID-19 a la gente.”, tras pulsar el botón de grabar enfermedad, entonces la aplicación nos muestra el listado de enfermedades y la COVID-19 aparece en el listado con la descripción proporcionada
+Escenarios Negativos
+H1-E1 – Alta de enfermedad sin nombre ni descripción
+Dado que estamos autenticados en el sistema como vet1 y que la diabetes no está ya registrada como enfermedad en el sistema, cuando pulsamos en el enlace de enfermedades del vademécum y pulsamos el botón de añadir enfermedad, una vez que ponemos como nombre de enfermedad “” y como descripción “”, tras pulsar el botón de grabar enfermedad, entonces la aplicación nos muestra el formulario de edición de nuevo y nos indica que tanto el campo nombre como la descripción son obligatorias
+Mockup de Interfaz de usuario
+
+
+Modelo de Datos
+En esta sección debe proporcionar un diagrama UML de clases que describa el modelo de datos a implementar en la aplicación. Este diagrama estará anotado con las restricciones simples (de formato/patrón, unicidad, obligatoriedad, o valores máximos y mínimos) de los datos a gestionar por la aplicación. 
+
+Si la aplicación es original y se contextualiza en un dominio de aplicación distinto al de la clínica de mascotas, puede formatear el diagrama UML como desee siempre y cuando cumpla las directrices especificadas en el párrafo anterior.
+Ej:
+
+
+
+
+
+Reglas de Negocio
+R-<X> <Nombre Regla de negocio>
+<Descripción de la restricción a imponer>
+
+Ej: R1 – Diagnósticos imposibles
+El diagnóstico debe estar asociado a una enfermedad que es compatible con el tipo de mascota de su visita relacionada. Por ejemplo, no podemos establecer como enfermedad diagnosticada una otitis cuando la visita está asociada a una mascota que es un pez, porque éstos no tienen orejas ni oídos (y por tanto no será uno de los tipos de mascota asociados a la enfermedad otitis en el vademecum).
+
+…
+Planificación
+Aquí debe proporcionar una tabla con la asignación de elementos a implementar por pareja y sprint, el primer elemento que aparezca para una pareja será el primero que será abordado durante el sprint correspondiente.
+A la hora de realizar la asignación de tareas tenga en cuenta que:
+En el Sprint 1 debería asignar primero las tareas más simples (creación de entidades aisladas por ejemplo), para facilitar la familiarización del equipo con las tecnologías a usar.
+Las tareas no pueden abordarse en cualquier orden, sino que existen dependencias entre las mismas. Por ejemplo, no podemos crear las relaciones entre las entidades si las entidades no han sido implementadas, o no podremos implementar las historias de usuario sin las entidades y relaciones que requieren.
+Es una buena práctica asignar la creación de las pruebas de una funcionalidad a miembros distintos de los que la implementaron, incluso a otra pareja. Sin embargo, al ser pruebas unitarias también es admisible que lo hagan las mismas personas.
+Es conveniente modificar la composición de las parejas entre un sprint y otro para facilitar la colaboración entre todos los miembros del equipo.
+
+Ej:
+Tipo
+Elemento
+Asignación
+Sprint
+Entidad
+Disease
+<Satoru Iwata>
+<Eiji Aonuma>
+1
+Relación 1:N
+Disease-Diagnose
+<Satoru Iwata>
+<Eiji Aonuma>
+1
+Historia de Usuario
+H1-1
+<Satoru Iwata>
+<Eiji Aonuma>
+1
+Regla de Negocio
+R1
+<Satoru Iwata>
+<Eiji Aonuma>
+2
+Prueba 
+H1+E1
+<Hidemaro Fujibayashi>
+<Koji Igarashi>
+2
+Entidad
+Diagnose
+<Hidemaro Fujibayashi>
+<Koji Igarashi>
+1
+…
+…
+…
+…
+
+
+Métricas del proyecto
+
+Métrica
+Valor
+Nº de entidades (excluyendo actores)
+<X>
+Relaciones 
+<R>
+Relaciones N:N
+<Z>
+Restricciones Simples
+<V>
+Reglas de Negocio
+<W>
+Historias de Usuario totales
+<U>
+Historias de usuario involucrando 2 o más entidades
+<P>
+Historias de usuario involucrando 3 o más entidades
+<Q>
+Actores
+<Y>
+
+
+Módulos extra que se pretenden desarrollar: <X>. Ej: Módulo de estadísticas.

@@ -35,15 +35,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 				.antMatchers("/resources/**","/webjars/**","/h2-console/**").permitAll()
 				.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
-				.antMatchers("/users/new").permitAll()
+				.antMatchers("/register").permitAll()
+				.antMatchers("/usuarios/**").hasAnyAuthority("admin")
 				.antMatchers("/admin/**").hasAnyAuthority("admin")
-				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")	
-				.antMatchers("/statistics/**").permitAll()			
+				.antMatchers("/owners/**").hasAnyAuthority("owner","admin","jugador")			
 				.antMatchers("/vets/**").authenticated()
-				.anyRequest().permitAll()
+				.antMatchers("/games/**").authenticated()
+				.antMatchers("/statistics/**").authenticated()
+				.antMatchers("/inicio").permitAll()
+				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
-				 	/*.loginPage("/login")*/
+				 	.loginPage("/login")
+					.permitAll()
+					.defaultSuccessUrl("/owners", true) //Esto es la Url a la que va si el login es succesful
 				 	.failureUrl("/login-error")
 				.and()
 					.logout()
@@ -61,8 +66,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication()
 	      .dataSource(dataSource)
 	      .usersByUsernameQuery(
-	       "select username,password,enabled "
-	        + "from users "
+	       "select username,password,true "
+	        + "from usuarios "
 	        + "where username = ?")
 	      .authoritiesByUsernameQuery(
 	       "select username, authority "
