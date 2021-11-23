@@ -3,7 +3,7 @@ package org.springframework.samples.endofline.card;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service
