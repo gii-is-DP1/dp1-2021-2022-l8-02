@@ -41,6 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/owners/**").hasAnyAuthority("owner","admin","jugador")			
 				.antMatchers("/vets/**").authenticated()
 				.antMatchers("/inicio").permitAll()
+				//.antMatchers("/principal").authenticated()
 				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
@@ -50,7 +51,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				 	.failureUrl("/login-error")
 				.and()
 					.logout()
-						.logoutSuccessUrl("/"); 
+						.logoutSuccessUrl("/");
+//						.invalidateHttpSession(true)
+//						.deleteCookies("JSESSIONID");
                 // Configuración para que funcione la consola de administración 
                 // de la BD H2 (deshabilitar las cabeceras de protección contra
                 // ataques de tipo csrf y habilitar los framesets si su contenido
