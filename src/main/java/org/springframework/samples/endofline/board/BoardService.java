@@ -10,7 +10,7 @@ import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.CardType;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
-import org.springframework.samples.petclinic.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service

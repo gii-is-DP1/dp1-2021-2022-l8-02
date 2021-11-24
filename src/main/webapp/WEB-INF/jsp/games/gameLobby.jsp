@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
-<eol:layoutEOL pageTitle="Lobby">
+<eol:layoutEOL pageName="Lobby">
     <div class="container-fluid neon-border">
 
     <div class="row">
