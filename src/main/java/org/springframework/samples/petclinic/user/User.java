@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.samples.petclinic.usuario.Authorities;
 
 import lombok.Getter;
 import lombok.Setter;
