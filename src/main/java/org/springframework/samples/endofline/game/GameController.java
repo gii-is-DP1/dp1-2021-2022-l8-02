@@ -102,11 +102,13 @@ public class GameController {
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
         
         model.addAttribute("board", game.getBoard());
+
         model.addAttribute("deck", boardService.deckFromPlayers(getLoggedUser()));
 
         // For rendering card images
         model.addAttribute("cardTypes",boardService.getAllCardTypes() );
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
+
         model.addAttribute("user", getLoggedUser());
 
         return GAME_VIEW;
@@ -116,7 +118,9 @@ public class GameController {
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model) {
 
         try {
+
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
+
             boardService.playCard(getLoggedUser() ,card, tile);
         } catch (InvalidMoveException e) {
             model.addAttribute("message", "No puedes realizar esa acción"); // Esto no se muestra si se hace un redirect
