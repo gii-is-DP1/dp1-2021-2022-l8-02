@@ -63,6 +63,10 @@ public class GameController {
 
     @Autowired
     public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
+
+
+    @Autowired
+    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService){
         this.gameService = gameService;
         this.userService = userService;
         this.cardService = cardService;
@@ -71,6 +75,7 @@ public class GameController {
         this.tileService = tileService;
         this.statisticsGamesService= statisticsGamesService;
         this.statisticsService = statisticsService;
+
     }
 
     @InitBinder
@@ -189,10 +194,12 @@ public class GameController {
              statisticsGame.setPoint(0);
              statisticsGamesService.save(statisticsGame);
         }
+
         Statistics s = statisticsService.findByUser(getLoggedUser());
         s.setNumGames(s.getNumGames()+1);
         s.setNumPlayers(game.getPlayers().size());
         statisticsService.save(s);
+
 
         if(game.getPlayers().get(0).equals(getLoggedUser()))
             gameService.startGame(game);
