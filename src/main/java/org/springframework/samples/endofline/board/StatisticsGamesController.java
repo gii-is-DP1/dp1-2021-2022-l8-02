@@ -5,8 +5,10 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
-import org.springframework.samples.petclinic.usuario.Usuario;
-import org.springframework.samples.petclinic.usuario.UsuarioService;
+
+import org.springframework.samples.endofline.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.UsuarioService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;

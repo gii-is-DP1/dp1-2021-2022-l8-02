@@ -19,8 +19,8 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.endofline.usuario.AuthoritiesService;
 import org.springframework.samples.petclinic.user.UserService;
-import org.springframework.samples.petclinic.usuario.AuthoritiesService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

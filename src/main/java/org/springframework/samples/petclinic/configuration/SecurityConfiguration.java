@@ -41,17 +41,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/owners/**").hasAnyAuthority("owner","admin","jugador")			
 				.antMatchers("/vets/**").authenticated()
 				.antMatchers("/games/**").authenticated()
+				.antMatchers("/statistics/**").authenticated()
 				.antMatchers("/inicio").permitAll()
 				.antMatchers("/statisticsGame/**").permitAll()
 				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
-				 	.loginPage("/login")
-					.permitAll()
+				 	// .loginPage("/login")
+					// .permitAll()
 					.defaultSuccessUrl("/owners", true) //Esto es la Url a la que va si el login es succesful
 				 	.failureUrl("/login-error")
 				.and()
-					.logout().permitAll()
+					.logout()
 						.logoutSuccessUrl("/inicio"); 
                 // Configuración para que funcione la consola de administración 
                 // de la BD H2 (deshabilitar las cabeceras de protección contra

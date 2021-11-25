@@ -22,8 +22,10 @@ import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
-import org.springframework.samples.petclinic.usuario.Usuario;
-import org.springframework.samples.petclinic.usuario.UsuarioService;
+import org.springframework.samples.endofline.statistics.Statistics;
+import org.springframework.samples.endofline.statistics.StatisticsService;
+import org.springframework.samples.endofline.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -57,9 +59,13 @@ public class GameController {
     private BoardService boardService;
     private TileService tileService;
     private StatisticsGamesService statisticsGamesService;
+    private StatisticsService statisticsService;
+
+    
+
 
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService){
+    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
         this.gameService = gameService;
         this.userService = userService;
         this.cardService = cardService;
@@ -67,6 +73,8 @@ public class GameController {
         this.boardService = boardService;
         this.tileService = tileService;
         this.statisticsGamesService= statisticsGamesService;
+        this.statisticsService = statisticsService;
+
     }
 
     @InitBinder
@@ -102,10 +110,11 @@ public class GameController {
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
         
         model.addAttribute("board", game.getBoard());
-        model.addAttribute("deck", deckService.getDeckFromPlayer(getLoggedUser()));
+
+        model.addAttribute("deck", boardService.deckFromPlayers(getLoggedUser()));
 
         // For rendering card images
-        model.addAttribute("cardTypes", cardService.findAllCardTypes());
+        model.addAttribute("cardTypes",boardService.getAllCardTypes() );
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
 
         model.addAttribute("user", getLoggedUser());
@@ -117,7 +126,9 @@ public class GameController {
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model) {
 
         try {
-            Tile tile = tileService.findTileByCoordsAndBoard(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
+
+            Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
+
             boardService.playCard(getLoggedUser() ,card, tile);
         } catch (InvalidMoveException e) {
             model.addAttribute("message", "No puedes realizar esa acción"); // Esto no se muestra si se hace un redirect
@@ -182,6 +193,12 @@ public class GameController {
              statisticsGame.setPoint(0);
              statisticsGamesService.save(statisticsGame);
         }
+
+        Statistics s = statisticsService.findByUser(getLoggedUser());
+        s.setNumGames(s.getNumGames()+1);
+        s.setNumPlayers(game.getPlayers().size());
+        statisticsService.save(s);
+
 
         if(game.getPlayers().get(0).equals(getLoggedUser()))
             gameService.startGame(game);

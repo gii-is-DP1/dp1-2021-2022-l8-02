@@ -11,17 +11,10 @@
         <p class="neon-button2" style="text-align:center;">End of Line</p>
     </div>
     <div class="row">
-        <div class="col">
+        
             <a href="/register" class="neon-button" style="font-size: 20px;">Registrarse</a>
-        </div>
-        <div class="col">
+            </div>
             <a href="/login" class="neon-button" style="font-size: 20px;">Iniciar sesi&oacute;n</a>
-        </div>
+            </div>
     </div>
-
-    <!-- Google fonts -->
-
-
-
-
 </endofline:layoutEOL>
