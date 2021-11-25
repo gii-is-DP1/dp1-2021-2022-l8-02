@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.usuario;
+package org.springframework.samples.endofline.usuario;
 
 import java.util.Map;
 import java.util.Optional;
@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.statistics.Statistics;
-import org.springframework.samples.endofline.statistics.StatisticsRepository;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +27,7 @@ public class UsuarioController {
 	public static final String REGISTER_USER = "usuarios/registerUser";
 	public static final String LOGIN_USER = "login";
 	public static final String INICIO = "inicio";
+	public static final String ERROR = "login-error";
 
     @Autowired
     UsuarioService usuarioService;
@@ -115,7 +115,6 @@ public class UsuarioController {
 	//Post para registrarse como nuevo usuario
 	@PostMapping("/register")
 	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
-		
 		if(binding.hasErrors()) {			
 			return REGISTER_USER;
 		}else {
@@ -129,18 +128,22 @@ public class UsuarioController {
 			statisticsService.save(s);
 			return "redirect:/login";
 		}
-		
 	}
  
-	@GetMapping("/login")
-	public String logUser(ModelMap model){
-		model.addAttribute("usuario", new Usuario());
-		return LOGIN_USER;
-	}
+	// @GetMapping("/login")
+	// public String logUser(ModelMap model){
+	// 	model.addAttribute("usuario", new Usuario());
+	// 	return LOGIN_USER;
+	// }
 
 	@GetMapping("/inicio")
 	public String PagInicial(){
 		return INICIO;
 	}
 
+	// @GetMapping("/login-error")
+	// public String logError(ModelMap model){
+	// 	model.addAttribute("usuario", new Usuario());
+	// 	return ERROR;
+	// }
 }

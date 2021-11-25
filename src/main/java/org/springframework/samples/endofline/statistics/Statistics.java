@@ -9,8 +9,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.model.BaseEntity;
+import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.petclinic.model.NamedEntity;
-import org.springframework.samples.petclinic.usuario.Usuario;
 
 import lombok.Getter;
 import lombok.Setter;

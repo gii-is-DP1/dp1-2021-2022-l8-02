@@ -4,8 +4,7 @@ import java.util.Collection;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.samples.petclinic.usuario.Usuario;
-import org.springframework.stereotype.Repository;
+import org.springframework.samples.endofline.usuario.Usuario;
 
 
 public interface StatisticsRepository extends CrudRepository<Statistics, Integer>{

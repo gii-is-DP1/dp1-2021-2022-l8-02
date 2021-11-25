@@ -5,7 +5,7 @@ import java.util.Collection;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service

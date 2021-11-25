@@ -1,5 +1,6 @@
 package org.springframework.samples.endofline.game;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -14,7 +15,8 @@ import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
-import org.springframework.samples.petclinic.usuario.Usuario;
+import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
+import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -40,7 +42,7 @@ public class GameService {
         if(game.isPresent()) {
             return game.get();
         }
-        throw new IllegalArgumentException();
+        throw new GameNotFoundException();
     }
 
     public void createGame(Game game) throws DuplicatedGameNameException {
