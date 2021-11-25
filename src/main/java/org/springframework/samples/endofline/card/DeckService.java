@@ -2,9 +2,13 @@ package org.springframework.samples.endofline.card;
 
 import java.util.ArrayList;
 
+import java.util.List;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class DeckService {
@@ -14,6 +18,12 @@ public class DeckService {
 
     @Autowired
     private CardService cardService;
+
+
+    public List<CardType> AllCardTypes(){
+        List<CardType> cardType=cardService.findAllCardTypes();
+        return cardType;
+    }
 
     public Deck getDeckFromPlayer(Usuario player) {
         return deckRepository.findDeckByPlayerUsername(player.getUsername());
