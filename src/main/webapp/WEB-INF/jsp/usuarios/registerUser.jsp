@@ -19,7 +19,7 @@
             <br>
             <form:password class="form-control" path="password" style="margin-top: 3%;width: 250px; height: 35px;border-radius: 25px;text-align: center;"/>
             <br>
-            <h2 style="font-size: 30px;">Repetir contrase&ntilde;a</h2>
+            <h2 style="font-size: 30px;" >Repetir contrase&ntilde;a</h2>
             <label for="PasswordRepeat" class="col-sm-2 control-label" style="font-size: 30px; margin-left: 16%;"></label>
             <br>
             <input id="PasswordRepeat" name="passwordRepeat" placeholder="securePassword" type="password" style="width: 250px; height: 35px;border-radius: 25px;text-align: center;"/>
