@@ -61,12 +61,11 @@ public class GameController {
     private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
 
+    
+
+
     @Autowired
     public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
-
-
-    @Autowired
-    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService){
         this.gameService = gameService;
         this.userService = userService;
         this.cardService = cardService;
