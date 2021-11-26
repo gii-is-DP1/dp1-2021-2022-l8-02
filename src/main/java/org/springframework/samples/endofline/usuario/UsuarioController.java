@@ -100,12 +100,21 @@ public class UsuarioController {
 
 	@PostMapping(value = "/usuarios/new")
 	public String processCreationForm(@Valid Usuario usuario, BindingResult result) {
+		List<String> list= new ArrayList<>();
+		for(Usuario user :usuarioService.findAll()){
+			String name= user.getUsername();
+			list.add(name);
+		}
 		if (result.hasErrors()) {
 			return USUARIOS_FORM;
-		} else {
+		}
+		else if(list.contains(usuario.getUsername())){
+			return USUARIOS_FORM;
+		}
+		else{
 			this.usuarioService.save(usuario);
 			return "redirect:/usuarios";
-		}
+			}
 	}
 
 	@GetMapping("/register")
