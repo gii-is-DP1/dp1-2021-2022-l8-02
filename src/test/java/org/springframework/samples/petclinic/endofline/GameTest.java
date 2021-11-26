@@ -142,15 +142,17 @@ public class GameTest {
 
     @Test
     void findGame(){
-        Game game= gameService.findGame(1);
+        Usuario user=userService.findByUsername("player").get();
+        Game game= gameService.getGameByPlayer(user);
         assertNotNull(game);
     }
 
     @Test
     void findGameWithOutPlayer(){
-        Game game= gameService.findGame(1);
-        Usuario user= game.getPlayers().get(0);
-        gameService.leaveGame(user);
+        Usuario user=userService.findByUsername("player").get();
+        Game game= gameService.getGameByPlayer(user);
+        Usuario user2= game.getPlayers().get(0);
+        gameService.leaveGame(user2);
         assertThrows(GameNotFoundException.class, () -> gameService.findGame(1));
     }
 
@@ -159,7 +161,7 @@ public class GameTest {
         Game game = gameService.getGameByPlayer(userService.findByUsername("player").get());
         Usuario user = new Usuario();
         gameService.joinGame(game, user);
-        assertEquals(game.getPlayers().size(), 1);
+        assertNotEquals(game.getPlayers().size(), 1);
     }
 
     @Test
@@ -172,8 +174,7 @@ public class GameTest {
     }
 
     @Test 
-    void GameWithTitle() throws DuplicatedGameNameException{
-        Game game1 = gameService.findGame(1);
+    void GameWithTitle() {
         Game game2 = new Game();
         game2.setName("Juego Prueba Estadisticas");
         game2.setGameMode(GameMode.SOLITAIRE);
