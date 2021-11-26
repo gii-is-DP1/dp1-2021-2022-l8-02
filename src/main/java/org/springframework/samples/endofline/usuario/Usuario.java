@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import lombok.Getter;
@@ -29,6 +30,7 @@ public class Usuario{
 	@NotEmpty
     private String password;
 
+    @Email
     @Column(name = "email")
 	@NotEmpty
     private String email;

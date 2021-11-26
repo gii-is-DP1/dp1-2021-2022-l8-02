@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.game.Game;
-
 import org.springframework.samples.endofline.usuario.Usuario;
 
 import org.springframework.stereotype.Service;

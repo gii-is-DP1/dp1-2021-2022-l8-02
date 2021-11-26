@@ -1,7 +1,8 @@
 package org.springframework.samples.petclinic.endofline.GameStatisticsTest;
 
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.samples.endofline.board.StatisticsGamesService;
+import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameMode;
@@ -32,8 +35,7 @@ public class GameStatisticsTest {
     @Autowired
     protected CardService cardService;
     @Autowired
-    protected 
-    
+    protected StatisticsGamesService gStatsService;
 
     @BeforeEach
     void newGame() {
@@ -42,11 +44,16 @@ public class GameStatisticsTest {
         game.setName("Juego Prueba Estadisticas");
         game.setGameMode(GameMode.SOLITAIRE);
         game.setHidden(false);
+        Game game2 = new Game();
+        game2.setName("Juego Prueba2");
+        game2.setGameMode(GameMode.PUZZLE);
+        game2.setHidden(false);
         Usuario user = new Usuario();
+        Usuario user2 = new Usuario();
         Authorities aut = new Authorities();
         Set<Authorities> setAut = new HashSet<>();
 
-        //Usuario
+        //Usuario1
         user.setUsername("player");
         user.setPassword("pass");
         user.setEmail("player@endofline.com");
@@ -55,6 +62,14 @@ public class GameStatisticsTest {
         user.setAuthorities(setAut);
         userService.save(user);
 
+        //Usuario2
+        user2.setUsername("player2");
+        user2.setPassword("pass");
+        user2.setEmail("player2@endofline.com");
+        user2.setAuthorities(setAut);
+        userService.save(user2);
+
+        //Game1
         try{
 
             gameService.createGame(game);
@@ -66,22 +81,44 @@ public class GameStatisticsTest {
             System.out.println("Ya existe la partida");
 
         }
+
+        //Game2
+        try{
+
+            gameService.createGame(game2);
+            gameService.joinGame(game2, user2);
+            gameService.startGame(game2);
+
+        }catch(DuplicatedGameNameException e){
+
+            System.out.println("Ya existe la partida");
+
+        }
+
+        StatisticsGames stat = new StatisticsGames();
+        stat.setUser(user2);
+        stat.setGame(game2);
+        stat.setPoint(2);
+        gStatsService.save(stat);
+
     }
 
     @Test
-    void shouldExistGame(){
+    void shouldSaveStat(){
 
-        Game game1 = gameService.getGameByPlayer(userService.findByUsername("player").get());
-        assertNotNull(game1);
+        Game game = gameService.getGameByPlayer(userService.findByUsername("player2").get());
+        StatisticsGames stat = gStatsService.findStatisticsGamesByUserGames(userService.findByUsername("player2").get(), game);
+        assertEquals(2, stat.getPoint());
 
     }
 
     @Test
-    void shouldExistStatistics(){
+    void shouldCreateStatWithGame(){
 
         Game game1 = gameService.getGameByPlayer(userService.findByUsername("player").get());
+        StatisticsGames stats = gStatsService.findStatisticsGamesByUserGames(userService.findByUsername("player").get(), game1);
+        assertNull(stats);
 
-        assertNotNull(game1);
     }
 
 }
