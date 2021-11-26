@@ -2,6 +2,7 @@ package org.springframework.samples.endofline.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
 
 @Service
