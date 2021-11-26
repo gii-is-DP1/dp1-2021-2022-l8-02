@@ -39,6 +39,7 @@ public class StatisticsGames extends BaseEntity{
  //   @CollectionTable(name="tatisticsGetMapping", joinColumns = {@JoinColumn(name ="map_id", referencedColumnName = "id")})
     @MapKeyColumn(name="statisticsMapCard")
     Map<Card,Integer> map;
+    @NotNull
     Integer point;
 
     public Card getMaxCard(){
