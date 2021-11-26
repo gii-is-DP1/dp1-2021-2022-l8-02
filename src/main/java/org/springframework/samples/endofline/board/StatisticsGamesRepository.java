@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.samples.endofline.game.Game;
-
 import org.springframework.samples.endofline.usuario.Usuario;
 
 
