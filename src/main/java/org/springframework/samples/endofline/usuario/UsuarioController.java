@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.usuario;
+package org.springframework.samples.endofline.usuario;
 
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +26,7 @@ public class UsuarioController {
 	public static final String LOGIN_USER = "login";
 	public static final String INICIO = "inicio";
 	//public static final String PRINCIPAL = "principal";
+	public static final String ERROR = "login-error";
 
     @Autowired
     UsuarioService usuarioService;
@@ -119,11 +120,11 @@ public class UsuarioController {
 		}
 	}
  
-	@GetMapping("/login")
-	public String logUser(ModelMap model){
-		model.addAttribute("usuario", new Usuario());
-		return LOGIN_USER;
-	}
+	// @GetMapping("/login")
+	// public String logUser(ModelMap model){
+	// 	model.addAttribute("usuario", new Usuario());
+	// 	return LOGIN_USER;
+	// }
 
 	@GetMapping("/inicio")
 	public String PagInicial(){
@@ -137,4 +138,9 @@ public class UsuarioController {
 	}
 */
 
+	// @GetMapping("/login-error")
+	// public String logError(ModelMap model){
+	// 	model.addAttribute("usuario", new Usuario());
+	// 	return ERROR;
+	// }
 }

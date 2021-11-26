@@ -1,7 +1,9 @@
 package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -9,6 +11,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
+import org.springframework.samples.endofline.board.StatisticsGames;
+import org.springframework.samples.endofline.board.StatisticsGamesService;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.TileService;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
@@ -18,13 +22,14 @@ import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
-import org.springframework.samples.petclinic.usuario.Usuario;
-import org.springframework.samples.petclinic.usuario.UsuarioService;
+import org.springframework.samples.endofline.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +48,7 @@ public class GameController {
     public static final String GAME_LIST = "games/gameList";
     public static final String GAME_CREATION = "games/gameCreationForm";
     public static final String GAME_LOBBY = "games/gameLobby";
+    public static final String GAME_STATICPOSTGAME = "games/staticPostGame";
 
     private GameService gameService;
     private UsuarioService userService;
@@ -50,15 +56,17 @@ public class GameController {
     private DeckService deckService;
     private BoardService boardService;
     private TileService tileService;
+    private StatisticsGamesService statisticsGamesService;
 
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService) {
+    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService){
         this.gameService = gameService;
         this.userService = userService;
         this.cardService = cardService;
         this.deckService = deckService;
         this.boardService = boardService;
         this.tileService = tileService;
+        this.statisticsGamesService= statisticsGamesService;
     }
 
     @InitBinder
@@ -94,11 +102,14 @@ public class GameController {
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
         
         model.addAttribute("board", game.getBoard());
-        model.addAttribute("deck", deckService.getDeckFromPlayer(getLoggedUser()));
+
+        model.addAttribute("deck", boardService.deckFromPlayers(getLoggedUser()));
 
         // For rendering card images
-        model.addAttribute("cardTypes", cardService.findAllCardTypes());
+        model.addAttribute("cardTypes",boardService.getAllCardTypes() );
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
+
+        model.addAttribute("user", getLoggedUser());
 
         return GAME_VIEW;
     }
@@ -107,12 +118,13 @@ public class GameController {
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model) {
 
         try {
-            Tile tile = tileService.findTileByCoordsAndBoard(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
+
+            Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
+
             boardService.playCard(getLoggedUser() ,card, tile);
         } catch (InvalidMoveException e) {
             model.addAttribute("message", "No puedes realizar esa acción"); // Esto no se muestra si se hace un redirect
         }
-
         return getGame(model); // No se si esto es correcto o una buena forma de hacerlo
     }
 
@@ -131,7 +143,6 @@ public class GameController {
 
     @PostMapping("/new")
     public String createGame(@ModelAttribute("game") @Valid Game game, BindingResult result, Model model) {
-
         if(result.hasErrors()) {
             return GAME_CREATION;
         }
@@ -165,6 +176,16 @@ public class GameController {
     @GetMapping("/{gameId}/start")
     public String startGame(@PathVariable("gameId") Game game, Model model) {
         // Cambiar a POST puede ser una mejor opcion
+        for(Usuario player:game.getPlayers()){
+            Map<Card, Integer> map= new HashMap<>();
+            StatisticsGames statisticsGame= new StatisticsGames();
+             statisticsGame.setUser(player);
+             statisticsGame.setGame(game);
+             statisticsGame.setMap(map);
+             statisticsGame.setPoint(0);
+             statisticsGamesService.save(statisticsGame);
+        }
+
         if(game.getPlayers().get(0).equals(getLoggedUser()))
             gameService.startGame(game);
         return "redirect:/games/currentGame";

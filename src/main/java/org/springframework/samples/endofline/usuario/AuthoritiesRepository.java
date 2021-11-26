@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.usuario;
+package org.springframework.samples.endofline.usuario;
 
 import org.springframework.data.repository.CrudRepository;
 
