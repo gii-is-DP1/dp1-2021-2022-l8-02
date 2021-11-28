@@ -44,7 +44,7 @@ public class BoardService {
 
     public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException {
         Deck deck = deckService.getDeckFromPlayer(player);
-        if(deck != null && deck.getCards().contains(card)) {
+        if(deck != null && deck.getCards().contains(card) && checkPlayableCard(card,tile)) {
             // TODO: Logica de validacion de una jugada aqui?
             deck.getCards().remove(card);
             deckService.save(deck);
@@ -63,6 +63,37 @@ public class BoardService {
         statisticsGamesService.save(statisticsGames);
     
     }
+
+    //@author Migue
+    public boolean checkPlayableCard(Card card, Tile tile) {
+        boolean tlState = tile.getTileState()==TileState.AVAILABLE?true:false;
+        return tlState && true;
+    }
+
+  /*  public TileState getTileState(Board board, Tile tile){
+        TileState t = TileState.FREE;
+        if(tile.getCard()!=null){
+            t = TileState.TAKEN;
+        }else{
+            t = maybeTileBorder(board, tile);
+        }
+    }
+
+    private TileState maybeTileBorder(Board board, Tile tile) {
+        int x = tile.getX();
+        int y = tile.getY();
+        Integer aux = board.getTiles().size();
+        //Last Possible Tile Index
+        Double lpti = Math.sqrt(aux.doubleValue())-1;
+        if(x>0 && x<lpti && y>0 && y<lpti){
+            for(int e = 0;e < 4;e++){
+                //Clockwise, first tile I check is the above one
+                if(tileByCoords(board, x, y-1).getTileState()==TileState.TAKEN && tileByCoords(board, x, y).getCard().getCardType().getDirections().contains("SUR"));
+            }
+        }
+        return null;
+    }*/
+
     public Deck deckFromPlayers(Usuario player){
         Deck deck=deckService.getDeckFromPlayer(player);
         return deck;

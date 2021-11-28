@@ -22,5 +22,6 @@ public class CardService {
     public void save(Card card) {
         cardRepository.save(card);
     }
+
     
 }
