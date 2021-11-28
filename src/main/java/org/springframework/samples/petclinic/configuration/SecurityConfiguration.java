@@ -44,12 +44,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/statistics/**").authenticated()
 				.antMatchers("/inicio").permitAll()
 				.antMatchers("/statisticsGame/**").permitAll()
+				.antMatchers("/lobby").authenticated()
 				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
 				 	// .loginPage("/login")
 					// .permitAll()
-					.defaultSuccessUrl("/owners", true) //Esto es la Url a la que va si el login es succesful
+					.defaultSuccessUrl("/lobby", true) //Esto es la Url a la que va si el login es succesful
 				 	.failureUrl("/login-error")
 				.and()
 					.logout()
