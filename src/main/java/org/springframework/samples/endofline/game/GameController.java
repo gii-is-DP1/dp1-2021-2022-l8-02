@@ -51,7 +51,7 @@ public class GameController {
     public static final String GAME_CREATION = "games/gameCreationForm";
     public static final String GAME_LOBBY = "games/gameLobby";
     public static final String GAME_STATICPOSTGAME = "games/staticPostGame";
-    public static final String GAME_JOIN="games/join";
+
 
     private GameService gameService;
     private UsuarioService userService;
