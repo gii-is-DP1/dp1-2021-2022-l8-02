@@ -52,6 +52,7 @@ public class GameController {
     public static final String GAME_LOBBY = "games/gameLobby";
     public static final String GAME_STATICPOSTGAME = "games/staticPostGame";
 
+
     private GameService gameService;
     private UsuarioService userService;
     private CardService cardService;
@@ -170,10 +171,12 @@ public class GameController {
     }
 
     @GetMapping("/join/{gameId}")
-    public String joinGame(@PathVariable("gameId") Game game) {
+    public String joinGame(@PathVariable("gameId") Game game, ModelMap model) {
         gameService.joinGame(game, getLoggedUser());
+        model.addAttribute("joinToAGame", game );
         return "redirect:/games/currentGame";
     }
+
 
     @GetMapping("/leave")
     public String leaveGame() {
