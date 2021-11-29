@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -31,6 +35,7 @@ public class UsuarioController {
 	public static final String LOGIN_USER = "login";
 	public static final String INICIO = "inicio";
 	public static final String ERROR = "login-error";
+	public static final String LOBBY = "lobby";
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -151,7 +156,9 @@ public class UsuarioController {
 			s.setNumGames(0);
 			s.setDuration(0);
 			statisticsService.save(s);
-			return "redirect:/login";
+			return "redirect:/lobby";
+			/*Authentication authentication=;
+			SecurityContextHolder.getContext().setAuthentication(authentication);*/
 		}
 	}
 
@@ -166,6 +173,20 @@ public class UsuarioController {
 		return INICIO;
 	}
 
+	/*@GetMapping("/lobby")
+	public String PagLobby(Model model) {
+		model.addAttribute("userName", getLoggedUser().getUsername());
+		return LOBBY;
+	}
+	private Usuario getLoggedUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Usuario user = (Usuario) auth.getPrincipal();
+        return usuarioService.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
+    }*/
+	@GetMapping("/lobby")
+	public String PagLobby() {
+		return LOBBY;
+	}
 	// @GetMapping("/login-error")
 	// public String logError(ModelMap model){
 	// model.addAttribute("usuario", new Usuario());
