@@ -8,9 +8,9 @@
     <h2><fmt:message key="welcome"/>Statistics</h2>
     
         <div class="row text-center">
-            <p>${statistiscPostGame.user.username}</p>
-            <p>${statistiscPostGame.game.name}</p>
-            <p>${statistiscPostGame.point}</p>
-            <p>${statistiscPostGame.maxCard.cardType.iniciative}</p>
+            <p>Jugador:   ${statistiscPostGame.user.username}</p>
+            <p>Partida:   ${statistiscPostGame.game.name}</p>
+            <p>Puntos:    ${statistiscPostGame.point}</p>
+            <p>Inciativa de la carta mas usada:     ${statistiscPostGame.maxCard.cardType.iniciative}</p>
         </div>
 </eol:layoutEOL>
