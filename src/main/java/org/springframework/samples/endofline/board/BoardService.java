@@ -1,9 +1,11 @@
 package org.springframework.samples.endofline.board;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import java.util.Map;
-
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
@@ -69,8 +71,8 @@ public class BoardService {
         boolean tlState = tile.getTileState()==TileState.AVAILABLE?true:false;
         return tlState && true;
     }
-
-  /*  public TileState getTileState(Board board, Tile tile){
+/*
+   public TileState getTileState(Board board, Tile tile){
         TileState t = TileState.FREE;
         if(tile.getCard()!=null){
             t = TileState.TAKEN;
@@ -92,7 +94,99 @@ public class BoardService {
             }
         }
         return null;
-    }*/
+    }
+*/
+
+    //@Author Migue: Algoritmo recursivo para encontrar la dirección a la que apunta el camino
+    public String findFacingDirection(Board board, Tile tile, CardColor color){
+      //Caso base
+      String laneCurrentDirection = "";
+      int startDirection = 1;
+      int res = 69;
+      int currentDirection = 69;
+      String restr = "";
+      List<String> dirs = new ArrayList<>();
+      dirs.add("NORTH"); //North = 1, East = 2, South = 3, West = 4
+      dirs.add("EAST"); //North = 1, East = 2, South = 3, West = 4
+      dirs.add("SOUTH"); //North = 1, East = 2, South = 3, West = 4
+      dirs.add("WEST"); //North = 1, East = 2, South = 3, West = 4
+      if(isLastTile(board,tile,color)) {
+        res = redirectioner(tile.getCard().getCardType(),laneCurrentDirection,currentDirection);
+        switch(res){
+            case 1:
+                restr = "NORTH";
+                break;
+            case 2: 
+                restr = "EAST";
+                break;
+            case 3:
+                restr = "SOUTH";
+                break;
+            case 4:
+                restr = "WEST";
+                break;
+        }
+      }else if(tile.getCard().getCardName().equals("start")){
+        Tile aux = tileByCoords(board, tile.getX(), tile.getY()+1);
+        restr = findFacingDirection(board, aux, color);
+      }else{
+          restr = redirectioner(tile.getCard().getCardType(), laneCurrentDirection, currentDirection); //DECIDIR SI INT O STRING, MAS O MENOS PINTA MANERAS.
+      }
+      return restr;
+    }
+
+    private int redirectioner(CardType type, String laneCurrentDirection, int intLane){
+        String res = laneCurrentDirection;
+        Integer resInt = intLane;
+        switch(type.getName()){
+            case "0":
+                break;
+            case "1":
+                break;
+            case "2":
+                //if(laneCurrentDirection.equals("NORTH")) res = "EAST";
+                if(intLane==4){
+                    resInt = 1;
+                }else{
+                    resInt = intLane+1;
+                }
+            case "2b":
+                if(intLane==1){
+                    resInt = 4;
+                }else{
+                    resInt = intLane-1;
+                }
+            case "3":
+                break;
+            case "4":
+                break;
+            case "5":
+                break;
+        }return resInt;
+    }
+
+    private boolean isLastTile(Board board, Tile tile, CardColor color) {
+        int x = tile.getX();
+        int y = tile.getY();
+        int cont = 0;
+        Tile above = tileByCoords(board, x, y-1);
+        Tile left = tileByCoords(board, x+1, y);
+        Tile below = tileByCoords(board, x, y-1);
+        Tile right = tileByCoords(board, x-1, y);
+        Set<Tile> tiles = new HashSet<>();
+        tiles.add(above);
+        tiles.add(left);
+        tiles.add(right);
+        tiles.add(below);
+        for(Tile t:tiles){
+            if(notOccupiedByPlayer(t, color)) cont++;
+        }
+        return cont==3?true:false;
+    }
+
+    private Boolean notOccupiedByPlayer(Tile tile, CardColor color){
+        return (tile.getCard()==null || tile.getCard().getColor()!=color)?true:false;
+    }
 
     public Deck deckFromPlayers(Usuario player){
         Deck deck=deckService.getDeckFromPlayer(player);
