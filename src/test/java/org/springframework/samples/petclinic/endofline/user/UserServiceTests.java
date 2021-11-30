@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.user;
+package org.springframework.samples.petclinic.endofline.user;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

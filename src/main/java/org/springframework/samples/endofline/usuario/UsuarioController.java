@@ -12,11 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -141,7 +137,7 @@ public class UsuarioController {
 		}
 		if (binding.hasErrors()) {
 			return REGISTER_USER;
-		} else if (usernames.contains(usuario.getUsername())) {
+		}else if (usernames.contains(usuario.getUsername())) {
 			binding.rejectValue("username", "usernamex2", "Ya existe un usuario con este nombre");
 			return REGISTER_USER;
 		} else if (emails.contains(usuario.getEmail())) {
@@ -162,34 +158,13 @@ public class UsuarioController {
 		}
 	}
 
-	// @GetMapping("/login")
-	// public String logUser(ModelMap model){
-	// model.addAttribute("usuario", new Usuario());
-	// return LOGIN_USER;
-	// }
-
 	@GetMapping("/inicio")
 	public String PagInicial() {
 		return INICIO;
 	}
 
-	/*@GetMapping("/lobby")
-	public String PagLobby(Model model) {
-		model.addAttribute("userName", getLoggedUser().getUsername());
-		return LOBBY;
-	}
-	private Usuario getLoggedUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Usuario user = (Usuario) auth.getPrincipal();
-        return usuarioService.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
-    }*/
 	@GetMapping("/lobby")
 	public String PagLobby() {
 		return LOBBY;
 	}
-	// @GetMapping("/login-error")
-	// public String logError(ModelMap model){
-	// model.addAttribute("usuario", new Usuario());
-	// return ERROR;
-	// }
 }
