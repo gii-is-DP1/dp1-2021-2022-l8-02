@@ -14,13 +14,9 @@ import org.springframework.samples.endofline.board.BoardService;
 import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.StatisticsGamesService;
 import org.springframework.samples.endofline.board.Tile;
-import org.springframework.samples.endofline.board.TileService;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
-import org.springframework.samples.endofline.card.CardService;
-import org.springframework.samples.endofline.card.Deck;
-import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -31,7 +27,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,10 +50,7 @@ public class GameController {
 
     private GameService gameService;
     private UsuarioService userService;
-    private CardService cardService;
-    private DeckService deckService;
     private BoardService boardService;
-    private TileService tileService;
     private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
 
@@ -66,13 +58,10 @@ public class GameController {
 
 
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService, CardService cardService, DeckService deckService,BoardService boardService, TileService tileService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
+    public GameController(GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
         this.gameService = gameService;
         this.userService = userService;
-        this.cardService = cardService;
-        this.deckService = deckService;
         this.boardService = boardService;
-        this.tileService = tileService;
         this.statisticsGamesService= statisticsGamesService;
         this.statisticsService = statisticsService;
 
@@ -119,6 +108,9 @@ public class GameController {
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
 
         model.addAttribute("user", getLoggedUser());
+
+        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
+        model.addAttribute("statistiscPostGame",statisticsGames);
 
         return GAME_VIEW;
     }
@@ -173,6 +165,7 @@ public class GameController {
     @GetMapping("/join/{gameId}")
     public String joinGame(@PathVariable("gameId") Game game) {
         gameService.joinGame(game, getLoggedUser());
+        //COMPROBAR QUE EL JUGADOR NO ESTA YA EN LA PARTIDA
         return "redirect:/games/currentGame";
     }
     
