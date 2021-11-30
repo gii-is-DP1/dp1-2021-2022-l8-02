@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.endofline.StatisticsTest;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashSet;

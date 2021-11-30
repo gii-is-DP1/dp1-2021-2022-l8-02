@@ -35,10 +35,6 @@ public class Usuario{
 	@NotEmpty
     private String email;
 
-    public boolean isNew() {
-		return this.username == null;
-	}
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
 	private Set<Authorities> authorities;
 
