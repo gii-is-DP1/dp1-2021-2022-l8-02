@@ -140,29 +140,29 @@ public class GameService {
                 tile3.setCard(sWhite);
                 tileService.save(tile3);
             }else if(numplayers == 4){
-                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 2, 6);
+                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 3, 3);
                 tile1.setCard(sRed);
                 tileService.save(tile1);
-                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 4, 6);
+                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 5, 5);
                 tile2.setCard(sGreen);
                 tileService.save(tile2);
                 Tile tile3 = tileService.findTileByCoordsAndBoard(board, 3, 5);
                 tile3.setCard(sWhite);
                 tileService.save(tile3);
-                Tile tile4 = tileService.findTileByCoordsAndBoard(board, 3, 3);
+                Tile tile4 = tileService.findTileByCoordsAndBoard(board, 5, 3);
                 tile4.setCard(sBlue);
                 tileService.save(tile4);
             }else if(numplayers == 5){
-                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 2, 6);
+                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 3, 3);
                 tile1.setCard(sRed);
                 tileService.save(tile1);
-                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 4, 6);
+                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 5, 5);
                 tile2.setCard(sGreen);
                 tileService.save(tile2);
                 Tile tile3 = tileService.findTileByCoordsAndBoard(board, 3, 5);
                 tile3.setCard(sWhite);
                 tileService.save(tile3);
-                Tile tile4 = tileService.findTileByCoordsAndBoard(board, 3, 3);
+                Tile tile4 = tileService.findTileByCoordsAndBoard(board, 5, 3);
                 tile4.setCard(sBlue);
                 tileService.save(tile4);
                 Tile tile5 = tileService.findTileByCoordsAndBoard(board, 6, 4);
