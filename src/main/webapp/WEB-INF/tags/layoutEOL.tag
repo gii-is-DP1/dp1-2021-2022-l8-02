@@ -20,7 +20,8 @@
 				</button> 
 			</div>
 		</c:if>
-
+	</div>
+	<div class="container text-center">
 		<jsp:doBody/>
 
 		</div>

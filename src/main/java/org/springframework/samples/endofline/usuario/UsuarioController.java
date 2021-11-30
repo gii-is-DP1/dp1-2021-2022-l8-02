@@ -24,70 +24,70 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class UsuarioController {
 
-    public static final String USUARIOS_FORM = "usuarios/CUDUsuariosForm";
+	public static final String USUARIOS_FORM = "usuarios/CUDUsuariosForm";
 	public static final String USUARIOS_LISTING = "usuarios/UsuariosListing";
 	public static final String NEW_USUARIO_FORM = "usuarios/createUsuarioForm";
 	public static final String REGISTER_USER = "usuarios/registerUser";
 	public static final String LOGIN_USER = "login";
 	public static final String INICIO = "inicio";
 	public static final String ERROR = "login-error";
+	public static final String LOBBY = "lobby";
 
-    @Autowired
-    UsuarioService usuarioService;
+	@Autowired
+	UsuarioService usuarioService;
 
 	@Autowired
 	AuthoritiesService authoritiesSer;
 
-
 	@Autowired
-    StatisticsService statisticsService;
+	StatisticsService statisticsService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
 		dataBinder.setDisallowedFields("id");
 	}
-	
-	
-    @GetMapping("/usuarios")
-    public String listUsuarios(ModelMap model){
-        model.addAttribute("usuarios", usuarioService.findAll());
-        return USUARIOS_LISTING;
-    }
 
-    @GetMapping("/usuarios/{username}/edit")
-	public String editUsuario(@PathVariable("username") String username,ModelMap model) {
-		Optional<Usuario> usuario=usuarioService.findByUsername(username);
-		if(usuario.isPresent()) {
-			model.addAttribute("usuario",usuario.get());
+	@GetMapping("/usuarios")
+	public String listUsuarios(ModelMap model) {
+		model.addAttribute("usuarios", usuarioService.findAll());
+		return USUARIOS_LISTING;
+	}
+
+	@GetMapping("/usuarios/{username}/edit")
+	public String editUsuario(@PathVariable("username") String username, ModelMap model) {
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if (usuario.isPresent()) {
+			model.addAttribute("usuario", usuario.get());
 			return USUARIOS_FORM;
-		}else {
-			model.addAttribute("message","We cannot find the user you tried to edit!");
+		} else {
+			model.addAttribute("message", "We cannot find the user you tried to edit!");
 			return listUsuarios(model);
 		}
 	}
 
 	@PostMapping("/usuarios/{username}/edit")
-	public String editUsuario(@PathVariable("username") String username, @Valid Usuario modifiedUsuario, BindingResult binding, ModelMap model) {
-		Optional<Usuario> usuario=usuarioService.findByUsername(username);
-		if(binding.hasErrors()) {			
+	public String editUsuario(@PathVariable("username") String username, @Valid Usuario modifiedUsuario,
+			BindingResult binding, ModelMap model) {
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if (binding.hasErrors()) {
 			return USUARIOS_FORM;
-		}else {
+		} else {
 			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
 			usuarioService.save(usuario.get());
-			model.addAttribute("message","User updated succesfully!");
+			model.addAttribute("message", "User updated succesfully!");
 			return listUsuarios(model);
 		}
 	}
 
 	@GetMapping("/usuarios/{username}/delete")
-	public String deleteUsuario(@PathVariable("username") String username,ModelMap model) {
-		Optional<Usuario> usuario=usuarioService.findByUsername(username);
-		if(usuario.isPresent()) {
+	public String deleteUsuario(@PathVariable("username") String username, ModelMap model) {
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if (usuario.isPresent()) {
 			usuarioService.delete(usuario.get());
-			model.addAttribute("message","The user was deleted successfully!");
+			model.addAttribute("message", "The user was deleted successfully!");
 			return listUsuarios(model);
-		}else {
-			model.addAttribute("message","We cannot find the user you tried to delete!");
+		} else {
+			model.addAttribute("message", "We cannot find the user you tried to delete!");
 			return listUsuarios(model);
 		}
 	}
@@ -106,15 +106,12 @@ public class UsuarioController {
 			String name= user.getUsername();
 			list.add(name);
 		}
-		
 		if (result.hasErrors()) {
 			return USUARIOS_FORM;
 		}
-
 		else if(list.contains(usuario.getUsername())){
 			return USUARIOS_FORM;
 		}
-
 		else{
 			this.usuarioService.save(usuario);
 			return "redirect:/usuarios";
@@ -122,43 +119,52 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/register")
-    public String showRegisterForm(ModelMap model){
-        model.addAttribute("usuario", new Usuario());
+	public String showRegisterForm(ModelMap model) {
+		model.addAttribute("usuario", new Usuario());
 		return REGISTER_USER;
-    }
+	}
 
-	//Post para registrarse como nuevo usuario
+	// Post para registrarse como nuevo usuario
 	@PostMapping("/register")
 	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
-		if(binding.hasErrors()) {			
+		List<String> usernames = new ArrayList<>();
+		List<String> emails = new ArrayList<>();
+		for (Usuario user : usuarioService.findAll()) {
+			String name = user.getUsername();
+			String email = user.getEmail();
+			usernames.add(name);
+			emails.add(email);
+		}
+		if (binding.hasErrors()) {
 			return REGISTER_USER;
-		}else {
+		}else if (usernames.contains(usuario.getUsername())) {
+			binding.rejectValue("username", "usernamex2", "Ya existe un usuario con este nombre");
+			return REGISTER_USER;
+		} else if (emails.contains(usuario.getEmail())) {
+			binding.rejectValue("email", "emailx2", "Ya existe un usuario con este email");
+			return REGISTER_USER;
+		} else {
 			this.usuarioService.save(usuario);
-			this.authoritiesSer.saveAuthorities(usuario.getUsername(),"jugador");
+			this.authoritiesSer.saveAuthorities(usuario.getUsername(), "jugador");
 			Statistics s = new Statistics();
 			s.setUsuario(usuario);
 			s.setNumPlayers(0);
 			s.setNumGames(0);
 			s.setDuration(0);
 			statisticsService.save(s);
-			return "redirect:/login";
+			return "redirect:/lobby";
+			/*Authentication authentication=;
+			SecurityContextHolder.getContext().setAuthentication(authentication);*/
 		}
 	}
- 
-	// @GetMapping("/login")
-	// public String logUser(ModelMap model){
-	// 	model.addAttribute("usuario", new Usuario());
-	// 	return LOGIN_USER;
-	// }
 
 	@GetMapping("/inicio")
-	public String PagInicial(){
+	public String PagInicial() {
 		return INICIO;
 	}
 
-	// @GetMapping("/login-error")
-	// public String logError(ModelMap model){
-	// 	model.addAttribute("usuario", new Usuario());
-	// 	return ERROR;
-	// }
+	@GetMapping("/lobby")
+	public String PagLobby() {
+		return LOBBY;
+	}
 }

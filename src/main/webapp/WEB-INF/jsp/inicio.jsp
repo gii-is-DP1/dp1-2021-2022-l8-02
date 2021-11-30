@@ -11,10 +11,14 @@
         <p class="neon-button2" style="text-align:center;">End of Line</p>
     </div>
     <div class="row">
-        
-            <a href="/register" class="neon-button" style="font-size: 20px;">Registrarse</a>
-            </div>
-            <a href="/login" class="neon-button" style="font-size: 20px;">Iniciar sesi&oacute;n</a>
-            </div>
+        <a href="/register" class="neon-button" style="font-size: 20px; margin-top: 0%;margin-left: 35%;">Registrarse</a>
+    
+    </div>
+    <div class="row">
+            
+        <a href="/login" class="neon-button" style="font-size: 20px;margin-top: 10%; margin-left: 33%;">Iniciar sesi&oacute;n</a>
+    </div>
+           
+           
     </div>
 </endofline:layoutEOL>

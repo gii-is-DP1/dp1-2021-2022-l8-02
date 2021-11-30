@@ -18,8 +18,6 @@ import org.springframework.samples.endofline.usuario.Usuario;
 
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
-
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -89,7 +87,14 @@ public class BoardService {
 
     public void generateVersusBoard(Board board, int players) {
 
-        int size = 5;
+        int numPlayers = board.getGame().getPlayers().size();
+        int size = 0;
+
+        if(numPlayers < 4){
+            size = 7;
+        }else if(numPlayers > 3){
+            size = 9;
+        }
 
         for(int x=0; x<size; x++) {
             for(int y=0; y<size; y++) {
