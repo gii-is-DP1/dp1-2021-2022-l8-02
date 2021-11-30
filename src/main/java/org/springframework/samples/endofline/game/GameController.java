@@ -172,6 +172,7 @@ public class GameController {
     @GetMapping("/join/{gameId}")
     public String joinGame(@PathVariable("gameId") Game game) {
         gameService.joinGame(game, getLoggedUser());
+        //COMPROBAR QUE EL JUGADOR NO ESTA YA EN LA PARTIDA
         return "redirect:/games/currentGame";
     }
 
