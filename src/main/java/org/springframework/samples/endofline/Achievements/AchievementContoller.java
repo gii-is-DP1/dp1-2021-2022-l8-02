@@ -22,12 +22,13 @@ public class AchievementContoller {
         return ACHIEVEMENT_LIST;
     }
 
-    @GetMapping("/user/{userName}/achievements")
+   /* @GetMapping("/user/{userName}/achievements")
     public String AchievementOfUser(@PathVariable("userName") String userName, Model model){
         Achievement achievements= achievementService.findAchievementsByUser(userService.fidByUsername(userName).get());
         model.addAttribute("achievementOfUser", achievements);
         return USER_ACHIEVEMENT;
-    }
+    }*/
+
 
 
 }

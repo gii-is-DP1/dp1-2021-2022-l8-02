@@ -36,6 +36,7 @@ public class UsuarioController {
 	public static final String INICIO = "inicio";
 	public static final String ERROR = "login-error";
 	public static final String LOBBY = "lobby";
+	public static final String PROFILE = "profile";
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -177,15 +178,22 @@ public class UsuarioController {
 	public String PagLobby(Model model) {
 		model.addAttribute("userName", getLoggedUser().getUsername());
 		return LOBBY;
-	}
+	}*/
 	private Usuario getLoggedUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Usuario user = (Usuario) auth.getPrincipal();
         return usuarioService.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
-    }*/
+    }
 	@GetMapping("/lobby")
 	public String PagLobby() {
 		return LOBBY;
+	}
+
+	@GetMapping("/profile")
+	public String profileLoggedUser(ModelMap model){
+		model.addAttribute("usuario", getLoggedUser());
+		return PROFILE;
+	
 	}
 	// @GetMapping("/login-error")
 	// public String logError(ModelMap model){
