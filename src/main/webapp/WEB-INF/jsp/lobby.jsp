@@ -18,7 +18,7 @@
     </div>
 
     <div class="row " style="text-align: center!important; " >
-        <a href="/games" class="neon-button-sin-sombra  " style=" font-size:25px; width: 80%; height: 100px; margin-bottom: 30px;align-items: center!important;">
+        <a href="/games" class="neon-button-sin-sombra" style=" font-size:25px; width: 80%; height: 100px; margin-bottom: 30px;align-items: center!important;">
             <p>Buscar partida</p></a>
     </div>
 
