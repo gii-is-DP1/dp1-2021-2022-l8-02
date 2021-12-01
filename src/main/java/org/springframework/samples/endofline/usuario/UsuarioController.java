@@ -9,9 +9,11 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.userdetails.User;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -32,6 +34,8 @@ public class UsuarioController {
 	public static final String INICIO = "inicio";
 	//public static final String PRINCIPAL = "principal";
 	public static final String ERROR = "login-error";
+	public static final String LOBBY = "lobby";
+	public static final String PROFILE = "profile";
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -137,7 +141,7 @@ public class UsuarioController {
 		}
 		if (binding.hasErrors()) {
 			return REGISTER_USER;
-		} else if (usernames.contains(usuario.getUsername())) {
+		}else if (usernames.contains(usuario.getUsername())) {
 			binding.rejectValue("username", "usernamex2", "Ya existe un usuario con este nombre");
 			return REGISTER_USER;
 		} else if (emails.contains(usuario.getEmail())) {
@@ -152,15 +156,11 @@ public class UsuarioController {
 			s.setNumGames(0);
 			s.setDuration(0);
 			statisticsService.save(s);
-			return "redirect:/login";
+			return "redirect:/lobby";
+			/*Authentication authentication=;
+			SecurityContextHolder.getContext().setAuthentication(authentication);*/
 		}
 	}
-
-	// @GetMapping("/login")
-	// public String logUser(ModelMap model){
-	// model.addAttribute("usuario", new Usuario());
-	// return LOGIN_USER;
-	// }
 
 	@GetMapping("/inicio")
 	public String PagInicial() {
@@ -173,6 +173,27 @@ public class UsuarioController {
 		return PRINCIPAL;
 	}
 */
+	/*@GetMapping("/lobby")
+	public String PagLobby(Model model) {
+		model.addAttribute("userName", getLoggedUser().getUsername());
+		return LOBBY;
+	}*/
+	private Usuario getLoggedUser() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        return usuarioService.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
+    }
+	
+	@GetMapping("/lobby")
+	public String PagLobby() {
+		return LOBBY;
+	}
+
+	@GetMapping("/profile")
+	public String profileLoggedUser(ModelMap model){
+		model.addAttribute("usuario", getLoggedUser());
+		return PROFILE;
+	}
 
 	// @GetMapping("/login-error")
 	// public String logError(ModelMap model){

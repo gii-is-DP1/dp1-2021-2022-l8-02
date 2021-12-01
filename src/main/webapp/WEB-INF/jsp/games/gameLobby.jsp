@@ -5,41 +5,53 @@
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
 
 <eol:layoutEOL pageName="Lobby">
-    <div class="container-fluid neon-border">
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="row">
-                <h3 class="text-center neon-text">Jugadores</h3>
-            </div>
-            <c:forEach items="${game.players}" var="player">
-                <div class="row">
-                    <h4 class="text-center">${player.username}</h4>
-                </div>
-            </c:forEach>
-        </div>
-        <div class="col-md-6">
-            <div class="row">
-                <h3 class="text-center neon-text">Datos</h3>
-            </div>
-            <div class="row">
-                <h4 class="text-center">Nombre: ${game.name}</h4>
-            </div>
-            <div class="row">
-                <h4 class="text-center">Modo: ${game.gameMode}</h4>
-            </div>
-        </div>
+    <div class="row" style="text-align: center!important;">
+        <p style="font-size:50px; font-style: italic; font-weight: bold;">MI SALA</p>
     </div>
-    <div class="row">
-        <div class="col-md-4 text-center">
-            <a href="/games/leave" class="neon-button">Abandonar partida</a>
-        </div>
-        <div class="col-md-4 text-center">
-            <a href="/games/${game.id}/start" class="neon-button">Comenzar partida</a>
-        </div>
-        <div class="col-md-4 text-center">
-            <a href="#" class="neon-button">Invitar jugadores</a>
-        </div>
+    <div class="container text-center" >
+        <div > 
+        <table style="width: 100%;" >
+            <tr>
+                <th ><h2 class="text-center neon-text">Jugadores:</h2></th>
+                <th >
+                    <c:forEach items="${game.players}" var="player">
+                            <p class="text-center">${player.username}</p>
+                        
+                    </c:forEach>
+            </tr>
+        </table>
+    </div>
+    <div >
+
+        <table style="width: 100%;">
+            <th>
+                <div class="row">
+                    <h2 class="text-center neon-text">Descripci&oacuten:</h2>
+                </div>
+            </th>
+            
+            <th>
+                    <p class="text-center">Nombre:    ${game.name}</p>                
+                    <p class="text-center">Modo:     ${game.gameMode}</p>
+                
+            </th>
+        
+        </table>
+    </div>
+    <div style="text-align: center;">
+       <table  style="width: 100%; border-spacing: 20px;" >
+           <tr>
+               <th style="width: 20%; margin-right: 20%;">
+                    <a href="/games/leave" class="neon-button" style="font-size: 25px;">Abandonar partida</a>
+               </th>
+               <th style="width: 20%; margin-right: 20%;">
+                    <a href="/games/${game.id}/start" class="neon-button" style="font-size: 25px;">Comenzar partida</a>                
+                </th>
+                <th style="width: 20%; margin-right: 20%;">
+                    <a href="#" class="neon-button" style="font-size: 25px;">Invitar jugadores</a>
+                </th>
+           </tr>
+       </table>
     </div>
 
     </div>

@@ -22,6 +22,9 @@ INSERT INTO authorities(id,username,authority) VALUES (5,'miguegomgom','admin');
 INSERT INTO usuarios(username, password, email) VALUES ('mma12', '4dm1n123', 'marmarave@alum.us.es');
 INSERT INTO authorities(id,username,authority) VALUES (6,'mma12','admin');
 
+
+
+
 /*INSERT INTO friends('kikovilapavon');*/
 
 INSERT INTO vets VALUES (1, 'James', 'Carter');
