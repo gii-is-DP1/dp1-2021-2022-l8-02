@@ -9,7 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.userdetails.User;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.security.core.Authentication;
@@ -173,9 +173,10 @@ public class UsuarioController {
 	}*/
 	private Usuario getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Usuario user = (Usuario) auth.getPrincipal();
+        User user = (User) auth.getPrincipal();
         return usuarioService.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
     }
+	
 	@GetMapping("/lobby")
 	public String PagLobby() {
 		return LOBBY;
@@ -185,8 +186,8 @@ public class UsuarioController {
 	public String profileLoggedUser(ModelMap model){
 		model.addAttribute("usuario", getLoggedUser());
 		return PROFILE;
-	
 	}
+
 	// @GetMapping("/login-error")
 	// public String logError(ModelMap model){
 	// model.addAttribute("usuario", new Usuario());
