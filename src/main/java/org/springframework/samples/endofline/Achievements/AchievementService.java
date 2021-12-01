@@ -11,6 +11,11 @@ import org.springframework.samples.endofline.game.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.UsuarioRepository;
+import org.springframework.samples.endofline.usuario.UsuarioService;
+import org.springframework.samples.endofline.statistics.Statistics;
+import org.springframework.samples.endofline.statistics.StatisticsService;
+
 
 
 
@@ -19,44 +24,50 @@ public class AchievementService {
     @Autowired
     AchievementRepository achievementRepo;
 
-    GameService gameService;
+    
+    StatisticsService statsService;
+    
+    UsuarioService usuarioService;
 
-   /* @Transactional
-    public Collection<Achievement> findAchievementsByUser(Usuario user){
-        return achievementRepo.findAchievementsByUser(user);
-    }*/
+
+
+   
+    public List<Achievement> findAchievementsByUser(String username){
+        Usuario user = usuarioService.findByUsername(username).get();
+        return user.getAchievements();
+    }
+
     @Transactional
     public Collection<Achievement> findAll(){
         return achievementRepo.findAll();
     }
-   /* public Achievement findAchievement(Integer id){
+    
+    public Achievement findAchievement(Integer id){
         Optional<Achievement> achievement = achievementRepo.findById(id);
         if(achievement.isPresent()) {
             return achievement.get();
         }
         throw new RuntimeException();
        
-    }*/
+    }
 
     public void save (Achievement a){
         achievementRepo.save(a);
     }
 
-/*
-    public List<Achievement> playGames(Usuario user){
-        List<Game> games = new ArrayList<Game>();
-        games.add(gameService.getGameByPlayer(user));
+
+    public void playGames(String username){
         List<Achievement> achievements= new ArrayList<Achievement>();
-        if(games.size()==5){
+        Statistics stats = statsService.findByUser(usuarioService.findByUsername(username).get());
+        if(stats.getNumGames()==5){
             achievements.add(findAchievement(1));
-        }else if (games.size()==10){
+        }else if (stats.getNumGames()==10){
             achievements.add(findAchievement(2));
-        }else if(games.size()==50){
+        }else if(stats.getNumGames()==50){
             achievements.add(findAchievement(3));
         }
-        return achievements;
-
-    }*/
+        usuarioService.findByUsername(username).get().setAchievements(achievements);
+    }
 
 
 
