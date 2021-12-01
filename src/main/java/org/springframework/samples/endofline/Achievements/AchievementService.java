@@ -7,11 +7,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.samples.endofline.game.Game;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.usuario.Usuario;
-import org.springframework.samples.endofline.usuario.UsuarioRepository;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
