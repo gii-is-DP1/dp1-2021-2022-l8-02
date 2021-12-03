@@ -1,5 +1,6 @@
 package org.springframework.samples.endofline.board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
@@ -18,6 +19,10 @@ import org.springframework.samples.endofline.usuario.Usuario;
 
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
+import org.springframework.samples.endofline.game.RoundService;
+import org.springframework.samples.endofline.game.Turn;
+import org.springframework.samples.endofline.game.TurnService;
+import org.springframework.samples.endofline.game.Round;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -39,7 +44,13 @@ public class BoardService {
     private StatisticsGamesService statisticsGamesService;
 
     @Autowired
-    private GameService gameService; 
+    private GameService gameService;
+    
+    @Autowired
+    private RoundService roundService;
+
+    @Autowired
+    private TurnService turnService;
 
 
     public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException {
@@ -53,16 +64,33 @@ public class BoardService {
         } else {
             throw new InvalidMoveException();
         }
-        Game game=gameService.getGameByPlayer(player);
-        StatisticsGames statisticsGames=statisticsGamesService.findStatisticsGamesByUserGames(player, game);
-        Map<Card, Integer> mapSet= statisticsGamesService.userMap(card, statisticsGames.getMap());
+        Game game = gameService.getGameByPlayer(player);
+        StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
+        Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
         statisticsGames.setMap(mapSet);
-        Integer pointNew= statisticsGames.point+card.getCardType().getIniciative();
+        Integer pointNew = statisticsGames.point + card.getCardType().getIniciative();
         statisticsGames.setPoint(pointNew);
         //Guardar los datos una vez actualizados
         statisticsGamesService.save(statisticsGames);
-    
+        // List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
+        // turns.remove(turnService.getByUsername(player.getUsername()));
+        // game.getRound().setTurns(turns);
+        // if(game.getRound().getTurns().size() == 0){
+        //     roundService.delete(game.getRound());
+        //     Round round  = new Round();
+        //     round.setGame(game);
+        //     round.setPlayers(game.getPlayers());
+        //     roundService.generateTurnsByPlayers(round, game.getPlayers().size());
+        //     roundService.save(round);
+        //     game.setRound(round);
+        // }
+        gameService.save(game);
+        // roundService.save(game.getRound());
+
     }
+
+    
+    
     public Deck deckFromPlayers(Usuario player){
         Deck deck=deckService.getDeckFromPlayer(player);
         return deck;
