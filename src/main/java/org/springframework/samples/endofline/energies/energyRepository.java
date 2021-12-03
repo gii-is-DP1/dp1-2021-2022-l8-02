@@ -1,6 +1,7 @@
 package org.springframework.samples.endofline.energies;
 
+import org.springframework.data.repository.CrudRepository;
 
-public class energyRepository extends CrudRepository<Energy, Integer>{
+public interface energyRepository extends CrudRepository<energy, Integer> {
     
 }

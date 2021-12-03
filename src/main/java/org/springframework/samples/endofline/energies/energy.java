@@ -19,7 +19,5 @@ public class energy extends BaseEntity{
     @NotNull
     Integer counter;
 
-    @NotNull
-    Power power;
 
 }

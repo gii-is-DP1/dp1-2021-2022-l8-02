@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.samples.endofline.Achievements.Achievement;
+import org.springframework.samples.endofline.achievements.Achievement;
 
 import lombok.Getter;
 import lombok.Setter;
