@@ -21,6 +21,7 @@
 			</div>
 		</c:if>
 	</div>
+	</div>
 	<div class="container text-center">
 		<jsp:doBody/>
 

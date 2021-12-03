@@ -28,7 +28,7 @@
     </div>
 
     <div class="row" style="text-align: center!important;" >
-        <a href="#" class="neon-button-sin-sombra" style="position:none!important;font-size:25px; width: 80%; height: 100px; margin-bottom: 30px;align-items: center!important;">
+        <a href="profile" class="neon-button-sin-sombra" style="position:none!important;font-size:25px; width: 80%; height: 100px; margin-bottom: 30px;align-items: center!important;">
             <p>Perfil</p></a>
     </div>
 </eol:layoutEOL>

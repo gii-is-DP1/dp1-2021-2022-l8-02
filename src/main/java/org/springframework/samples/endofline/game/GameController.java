@@ -47,6 +47,7 @@ public class GameController {
     public static final String GAME_LOBBY = "games/gameLobby";
     public static final String GAME_STATICPOSTGAME = "games/staticPostGame";
 
+
     private GameService gameService;
     private UsuarioService userService;
     private BoardService boardService;
@@ -167,6 +168,7 @@ public class GameController {
         //COMPROBAR QUE EL JUGADOR NO ESTA YA EN LA PARTIDA
         return "redirect:/games/currentGame";
     }
+    
 
     @GetMapping("/leave")
     public String leaveGame() {
