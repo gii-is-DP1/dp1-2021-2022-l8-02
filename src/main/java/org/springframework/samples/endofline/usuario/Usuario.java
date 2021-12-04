@@ -12,13 +12,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-<<<<<<< HEAD
-
-import org.springframework.samples.endofline.achievements.Achievement;
-=======
 import org.springframework.samples.endofline.game.Turn;
-import org.springframework.samples.endofline.Achievements.Achievement;
->>>>>>> master
+import org.springframework.samples.endofline.achievements.Achievement;
 
 import lombok.Getter;
 import lombok.Setter;
