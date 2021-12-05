@@ -9,10 +9,10 @@
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
     </div>
-
 <div class="row">
         <eol:hand cards="${hand.cards}"></eol:hand>
 </div>
+
     <!-- <div class="row">
         <a href="/statisticsGame/${game.id}/${user.username}"><button>Statistics</button></a>
     </div> -->
