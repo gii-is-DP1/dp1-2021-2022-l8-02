@@ -50,5 +50,8 @@ public class Game extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private GameState GameState;
-    
+
+    @OneToOne
+    private Round round;
+
 }

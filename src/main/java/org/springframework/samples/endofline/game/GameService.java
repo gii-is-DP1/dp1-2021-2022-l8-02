@@ -1,5 +1,6 @@
 package org.springframework.samples.endofline.game;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -11,7 +12,9 @@ import org.springframework.samples.endofline.board.TileService;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
+import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -26,18 +29,29 @@ public class GameService {
     private DeckService deckService;
     private TileService tileService;
     private CardService cardService;
+    private HandService handService;
+    private RoundService roundService;
+    private TurnService turnService;
 
     @Autowired
-    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService) {
+    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, TurnService turnService, HandService handService) {
         this.gameRepository = gameRepository;
         this.boardService = boardService;
         this.deckService = deckService;
         this.tileService = tileService;
         this.cardService = cardService;
+        this.handService = handService;
+        this.roundService = roundService;
+        this.turnService = turnService;
     }
 
     public Collection<Game> getGames() {
         return gameRepository.findAll();
+    }
+
+
+    public void save(Game game){
+        gameRepository.save(game);
     }
 
     public Game findGame(Integer id) {
@@ -96,9 +110,18 @@ public class GameService {
                 boardService.generateVersusBoard(board, 2);
         }
 
-        for(Usuario player: game.getPlayers()) {
-            deckService.generateDefaultDeck(player, CardColor.RED);
+        // for(Usuario player: game.getPlayers()) {
+        //     deckService.generateDefaultDeck(player, CardColor.RED);
+        // }
+
+        for(Integer i=0; i<game.getPlayers().size(); i++){
+            Deck deck=deckService.generateDefaultDeck(game.getPlayers().get(i), CardColor.values()[i]);
+            handService.generateDefaultHand(deck);
         }
+
+        // Round round = new Round();
+        // round.setGame(game);
+        // round.setPlayers(new ArrayList<>(game.getPlayers()));
 
         if(game.getGameMode() == GameMode.VERSUS){
             int numplayers = game.getPlayers().size();
@@ -123,53 +146,20 @@ public class GameService {
             sPurple.setColor(CardColor.PURPLE);
             cardService.save(sPurple);
             if(numplayers < 3){
-                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 2, 6);
-                tile1.setCard(sRed);
-                tileService.save(tile1);
-                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 4, 6);
-                tile2.setCard(sGreen);
-                tileService.save(tile2);
+                // roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardForLess3Players(board, sRed, sGreen);
             }else if(numplayers == 3){
-                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 2, 6);
-                tile1.setCard(sRed);
-                tileService.save(tile1);
-                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 4, 6);
-                tile2.setCard(sGreen);
-                tileService.save(tile2);
-                Tile tile3 = tileService.findTileByCoordsAndBoard(board, 3, 5);
-                tile3.setCard(sWhite);
-                tileService.save(tile3);
+                // roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardFor3Players(board, sRed, sGreen, sWhite);
             }else if(numplayers == 4){
-                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 2, 6);
-                tile1.setCard(sRed);
-                tileService.save(tile1);
-                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 4, 6);
-                tile2.setCard(sGreen);
-                tileService.save(tile2);
-                Tile tile3 = tileService.findTileByCoordsAndBoard(board, 3, 5);
-                tile3.setCard(sWhite);
-                tileService.save(tile3);
-                Tile tile4 = tileService.findTileByCoordsAndBoard(board, 3, 3);
-                tile4.setCard(sBlue);
-                tileService.save(tile4);
+                // roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardFor4Players(board, sRed, sGreen, sWhite, sBlue);
             }else if(numplayers == 5){
-                Tile tile1 = tileService.findTileByCoordsAndBoard(board, 2, 6);
-                tile1.setCard(sRed);
-                tileService.save(tile1);
-                Tile tile2 = tileService.findTileByCoordsAndBoard(board, 4, 6);
-                tile2.setCard(sGreen);
-                tileService.save(tile2);
-                Tile tile3 = tileService.findTileByCoordsAndBoard(board, 3, 5);
-                tile3.setCard(sWhite);
-                tileService.save(tile3);
-                Tile tile4 = tileService.findTileByCoordsAndBoard(board, 3, 3);
-                tile4.setCard(sBlue);
-                tileService.save(tile4);
-                Tile tile5 = tileService.findTileByCoordsAndBoard(board, 6, 4);
-                tile5.setCard(sPurple);
-                tileService.save(tile5);
+                // roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardFor5Players(board, sRed, sGreen, sWhite, sBlue, sPurple);
             }
         }
+        // game.setRound(round);
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
     }

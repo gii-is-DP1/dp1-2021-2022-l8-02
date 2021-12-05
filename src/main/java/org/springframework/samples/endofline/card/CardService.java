@@ -19,6 +19,10 @@ public class CardService {
         return cardRepository.findCardTypeByIniciative(iniciative);
     }
 
+    public CardType findCardTypeByName(String name) {
+        return cardRepository.findCardTypeByName(name);
+    }
+
     public void save(Card card) {
         cardRepository.save(card);
     }
