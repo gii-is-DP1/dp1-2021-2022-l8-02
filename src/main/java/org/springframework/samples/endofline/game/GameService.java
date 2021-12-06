@@ -103,7 +103,7 @@ public class GameService {
                 boardService.generateSolitaireBoard(board);
                 break;
             default:
-                boardService.generateVersusBoard(board, 2);
+                boardService.generateVersusBoard(board);
         }
 
         for(Usuario player: game.getPlayers()) {
@@ -151,6 +151,7 @@ public class GameService {
             }
         }
         // game.setRound(round);
+        boardService.save(board);
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
     }

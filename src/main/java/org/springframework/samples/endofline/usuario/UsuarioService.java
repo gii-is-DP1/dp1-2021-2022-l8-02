@@ -1,6 +1,8 @@
 package org.springframework.samples.endofline.usuario;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -20,13 +22,30 @@ public class UsuarioService {
 
     public void delete(Usuario usuario) {
 		usuarioRepo.delete(usuario);
-	}
+  	}
 
-	public void save(@Valid Usuario usuario) {
+	  public void save(@Valid Usuario usuario) {
 		usuarioRepo.save(usuario);
-	}
+	  }
     
     public Optional<Usuario> findByUsername(String username) {
 		return usuarioRepo.findByUsername(username);
-	}
+	  }
+
+    public List<String> getallUsernames(){
+      List<String> usernames = new ArrayList<>();
+      for(Usuario user : findAll()){
+        usernames.add(user.getUsername());
+      }
+      return usernames;
+    }
+
+    public List<String> getallEmails(){
+      List<String> emails = new ArrayList<>();
+      for(Usuario user : findAll()){
+        emails.add(user.getEmail());
+      }
+      return emails;
+    }
+
 }
