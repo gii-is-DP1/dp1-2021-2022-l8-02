@@ -12,7 +12,9 @@ import org.springframework.samples.endofline.board.TileService;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
+import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -27,16 +29,19 @@ public class GameService {
     private DeckService deckService;
     private TileService tileService;
     private CardService cardService;
+    private HandService handService;
     private RoundService roundService;
     private TurnService turnService;
 
     @Autowired
-    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, TurnService turnService) {
+    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, TurnService turnService, HandService handService) {
+
         this.gameRepository = gameRepository;
         this.boardService = boardService;
         this.deckService = deckService;
         this.tileService = tileService;
         this.cardService = cardService;
+        this.handService = handService;
         this.roundService = roundService;
         this.turnService = turnService;
     }
@@ -106,8 +111,13 @@ public class GameService {
                 boardService.generateVersusBoard(board);
         }
 
-        for(Usuario player: game.getPlayers()) {
-            deckService.generateDefaultDeck(player, CardColor.RED);
+        // for(Usuario player: game.getPlayers()) {
+        //     deckService.generateDefaultDeck(player, CardColor.RED);
+        // }
+
+        for(Integer i=0; i<game.getPlayers().size(); i++){
+            Deck deck=deckService.generateDefaultDeck(game.getPlayers().get(i), CardColor.values()[i]);
+            handService.generateDefaultHand(deck);
         }
 
         // Round round = new Round();

@@ -1,6 +1,8 @@
 package org.springframework.samples.endofline.board;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,18 @@ public class StatisticsGamesService {
             mapCard.put(card, 1);
         }
         return mapCard;
+    }
+
+    public void statisticsGamesInitialize(List<Usuario> players, Game game){
+        for(Usuario player: players){
+        Map<Card, Integer> map= new HashMap<>();
+        StatisticsGames statisticsGame= new StatisticsGames();
+         statisticsGame.setUser(player);
+         statisticsGame.setGame(game);
+         statisticsGame.setMap(map);
+         statisticsGame.setPoint(0);
+         save(statisticsGame);
+        }
     }
     
 }
