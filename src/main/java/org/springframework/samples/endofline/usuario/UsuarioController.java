@@ -132,13 +132,13 @@ public class UsuarioController {
 	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
 		if (binding.hasErrors()) {
 			return REGISTER_USER;
-		}else if (usuarioService.getallUsernames().contains(usuario.getUsername())) {
+		} else if (usuarioService.getallUsernames().contains(usuario.getUsername())) {
 			binding.rejectValue("username", "usernamex2", "Ya existe un usuario con este nombre");
 			return REGISTER_USER;
 		} else if (usuarioService.getallEmails().contains(usuario.getEmail())) {
 			binding.rejectValue("email", "emailx2", "Ya existe un usuario con este email");
 			return REGISTER_USER;
-		}else if(binding.getFieldValue("password") != binding.getFieldValue("passwordRepeat")){
+		} else if (binding.getFieldValue("password") != binding.getFieldValue("passwordRepeat")){
 			binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
 			return REGISTER_USER;
 		}
@@ -162,11 +162,6 @@ public class UsuarioController {
 		return INICIO;
 	}
 
-	/*@GetMapping("/lobby")
-	public String PagLobby(Model model) {
-		model.addAttribute("userName", getLoggedUser().getUsername());
-		return LOBBY;
-	}*/
 	private Usuario getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
@@ -183,10 +178,4 @@ public class UsuarioController {
 		model.addAttribute("usuario", getLoggedUser());
 		return PROFILE;
 	}
-
-	// @GetMapping("/login-error")
-	// public String logError(ModelMap model){
-	// model.addAttribute("usuario", new Usuario());
-	// return ERROR;
-	// }
 }
