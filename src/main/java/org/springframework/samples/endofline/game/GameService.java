@@ -120,10 +120,19 @@ public class GameService {
         // round.setGame(game);
         // round.setPlayers(new ArrayList<>(game.getPlayers()));
 
+        //Carta prueba partidas Versus con 1 persona
+        Card sPrueba = new Card();
+        sPrueba.setCardType(cardService.findCardTypeByIniciative(-1));
+        sPrueba.setColor(CardColor.GREEN);
+        cardService.save(sPrueba);
+
         if(game.getGameMode() == GameMode.VERSUS){
             int numplayers = game.getPlayers().size();
             List<Card> cardList = new ArrayList<>(cardService.autoColorAssignInitCards(numplayers));
-            if(numplayers < 3){
+            if(numplayers < 2){
+                // roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardForLess3Players(board, cardList.get(0), sPrueba);
+            }else if(numplayers == 2){
                 // roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardForLess3Players(board, cardList.get(0), cardList.get(1));
             }else if(numplayers == 3){
