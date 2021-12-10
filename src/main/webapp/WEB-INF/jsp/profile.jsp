@@ -30,7 +30,7 @@
             <th style="width:30% ;">
                 <div class="scroll" style="border: solid; border-radius: 20px;  border-spacing: 10px; height: 500px;
                 max-height: 600px;">
-                    <p style="font-size:25px;  text-decoration:underline;  ">Estadísticas</p>
+                    <p style="font-size:25px;  text-decoration:underline;  ">Estad&iacute;sticas</p>
                     <p>sdkjaskd</p>
                     <p>sdkjaskd</p>
                     <p>sdkjaskd</p>
@@ -40,7 +40,7 @@
                 <th style="width:30% ;">
                 <div class="scroll" style="border: solid; border-radius: 20px; border-spacing: 10px; height: 500px;
                 max-height: 600px;">
-                    <p style="font-size:25px;  text-decoration:underline; "> Lógros</p>
+                    <p style="font-size:25px;  text-decoration:underline; "> L&oacute;gros</p>
                     <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
                     <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
                     <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>

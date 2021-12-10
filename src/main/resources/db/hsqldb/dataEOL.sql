@@ -32,3 +32,9 @@ INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (8, 'NORTH');
 INSERT INTO achievements(id, name, type, description) VALUES (1, 'Jugar 5 partidas', 'BRONCE', 'el jugador debe haber jugado 5 partidas para poder conseguir este logro' );
 INSERT INTO achievements(id, name, type, description) VALUES (2, 'Jugar 10 partidas', 'BRONCE', 'el jugador debe haber jugado 10 partidas para poder conseguir este logro' );
 INSERT INTO achievements(id, name, type, description) VALUES (3, 'Jugar 50 partidas', 'PLATA', 'el jugador debe haber jugado 50 partidas para poder conseguir este logro' );
+
+
+INSERT INTO powers(id, name) VALUES(1, 'Acelerón');
+INSERT INTO powers(id, name) VALUES(2, 'Frenazo');
+INSERT INTO powers(id, name) VALUES(3, 'Marcha atrás');
+INSERT INTO powers(id, name) VALUES(4, 'Gas extra');
