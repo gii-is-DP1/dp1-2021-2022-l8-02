@@ -32,3 +32,10 @@ INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (8, 'NORTH');
 INSERT INTO achievements(id, name, type, description) VALUES (1, 'Jugar 5 partidas', 'BRONCE', 'el jugador debe haber jugado 5 partidas para poder conseguir este logro' );
 INSERT INTO achievements(id, name, type, description) VALUES (2, 'Jugar 10 partidas', 'BRONCE', 'el jugador debe haber jugado 10 partidas para poder conseguir este logro' );
 INSERT INTO achievements(id, name, type, description) VALUES (3, 'Jugar 50 partidas', 'PLATA', 'el jugador debe haber jugado 50 partidas para poder conseguir este logro' );
+
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'kikovilapavon');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'chemaccs');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'Juangr4');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'martarl11');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'miguegomgom');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'mma12');

@@ -16,7 +16,7 @@ import org.springframework.samples.endofline.board.StatisticsGamesService;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.card.Card;
-import org.springframework.samples.endofline.card.CardColor
+import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
 
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
