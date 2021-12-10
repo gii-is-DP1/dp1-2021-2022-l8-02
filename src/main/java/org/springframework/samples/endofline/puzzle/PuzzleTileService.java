@@ -11,8 +11,8 @@ public class PuzzleTileService {
     @Autowired
     private PuzzleTileRepository puzzleTileRepository;
 
-    public List<PuzzleTile> findByPuzzleId(Integer puzzleId) {
-        return puzzleTileRepository.findByPuzzleId(puzzleId);
+    public List<PuzzleTile> findAllByPuzzleId(Integer puzzleId) {
+        return puzzleTileRepository.findAllByPuzzleId(puzzleId);
     }
     
 }

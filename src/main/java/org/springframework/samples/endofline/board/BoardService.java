@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Map;
-
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
@@ -153,7 +153,11 @@ public class BoardService {
 
         int size = 5;
 
-        List<PuzzleTile> tiles = puzzleTileService.findByPuzzleId(1);
+        Random random = new Random();
+
+        int maxImplementedPuzzles = 47;
+
+        List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles-1)+1);
         System.out.println(tiles);
 
         for(int x=0; x<size; x++) {

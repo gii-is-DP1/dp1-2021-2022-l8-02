@@ -6,6 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface PuzzleTileRepository extends CrudRepository<PuzzleTile, Integer> {
 
-    List<PuzzleTile> findByPuzzleId(Integer puzzleId);
+    List<PuzzleTile> findAllByPuzzleId(Integer puzzleId);
     
 }
