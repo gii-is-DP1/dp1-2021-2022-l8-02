@@ -120,7 +120,7 @@ public class BoardService {
         boardRepository.save(board);
     }
 
-    public void generateVersusBoard(Board board, int players) {
+    public void generateVersusBoard(Board board) {
 
         int numPlayers = board.getGame().getPlayers().size();
         int size = 0;

@@ -2,12 +2,12 @@ package org.springframework.samples.endofline.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Board;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.TileService;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
@@ -108,15 +108,11 @@ public class GameService {
                 boardService.generateSolitaireBoard(board);
                 break;
             default:
-                boardService.generateVersusBoard(board, 2);
+                boardService.generateVersusBoard(board);
         }
 
-        // for(Usuario player: game.getPlayers()) {
-        //     deckService.generateDefaultDeck(player, CardColor.RED);
-        // }
-
-        for(Integer i=0; i<game.getPlayers().size(); i++){
-            Deck deck=deckService.generateDefaultDeck(game.getPlayers().get(i), CardColor.values()[i]);
+        for(Integer i = 0; i < game.getPlayers().size(); i++){
+            Deck deck = deckService.generateDefaultDeck(game.getPlayers().get(i), CardColor.values()[i]);
             handService.generateDefaultHand(deck);
         }
 
@@ -124,43 +120,34 @@ public class GameService {
         // round.setGame(game);
         // round.setPlayers(new ArrayList<>(game.getPlayers()));
 
+        //Carta prueba partidas Versus con 1 persona
+        Card sPrueba = new Card();
+        sPrueba.setCardType(cardService.findCardTypeByIniciative(-1));
+        sPrueba.setColor(CardColor.GREEN);
+        cardService.save(sPrueba);
+
         if(game.getGameMode() == GameMode.VERSUS){
             int numplayers = game.getPlayers().size();
-            Card sRed = new Card();
-            Card sGreen = new Card();
-            Card sWhite = new Card();
-            Card sBlue = new Card();
-            Card sPurple = new Card();
-            sRed.setCardType(cardService.findCardTypeByIniciative(-1));
-            sRed.setColor(CardColor.RED);
-            cardService.save(sRed);
-            sGreen.setCardType(cardService.findCardTypeByIniciative(-1));
-            sGreen.setColor(CardColor.GREEN);
-            cardService.save(sGreen);
-            sWhite.setCardType(cardService.findCardTypeByIniciative(-1));
-            sWhite.setColor(CardColor.WHITE);
-            cardService.save(sWhite);
-            sBlue.setCardType(cardService.findCardTypeByIniciative(-1));
-            sBlue.setColor(CardColor.BLUE);
-            cardService.save(sBlue);
-            sPurple.setCardType(cardService.findCardTypeByIniciative(-1));
-            sPurple.setColor(CardColor.PURPLE);
-            cardService.save(sPurple);
-            if(numplayers < 3){
+            List<Card> cardList = new ArrayList<>(cardService.autoColorAssignInitCards(numplayers));
+            if(numplayers < 2){
                 // roundService.generateTurnsByPlayers(round, numplayers);
-                tileService.setFirstCardForLess3Players(board, sRed, sGreen);
+                tileService.setFirstCardForLess3Players(board, cardList.get(0), sPrueba);
+            }else if(numplayers == 2){
+                // roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardForLess3Players(board, cardList.get(0), cardList.get(1));
             }else if(numplayers == 3){
                 // roundService.generateTurnsByPlayers(round, numplayers);
-                tileService.setFirstCardFor3Players(board, sRed, sGreen, sWhite);
+                tileService.setFirstCardFor3Players(board, cardList.get(0), cardList.get(1), cardList.get(2));
             }else if(numplayers == 4){
                 // roundService.generateTurnsByPlayers(round, numplayers);
-                tileService.setFirstCardFor4Players(board, sRed, sGreen, sWhite, sBlue);
+                tileService.setFirstCardFor4Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3));
             }else if(numplayers == 5){
                 // roundService.generateTurnsByPlayers(round, numplayers);
-                tileService.setFirstCardFor5Players(board, sRed, sGreen, sWhite, sBlue, sPurple);
+                tileService.setFirstCardFor5Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4));
             }
         }
         // game.setRound(round);
+        boardService.save(board);
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
     }
