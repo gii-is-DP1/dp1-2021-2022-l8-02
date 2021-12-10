@@ -19,6 +19,7 @@ INSERT INTO card_Types(id, iniciative, name) VALUES (5, 3, '3');
 INSERT INTO card_Types(id, iniciative, name) VALUES (6, 4, '4');
 INSERT INTO card_Types(id, iniciative, name) VALUES (7, 5, '5');
 INSERT INTO card_Types(id, iniciative, name) VALUES (8, -1, 'start'); -- Esta representa la carta de salida
+INSERT INTO card_Types(id, iniciative, name) VALUES (9, -2, '3');
 
 INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (1, 'NORTH');
 INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (1, 'EAST');
@@ -39,3 +40,143 @@ INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUE
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'martarl11');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'miguegomgom');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'mma12');
+
+
+
+
+
+-- PUZZLES
+
+-- Yellow
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (1, 2, 2, 8);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (2, 2, 2, 8),
+    (2, 2, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (3, 2, 2, 8),
+    (3, 1, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (4, 2, 2, 8),
+    (4, 1, 2, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (5, 2, 2, 8),
+    (5, 1, 1, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (6, 2, 2, 8),
+    (6, 3, 1, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (7, 2, 2, 8),
+    (7, 3, 2, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (8, 2, 2, 8),
+    (8, 3, 3, 9);
+
+-- Orange
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (9, 2, 2, 8),
+    (9, 1, 2, 9),
+    (9, 3, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (10, 2, 2, 8),
+    (10, 1, 1, 9),
+    (10, 3, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (11, 2, 2, 8),
+    (11, 1, 1, 9),
+    (11, 3, 2, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (12, 2, 2, 8),
+    (12, 1, 3, 9),
+    (12, 3, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (13, 2, 2, 8),
+    (13, 1, 3, 9),
+    (13, 2, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (14, 2, 2, 8),
+    (14, 1, 3, 9),
+    (14, 3, 1, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (15, 2, 2, 8),
+    (15, 1, 2, 9),
+    (15, 3, 1, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (16, 2, 2, 8),
+    (16, 1, 1, 9),
+    (16, 3, 1, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (17, 2, 2, 8),
+    (17, 1, 3, 9),
+    (17, 3, 2, 9);
+
+-- Green
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (18, 2, 2, 8),
+    (18, 2, 3, 9),
+    (18, 2, 4, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (19, 2, 2, 8),
+    (19, 2, 3, 9),
+    (19, 1, 4, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (20, 2, 2, 8),
+    (20, 2, 3, 9),
+    (20, 3, 4, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (21, 2, 2, 8),
+    (21, 1, 1, 9),
+    (21, 1, 0, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (22, 2, 2, 8),
+    (22, 1, 1, 9),
+    (22, 2, 0, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (23, 2, 2, 8),
+    (23, 3, 1, 9),
+    (23, 2, 0, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (24, 2, 2, 8),
+    (24, 3, 1, 9),
+    (24, 3, 0, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (25, 2, 2, 8),
+    (25, 1, 3, 9),
+    (25, 1, 4, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (26, 2, 2, 8),
+    (26, 1, 3, 9),
+    (26, 2, 4, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (27, 2, 2, 8),
+    (27, 3, 3, 9),
+    (27, 2, 4, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (28, 2, 2, 8),
+    (28, 3, 3, 9),
+    (28, 3, 4, 9);
