@@ -5,11 +5,9 @@ import java.util.Collection;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.endofline.energies.energyRepository;
-import org.springframework.samples.endofline.game.GameRepository;
+import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.usuario.Usuario;
-import org.springframework.samples.endofline.usuario.UsuarioRepository;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.samples.petclinic.user.User;
 import org.springframework.security.core.Authentication;
@@ -20,13 +18,13 @@ public class powerService {
     @Autowired
     powerRepository powerRepo;
 
-    energyRepository eneryRepo;
+    EnergyService energyService;
 
     GameService gameService;
 
     UsuarioService userService;
 
-    UsuarioRepository usuarioRepo;
+   
 
     @Transactional
     public Power findById(Integer id){
@@ -39,11 +37,7 @@ public class powerService {
     }
 
 
-    private Usuario getLoggedUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) auth.getPrincipal();
-        return userService.findByUsername(user.getUsername()).orElseThrow(IllegalArgumentException::new);
-    }
+    
 
 
     /*public void playerUsePower(Integer id, String username){

@@ -38,3 +38,10 @@ INSERT INTO powers(id, name) VALUES(1, 'Acelerón');
 INSERT INTO powers(id, name) VALUES(2, 'Frenazo');
 INSERT INTO powers(id, name) VALUES(3, 'Marcha atrás');
 INSERT INTO powers(id, name) VALUES(4, 'Gas extra');
+
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'kikovilapavon');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'chemaccs');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'Juangr4');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'martarl11');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'miguegomgom');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'mma12');

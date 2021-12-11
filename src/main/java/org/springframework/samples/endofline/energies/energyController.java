@@ -1,5 +1,5 @@
 package org.springframework.samples.endofline.energies;
 
-public class energyController {
+public class EnergyController {
     
 }
