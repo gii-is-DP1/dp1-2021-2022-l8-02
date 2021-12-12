@@ -24,5 +24,10 @@ public class  PuzzleTile extends BaseEntity {
 
     @OneToOne
     private CardType cardType;
+
+    @Override
+    public String toString() {
+        return "PuzzleTile [cardType=" + cardType + ", puzzleId=" + puzzleId + ", x=" + x + ", y=" + y + "]";
+    }
     
 }

@@ -155,10 +155,10 @@ public class BoardService {
 
         Random random = new Random();
 
-        int maxImplementedPuzzles = 47;
+        int maxImplementedPuzzles = 60;
 
         List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles-1)+1);
-        System.out.println(tiles);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + tiles);
 
         for(int x=0; x<size; x++) {
             for(int y=0; y<size; y++) {
