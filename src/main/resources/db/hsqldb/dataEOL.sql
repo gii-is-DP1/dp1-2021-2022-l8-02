@@ -279,7 +279,83 @@ INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES
     (47, 0, 4, 9);
 
 INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
-    (47, 2, 2, 8),
-    (47, 2, 1, 3),
-    (47, 3, 3, 9),
-    (47, 4, 4, 9);
+    (48, 2, 2, 8),
+    (48, 2, 1, 3),
+    (48, 3, 3, 9),
+    (48, 4, 4, 9);
+
+-- Blue
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (49, 2, 2, 8),
+    (49, 1, 3, 9),
+    (49, 3, 3, 9),
+    (49, 4, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (50, 2, 2, 8),
+    (50, 2, 3, 9),
+    (50, 3, 3, 9),
+    (50, 4, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (51, 2, 2, 8),
+    (51, 1, 3, 9),
+    (51, 2, 3, 9),
+    (51, 0, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (52, 2, 2, 8),
+    (52, 1, 3, 9),
+    (52, 3, 3, 9),
+    (52, 0, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (53, 2, 2, 8),
+    (53, 1, 3, 9),
+    (53, 3, 3, 9),
+    (53, 4, 2, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (54, 2, 2, 8),
+    (54, 2, 3, 9),
+    (54, 3, 3, 9),
+    (54, 4, 2, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (55, 2, 2, 8),
+    (55, 1, 3, 9),
+    (55, 2, 3, 9),
+    (55, 0, 2, 9);
+
+-- Faltan 56, 57, 58, 59
+-- Es decir a partir de aqui para mapear con el pdf habra que sumarle 4 al id
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (56, 2, 2, 8),
+    (56, 1, 3, 9),
+    (56, 3, 3, 9),
+    (56, 0, 2, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (57, 2, 2, 8),
+    (57, 3, 2, 9),
+    (57, 2, 3, 9),
+    (57, 4, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (58, 2, 2, 8),
+    (58, 3, 2, 9),
+    (58, 3, 3, 9),
+    (58, 4, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (59, 2, 2, 8),
+    (59, 1, 2, 9),
+    (59, 1, 3, 9),
+    (59, 0, 3, 9);
+
+INSERT INTO Puzzles_Tiles(puzzle_id, x, y, card_type_id) VALUES 
+    (60, 2, 2, 8),
+    (60, 1, 2, 9),
+    (60, 2, 3, 9),
+    (60, 0, 3, 9);
