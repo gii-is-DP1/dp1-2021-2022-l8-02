@@ -23,12 +23,12 @@ public class EnergyService {
         return ene;
    }
 
-    public Integer findEnergyOfPlayerInGame(Usuario user){
+    /*public  findEnergyOfPlayerInGame(Usuario user){
         Integer energy=0;
         
 
         return energy;
-    }
+    }*/
 
     public void initEnergy(Game game){
         List<Usuario> players = new ArrayList<>(game.getPlayers());
@@ -38,7 +38,7 @@ public class EnergyService {
         }
     }
 
-    public void usePower(Usuario user, Power power){
+    /*public void usePower(Usuario user, Power power){
         Integer energy = findEnergyOfPlayerInGame(user);
         if(energy <= 3 && energy >0){
             if(power.getId()==1){
@@ -54,6 +54,33 @@ public class EnergyService {
         }
         Energy newEnergy= new Energy();
         newEnergy.setCounter(energy);
+        newEnergy.setUser(user);
+        save(newEnergy);
+
+    }*/
+    public void usePower(Usuario user){
+        Energy energy = getEnergyFromPlayer(user);
+        Integer num= energy.getCounter();
+        if(num <= 3 && num >0){
+            switch(energy.getPowers()) {
+                case ACELERON:
+
+                break;
+                case FRENAZO:
+                
+                    break;
+                case GAS_EXTRA:
+                
+                break;
+                case MARCHA_ATRAS:
+                
+                break;
+            }
+            num-=1;
+        }
+        Energy newEnergy= new Energy();
+        newEnergy.setCounter(num);
+        newEnergy.setUser(user);
         save(newEnergy);
 
     }

@@ -40,8 +40,5 @@ public class powerService {
     
 
 
-    /*public void playerUsePower(Integer id, String username){
-        Usuario user = gameService.;
-         
-    }*/
+
 }

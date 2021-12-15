@@ -1,9 +1,7 @@
 package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,6 +17,7 @@ import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.energies.EnergyService;
+import org.springframework.samples.endofline.energies.Powers;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -188,6 +187,9 @@ public class GameController {
         s.setNumPlayers(game.getPlayers().size());
         statisticsService.save(s);
         
+  /*model.addAttribute("game", game);
+        List<Powers> allPowers = List.of(Powers.values());
+        model.addAttribute("powers", allPowers);
 
         /*energyService.initEnergy(game);*/
 

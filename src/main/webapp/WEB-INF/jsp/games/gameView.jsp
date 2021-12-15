@@ -6,6 +6,7 @@
 
 <eol:layoutEOL pageName="${game.name}">
     <h2>${game.name}</h2>
+
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
     </div>

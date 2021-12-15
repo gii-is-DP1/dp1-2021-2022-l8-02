@@ -22,14 +22,18 @@
                     <p style="font-size: 20px; text-align: center;margin-bottom: 0px; margin-top: 5px;">Contrase&ntilde;a</p>
                     <!--label for="password" class="col-sm-2 control-label" style="font-size: 20px; margin-left: 16%;"></label-->
                    
-                    <form:password class="form-control" name="password" path="password" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+                    <form:password name= "password" class="form-control" path="password" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
                 
                 </div>
                 <div class="row">
                     <p style="font-size: 20px; margin-bottom: 0px; margin-top: 5px;" >Repetir contrase&ntilde;a</p>
                     <!--label for="PasswordRepeat" class="col-sm-2 control-label" style="font-size: 20px; margin-left: 16%;"></label-->
                    
+<<<<<<< HEAD
                     <input id="PasswordRepeat" name="passwordRepeat"  type="password"style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+=======
+                    <input id="passwordRepeat" name="passwordRepeat" placeholder="securePassword" type="password"style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+>>>>>>> master
                 </div>
                 <div class="row">
                     <p style="font-size: 20px; text-align: center; margin-bottom: 0px; margin-top: 5px;">Email</p>

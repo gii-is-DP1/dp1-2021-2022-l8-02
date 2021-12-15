@@ -24,6 +24,8 @@ public class Energy extends BaseEntity{
     @OneToOne
     private Usuario user;
     
+    @NotNull
+    Powers powers;
 
 
 }
