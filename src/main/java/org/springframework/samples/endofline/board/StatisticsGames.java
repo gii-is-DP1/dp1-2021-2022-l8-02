@@ -29,25 +29,26 @@ public class StatisticsGames extends BaseEntity{
 	@NotNull
     @OneToOne
     Usuario user;
+
     @NotNull
     @OneToOne
     Game game;
+
     @ElementCollection
- //   @CollectionTable(name="tatisticsGetMapping", joinColumns = {@JoinColumn(name ="map_id", referencedColumnName = "id")})
     @MapKeyColumn(name="statisticsMapCard")
     Map<Card,Integer> map;
-    @NotNull
+
     Integer point;
 
     public Card getMaxCard(){
-        Set<Card> setCards=map.keySet();
-        Card cardMax=null;
-        Integer val=0;
-        for (Card card: setCards){
-            Integer valCard=map.get(card);
-            if(map.get(card)> val){
-                val=valCard;
-                cardMax= card;
+        Set<Card> setCards = map.keySet();
+        Card cardMax = null;
+        Integer val = 0;
+        for (Card card : setCards){
+            Integer valCard = map.get(card);
+            if(map.get(card) > val){
+                val = valCard;
+                cardMax = card;
             }
         }
         return cardMax;
