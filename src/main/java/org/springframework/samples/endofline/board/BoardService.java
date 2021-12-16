@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
@@ -23,6 +24,11 @@ import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
+import org.springframework.samples.endofline.game.Turn;
+import org.springframework.samples.endofline.game.TurnService;
+import org.springframework.samples.endofline.puzzle.PuzzleTile;
+import org.springframework.samples.endofline.puzzle.PuzzleTileService;
+import org.springframework.samples.endofline.game.Round;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -51,6 +57,11 @@ public class BoardService {
 
     @Autowired
     private RoundService roundService;
+    private TurnService turnService;
+
+    @Autowired
+    private PuzzleTileService puzzleTileService;
+
 
     @Transactional
     public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException{
@@ -134,7 +145,14 @@ public class BoardService {
     @Transactional
     public void generatePuzzleBoard(Board board) {
 
-        int size = 7;
+        int size = 5;
+
+        Random random = new Random();
+
+        int maxImplementedPuzzles = 60;
+
+        List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles-1)+1);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + tiles);
 
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -142,6 +160,17 @@ public class BoardService {
                 tile.setX(x);
                 tile.setY(y);
                 tile.setTileState(TileState.FREE);
+                for(PuzzleTile pt: tiles) {
+                    if(pt.getX() == x && pt.getY() == y) {
+                        Card card = new Card();
+                        card.setColor(CardColor.RED);
+                        card.setCardType(pt.getCardType());
+                        cardService.save(card);
+                        tile.setTileState(TileState.TAKEN);
+                        tile.setCard(card);
+                        break;
+                    }
+                }
                 tile.setBoard(board);
                 tileService.save(tile);
             }
