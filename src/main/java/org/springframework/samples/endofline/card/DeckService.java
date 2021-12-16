@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class DeckService {
         return deckRepository.findDeckByPlayerUsername(player.getUsername());
     }
 
-    public Map<String, Integer> configuration (){
+    public Map<String, Integer> configuration(){
         Map<String, Integer> dicc= new HashMap<>();
         dicc.put("0", 1);
         dicc.put("1", 9);
@@ -42,7 +44,7 @@ public class DeckService {
         return dicc;
     }
 
-
+    @Transactional
     public Deck generateDefaultDeck(Usuario player, CardColor color) {
         Deck deck = getDeckFromPlayer(player);
         if(deck == null) {
@@ -66,6 +68,7 @@ public class DeckService {
         return deck;
     }
 
+    @Transactional
     public void save(Deck deck) {
         deckRepository.save(deck);
     }

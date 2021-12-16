@@ -1,5 +1,7 @@
 package org.springframework.samples.endofline.board;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ public class TileService {
         return tileRepository.findTileByCoordsAndBoard(board, x, y);
     }
 
+    @Transactional
     public void save(Tile tile) {
         tileRepository.save(tile);
     }
     
+    @Transactional
     public void setFirstCardForLess3Players(Board board, Card sRed, Card sGreen){
         Tile tile1 = findTileByCoordsAndBoard(board, 2, 6);
         tile1.setBoard(board);
@@ -31,6 +35,7 @@ public class TileService {
         save(tile2);
     }
 
+    @Transactional
     public void setFirstCardFor3Players(Board board, Card sRed, Card sGreen, Card sWhite){
         Tile tile1 = findTileByCoordsAndBoard(board, 2, 6);
         tile1.setBoard(board);
@@ -49,6 +54,7 @@ public class TileService {
         save(tile3);
     }
 
+    @Transactional
     public void setFirstCardFor4Players(Board board, Card sRed, Card sGreen, Card sWhite, Card sBlue){
         Tile tile1 = findTileByCoordsAndBoard(board, 3, 3);
         tile1.setBoard(board);
@@ -72,6 +78,7 @@ public class TileService {
         save(tile4);
     }
 
+    @Transactional
     public void setFirstCardFor5Players(Board board, Card sRed, Card sGreen, Card sWhite, Card sBlue, Card sPurple){
         Tile tile1 = findTileByCoordsAndBoard(board, 3, 3);
         tile1.setBoard(board);
