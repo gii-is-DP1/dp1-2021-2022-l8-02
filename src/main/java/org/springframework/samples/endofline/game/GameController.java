@@ -1,9 +1,7 @@
 package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +15,8 @@ import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
+import org.springframework.samples.endofline.card.Deck;
+
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -100,9 +100,9 @@ public class GameController {
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
         
         model.addAttribute("board", game.getBoard());
-
-        model.addAttribute("deck", boardService.deckFromPlayers(getLoggedUser()));
-
+        Deck deck=boardService.deckFromPlayers(getLoggedUser());
+        model.addAttribute("hand", boardService.handByDeck(deck));
+        // model.addAttribute("deck", boardService.deckFromPlayers(getLoggedUser()));
         // For rendering card images
         model.addAttribute("cardTypes",boardService.getAllCardTypes() );
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
@@ -179,15 +179,7 @@ public class GameController {
     @GetMapping("/{gameId}/start")
     public String startGame(@PathVariable("gameId") Game game, Model model) {
         // Cambiar a POST puede ser una mejor opcion
-        for(Usuario player:game.getPlayers()){
-            Map<Card, Integer> map= new HashMap<>();
-            StatisticsGames statisticsGame= new StatisticsGames();
-             statisticsGame.setUser(player);
-             statisticsGame.setGame(game);
-             statisticsGame.setMap(map);
-             statisticsGame.setPoint(0);
-             statisticsGamesService.save(statisticsGame);
-        }
+        statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
         Statistics s = statisticsService.findByUser(getLoggedUser());
         s.setNumGames(s.getNumGames()+1);

@@ -1,9 +1,10 @@
 package org.springframework.samples.endofline.card;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -29,6 +30,19 @@ public class DeckService {
         return deckRepository.findDeckByPlayerUsername(player.getUsername());
     }
 
+    public Map<String, Integer> configuration (){
+        Map<String, Integer> dicc= new HashMap<>();
+        dicc.put("0", 1);
+        dicc.put("1", 9);
+        dicc.put("2", 4);
+        dicc.put("2b", 4);
+        dicc.put("3", 4);
+        dicc.put("4", 2);
+        dicc.put("5", 1);
+        return dicc;
+    }
+
+
     public Deck generateDefaultDeck(Usuario player, CardColor color) {
         Deck deck = getDeckFromPlayer(player);
         if(deck == null) {
@@ -36,12 +50,17 @@ public class DeckService {
             deck.setUser(player);
             deck.setCards(new ArrayList<>());
         }
-        for(CardType type: cardService.findAllCardTypes()) {
-            Card card = new Card();
-            card.setColor(color);
-            card.setCardType(type);
-            cardService.save(card);
-            deck.getCards().add(card);
+
+        for(Entry<String, Integer> integer : configuration().entrySet()){
+            String a=integer.getKey();
+            CardType type= cardService.findCardTypeByName(a);
+            for (Integer i=0; i<integer.getValue(); i++){
+                Card card = new Card();
+                card.setColor(color);
+                card.setCardType(type);
+                cardService.save(card);
+                deck.getCards().add(card);
+            }
         }
         save(deck);
         return deck;

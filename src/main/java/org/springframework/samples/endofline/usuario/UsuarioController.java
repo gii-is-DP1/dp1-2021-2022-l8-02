@@ -131,23 +131,19 @@ public class UsuarioController {
 	// Post para registrarse como nuevo usuario
 	@PostMapping("/register")
 	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
-		List<String> usernames = new ArrayList<>();
-		List<String> emails = new ArrayList<>();
-		for (Usuario user : usuarioService.findAll()) {
-			String name = user.getUsername();
-			String email = user.getEmail();
-			usernames.add(name);
-			emails.add(email);
-		}
 		if (binding.hasErrors()) {
 			return REGISTER_USER;
-		}else if (usernames.contains(usuario.getUsername())) {
+		} else if (usuarioService.getallUsernames().contains(usuario.getUsername())) {
 			binding.rejectValue("username", "usernamex2", "Ya existe un usuario con este nombre");
 			return REGISTER_USER;
-		} else if (emails.contains(usuario.getEmail())) {
+		} else if (usuarioService.getallEmails().contains(usuario.getEmail())) {
 			binding.rejectValue("email", "emailx2", "Ya existe un usuario con este email");
 			return REGISTER_USER;
-		} else {
+		} //else if (binding.getFieldValue("password") != binding.getFieldValue("passwordRepeat")){
+		// 	binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
+		// 	return REGISTER_USER;
+		// }
+		 else {
 			this.usuarioService.save(usuario);
 			this.authoritiesSer.saveAuthorities(usuario.getUsername(), "jugador");
 			Statistics s = new Statistics();
@@ -194,10 +190,4 @@ public class UsuarioController {
 		model.addAttribute("usuario", getLoggedUser());
 		return PROFILE;
 	}
-
-	// @GetMapping("/login-error")
-	// public String logError(ModelMap model){
-	// model.addAttribute("usuario", new Usuario());
-	// return ERROR;
-	// }
 }
