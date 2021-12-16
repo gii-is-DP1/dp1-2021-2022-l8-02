@@ -23,12 +23,6 @@ public class StatisticsGamesController {
 
     @Autowired
     GameService gameService;
-    // @GetMapping("/staticsGames")
-    // public String findAll(ModelMap modelMap){
-    //     Collection<StatisticsGames> collec= statisticsGamesService.findAll();
-    //     modelMap.addAllAttributes(collec);
-    //     return STATISTICSGAME;
-    // }
 
     @GetMapping("/statisticsGame/{gameId}/{userName}")
     public String findStatisticsGameByUser(@PathVariable("gameId") Integer gameId, @PathVariable("userName") String userName, ModelMap model){

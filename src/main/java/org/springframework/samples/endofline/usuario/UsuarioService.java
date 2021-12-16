@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class UsuarioService {
 		usuarioRepo.delete(usuario);
   	}
 
+    @Transactional
 	  public void save(@Valid Usuario usuario) {
 		usuarioRepo.save(usuario);
 	  }

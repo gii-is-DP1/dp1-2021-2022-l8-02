@@ -3,6 +3,8 @@ package org.springframework.samples.endofline.card;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,12 @@ public class HandService {
         return handRepository.findHandByDeck(deck);
     }
 
+    @Transactional
     public void save(Hand hand){
         handRepository.save(hand);
     }
 
+    @Transactional
     public Hand generateDefaultHand(Deck deck){
         Hand hand= findHandByDeck(deck);
         Random random= new Random();

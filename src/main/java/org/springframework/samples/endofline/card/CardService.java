@@ -3,6 +3,8 @@ package org.springframework.samples.endofline.card;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +26,12 @@ public class CardService {
         return cardRepository.findCardTypeByName(name);
     }
 
+    @Transactional
     public void save(Card card) {
         cardRepository.save(card);
     }
 
+    @Transactional
     public List<Card> autoColorAssignInitCards(int numPlayers){
         List<Card> list = new ArrayList<>();
         for(int i = 0; i < numPlayers; i++){

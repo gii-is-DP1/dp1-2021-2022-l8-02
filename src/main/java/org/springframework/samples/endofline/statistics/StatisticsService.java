@@ -17,22 +17,18 @@ public class StatisticsService {
     
     @Autowired
     StatisticsRepository statisticsRepositor;
-
     GameService gameService;
-
     UsuarioService usuarioService;
 
-    @Transactional
     public Collection<Statistics> findAll(){
         return statisticsRepositor.findAll();
     }
 
-
-    @Transactional
     public Statistics findByUser(Usuario usuario){
         return statisticsRepositor.findStatisticsByUser(usuario);
     }
 
+    @Transactional
     public void save(Statistics s){
         statisticsRepositor.save(s);
     }
@@ -44,15 +40,22 @@ public class StatisticsService {
         for(Game g: games){
             if(g.getPlayers().contains(user)){
                 acum += 1;
-            }else{
-                acum = acum;
             }
         }
         statisticsRepositor.findStatisticsByUser(user).setNumGames(acum);
     }
 
+    @Transactional
+    public void initStatistics(Usuario user){
+        Statistics stat = new Statistics();
+        stat.setUsuario(user);
+        stat.setNumPlayers(0);
+        stat.setNumGames(0);
+        stat.setDuration(0);
+		save(stat);
+    }
 
-    // @Transactional
+
     // public Statistics findOne(String username){
     //     Integer numOfGames = statisticsRepositor.getNumberOfGames(username);
 
