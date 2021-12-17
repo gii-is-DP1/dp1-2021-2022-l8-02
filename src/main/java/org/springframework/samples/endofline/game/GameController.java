@@ -16,6 +16,7 @@ import org.springframework.samples.endofline.board.exceptions.InvalidMoveExcepti
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
+import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.energies.Powers;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
@@ -178,7 +179,7 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/start")
-    public String startGame(@PathVariable("gameId") Game game, Model model) {
+    public String startGame(/*@ModelAttribute("Energy") @Valid Energy energy,*/ @PathVariable("gameId") Game game, Model model) {
         // Cambiar a POST puede ser una mejor opcion
         statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
@@ -187,8 +188,7 @@ public class GameController {
         s.setNumPlayers(game.getPlayers().size());
         statisticsService.save(s);
         
-  /*model.addAttribute("game", game);
-        List<Powers> allPowers = List.of(Powers.values());
+        /*List<Powers> allPowers = List.of(Powers.values());
         model.addAttribute("powers", allPowers);
 
         /*energyService.initEnergy(game);*/
