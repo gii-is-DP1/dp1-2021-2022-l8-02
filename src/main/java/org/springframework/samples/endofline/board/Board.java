@@ -27,4 +27,8 @@ public class Board extends BaseEntity {
 
     @OneToOne
     private Game game;
+
+    @ElementCollection
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "board")
+    private List<Path> paths;
 }

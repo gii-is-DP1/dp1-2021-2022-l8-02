@@ -27,6 +27,13 @@ INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (1, 'WEST');
 INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (2, 'NORTH');
 INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (3, 'EAST');
 INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (4, 'WEST');
+INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (5, 'NORTH');
+INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (5, 'EAST');
+INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (6, 'EAST');
+INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (6, 'WEST');
+INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (7, 'NORTH');
+INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (7, 'EAST');
+INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (7, 'WEST');
 INSERT INTO card_Type_Directions(card_type_id, directions) VALUES (8, 'NORTH');
 
 --INSERT INTO Statistics(id, duration, numGames, numPlayers, usuario_username) VALUES (1, 15, 25, 4, 'kikovilapavon');
