@@ -1,18 +1,13 @@
 package org.springframework.samples.endofline.board;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+
 import java.util.List;
 
 import java.util.Map;
-import java.util.Set;
+
 import java.util.stream.Collectors;
 
-import javax.persistence.Transient;
 
-import java.util.List;
-
-import java.util.Map;
 
 import javax.transaction.Transactional;
 import java.util.Random;
@@ -35,14 +30,11 @@ import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
-import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
-import org.springframework.samples.endofline.game.Round;
+
 import org.springframework.stereotype.Service;
-import org.springframework.samples.endofline.card.Direction;
-import java.util.stream.Collectors;
 
 @Service
 public class BoardService {
@@ -70,7 +62,7 @@ public class BoardService {
 
     @Autowired
     private RoundService roundService;
-    private TurnService turnService;
+
 
     @Autowired
     private PuzzleTileService puzzleTileService;
