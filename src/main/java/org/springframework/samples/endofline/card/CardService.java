@@ -6,6 +6,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.board.Tile;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,6 +44,24 @@ public class CardService {
             list.add(card);
         }
         return list;
+    }
+
+    public Direction calculateRotation(Tile toBeOccupied, Tile lastTileOccupied){
+        Direction res = null;
+         //Lo de marcha atras se podria hacer a la hora de llamar al getAdjacents()
+        if(toBeOccupied.getX() == lastTileOccupied.getX()){
+            if(toBeOccupied.getY() > lastTileOccupied.getY()){
+                res = Direction.SOUTH;
+            }else{
+                res = Direction.NORTH;
+            }
+        }else{
+            if(toBeOccupied.getX() > lastTileOccupied.getX()){
+                res = Direction.EAST;
+            }else{
+                res = Direction.WEST;
+            }
+        }return res;
     }
     
 }
