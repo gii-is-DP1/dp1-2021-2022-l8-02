@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
@@ -17,6 +18,7 @@ import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.CardType;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.Direction;
 import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -62,19 +64,28 @@ public class BoardService {
     @Autowired
     private PuzzleTileService puzzleTileService;
 
+    @Autowired
+    private PathService pathService;
+
 
     @Transactional
     public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException{
         Game game = gameService.getGameByPlayer(player);
+        Path p = game.getBoard().getPaths().get(card.getColor().ordinal()); //Returns the path(tiles played)followed by a player
+        List<Tile> occupiedTiles = p.getOccupiedTiles();                    //Returns the list with the occupied tiles
+        Tile lastTile = occupiedTiles.get(occupiedTiles.size()-1);          //Returns the lastTile of the previous mentioned list
+        List<Tile> availableTiles = getAdjacents(lastTile);                 //Returns a list of the available tiles respect to the lastTile given                                    
         if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
             Deck deck = deckService.getDeckFromPlayer(player);
             Hand hand = handService.findHandByDeck(deck);
-            if (hand != null && hand.getCards().contains(card)) {
+            if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
                 // TODO: Logica de validacion de una jugada aqui?
                 hand.getCards().remove(card);
                 handService.save(hand);
                 tile.setCard(card);
                 tileService.save(tile);
+                p.getOccupiedTiles().add(tile);                             //Adds the new tile thats been occupied by the player to his path
+                pathService.save(p);
             } else {
                 throw new InvalidMoveException();
             }
@@ -203,4 +214,12 @@ public class BoardService {
         }
     }
 
+    public List<Tile> getAdjacents(Tile tile){
+        return tile.getCard().getCardType().getDirections()
+                    .stream().map(Enum::ordinal)
+                    .map(x -> (x + tile.getCard().getRotation().ordinal())%Direction.values().length)
+                    .map(x -> Direction.values()[x])
+                    .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
+                    .collect(Collectors.toList());
+    }
 }

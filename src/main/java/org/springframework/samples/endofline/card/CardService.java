@@ -38,6 +38,7 @@ public class CardService {
             Card card = new Card();
             card.setCardType(findCardTypeByIniciative(-1));
             card.setColor(CardColor.values()[i]);
+            card.setRotation(Direction.NORTH);
             save(card);
             list.add(card);
         }
