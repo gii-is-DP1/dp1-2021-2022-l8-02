@@ -31,7 +31,6 @@ public class UsuarioController {
 	public static final String REGISTER_USER = "usuarios/registerUser";
 	public static final String LOGIN_USER = "login";
 	public static final String INICIO = "inicio";
-	//public static final String PRINCIPAL = "principal";
 	public static final String ERROR = "login-error";
 	public static final String LOBBY = "lobby";
 	public static final String PROFILE = "profile";
@@ -154,17 +153,6 @@ public class UsuarioController {
 		return INICIO;
 	}
 
-/*	
-	@GetMapping("/principal")
-	public String getPrincipal(){
-		return PRINCIPAL;
-	}
-*/
-	/*@GetMapping("/lobby")
-	public String PagLobby(Model model) {
-		model.addAttribute("userName", getLoggedUser().getUsername());
-		return LOBBY;
-	}*/
 	private Usuario getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();

@@ -41,11 +41,6 @@
             <div class="col-sm-offset-2 col-sm-10" style=" text-align: center;">
                 <button class="neon-button" type="submit" style="background-color: transparent; font-size: 20px;">Registrarse</button>
             </div>
-            <div class="form-group" style="text-align: center;">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button class="neon-button3" type="submit">Registrarse</button>
-                </div>
-            </div>
-        </form:form>
-    </div>
+        </div>
+    </form:form>
 </endofline:layoutEOL> 

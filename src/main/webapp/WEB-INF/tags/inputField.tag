@@ -10,10 +10,10 @@
     <c:set var="cssGroup" value="form-group ${status.error ? 'has-error' : '' }"/>
     <c:set var="valid" value="${not status.error and not empty status.actualValue}"/>
     <div class="${cssGroup}">
-        <label class="col-sm-2 control-label t30" for="${name}">${label}</label>
+        <label class="col-sm-2 control-label" for="${name}">${label}</label>
 
         <div class="col-sm-10">
-            <form:input class="form-control inputFormu" path="${name}"/>
+            <form:input class="form-control" path="${name}"/>
             <c:if test="${valid}">
                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
             </c:if>

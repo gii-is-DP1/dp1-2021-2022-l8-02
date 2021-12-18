@@ -1,7 +1,6 @@
 package org.springframework.samples.endofline.board;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
@@ -10,7 +9,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.model.BaseEntity;
 
@@ -29,6 +27,4 @@ public class Board extends BaseEntity {
 
     @OneToOne
     private Game game;
-
-    private Map<CardColor, List<Tile>> lines;
 }

@@ -6,13 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch EndOfLineApplication",
-            "request": "launch",
-            "mainClass": "org.springframework.samples.petclinic.EndOfLineApplication",
-            "projectName": "L8-02"
-        },
-        {
-            "type": "java",
             "name": "Debug (Launch)-PetClinicApplication<spring-petclinic>",
             "request": "launch",
             "cwd": "${workspaceFolder}",

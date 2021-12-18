@@ -19,27 +19,6 @@
     
   }
   
-  .container-fluid {
-    width: 100%;
-    height: 100%;
- /*   border: solid 5px;
-    border-color: red; */
-  }
-
-  .inputFormu {
-    width: 100%;
-    border-radius: 12px;
-    height: 40px;
-  }
-
-  .inputFormu:focus {
-    box-shadow: inset 0 0 0.5em 0 var(--clr-neon), 0 0 0.5em 0 var(--clr-neon);
-  }
-
-  .t30 {
-    font-size: 30px;
-  }
-
   .neon-button {
     font-size: 4rem;
   /*  margin-top: 50%;*/
@@ -154,22 +133,6 @@
     background-color: var(--clr-neon);
     z-index: -1;
     transition: opacity 100ms linear;
-  }
-  
-  .neon-button3:hover,
-  .neon-button3:focus {
-    color: black;
-    background-color: var(--clr-neon);
-    text-shadow: none;
-  }
-  
-  .neon-button3:hover::before,
-  .neon-button3:focus::before {
-    opacity: 1;
-  }
-  .neon-button3:hover::after,
-  .neon-button3:focus::after {
-    opacity: 1;
   }
   
   .neon-button-sin-sombra:hover,

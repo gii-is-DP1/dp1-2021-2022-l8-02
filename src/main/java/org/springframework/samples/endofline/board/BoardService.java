@@ -1,13 +1,8 @@
 package org.springframework.samples.endofline.board;
 
-
 import java.util.List;
 
 import java.util.Map;
-
-import java.util.stream.Collectors;
-
-
 
 import javax.transaction.Transactional;
 import java.util.Random;
@@ -22,7 +17,6 @@ import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.CardType;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
-import org.springframework.samples.endofline.card.Direction;
 import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -30,10 +24,11 @@ import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
+import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
-
+import org.springframework.samples.endofline.game.Round;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -62,22 +57,11 @@ public class BoardService {
 
     @Autowired
     private RoundService roundService;
-
+    private TurnService turnService;
 
     @Autowired
     private PuzzleTileService puzzleTileService;
- 
 
- 
-
-    public List<Tile> getAdjacents(Tile tile){
-        return tile.getCard().getCardType().getDirections()
-                    .stream().map(Enum::ordinal)
-                    .map(x -> (x + tile.getCard().getRotation().ordinal())%Direction.values().length)
-                    .map(x -> Direction.values()[x])
-                    .map(x -> tileService.creaTile(x, tile))
-                    .collect(Collectors.toList());
-    }
 
     @Transactional
     public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException{

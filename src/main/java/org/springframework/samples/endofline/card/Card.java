@@ -25,8 +25,6 @@ public class Card extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CardColor color;
 
-    private Direction rotation;
-
     public String getCardName() {
         return color.toString().toLowerCase() + "_" + cardType.getName();
     }

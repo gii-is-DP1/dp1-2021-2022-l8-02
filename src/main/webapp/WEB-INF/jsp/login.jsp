@@ -23,7 +23,7 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10" style="margin-left: 37%; margin-top: 3.5%;">
-                <button class="neon-button3" type="submit">Iniciar sesi&oacute;n</button>
+                <button class="btn btn-default" type="submit" style="width: 150px; height: 30px; border-radius: 25px;">Iniciar sesi&oacute;n</button>
             </div>
         </div>
     </form:form>
