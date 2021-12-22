@@ -177,7 +177,7 @@ public class GameController {
         statisticsService.save(s);
 
 
-        if(game.getPlayers().get(0).equals(getLoggedUser()))
+        if(game.getPlayers().get(0).equals(getLoggedUser())) 
             gameService.startGame(game);
         return "redirect:/games/currentGame";
     }
