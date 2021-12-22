@@ -49,6 +49,11 @@ public class CardService {
     public Direction calculateRotation(Tile toBeOccupied, Tile lastTileOccupied){
         Direction res = null;
          //Lo de marcha atras se podria hacer a la hora de llamar al getAdjacents()
+        Double aux = Math.sqrt(toBeOccupied.getBoard().getTiles().size());
+        Integer boardDimension = aux.intValue();
+        Boolean oppositeX = Math.abs(toBeOccupied.getX()-lastTileOccupied.getX()) == boardDimension-1;
+        Boolean oppositeY = Math.abs(toBeOccupied.getY()-lastTileOccupied.getX()) == boardDimension-1;
+        
         if(toBeOccupied.getX() == lastTileOccupied.getX()){
             if(toBeOccupied.getY() > lastTileOccupied.getY()){
                 res = Direction.SOUTH;
@@ -61,7 +66,14 @@ public class CardService {
             }else{
                 res = Direction.WEST;
             }
+        }
+        
+        if(oppositeX || oppositeY ){
+            Integer auxi = res.ordinal()+2;
+            res = Direction.values()[auxi];
         }return res;
+    
+        
     }
     
 }

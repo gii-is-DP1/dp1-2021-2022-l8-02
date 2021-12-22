@@ -123,18 +123,20 @@ public class TileService {
 
     public Tile creaTile(Direction direction, Tile t, Board board){
         Tile tile = new Tile();
+        Double aux = Math.sqrt(board.getTiles().size());
+        Integer mod = aux.intValue();
         switch(direction.ordinal()){
             case 0:
-                tile = findTileByCoordsAndBoard(board, t.getX(), t.getY()-1);
+                tile = findTileByCoordsAndBoard(board, t.getX(), (t.getY()-1 + mod)%mod);
                 break;
             case 1:
-                tile = findTileByCoordsAndBoard(board, t.getX()+1, t.getY());
+                tile = findTileByCoordsAndBoard(board, (t.getX()+1 + mod)%mod, t.getY());
                 break;
             case 2:
-                tile = findTileByCoordsAndBoard(board, t.getX(), t.getY()+1);
+                tile = findTileByCoordsAndBoard(board, t.getX(), (t.getY()+1 + mod)%mod);
                 break;
             case 3:
-                tile = findTileByCoordsAndBoard(board, t.getX()-1, t.getY());
+                tile = findTileByCoordsAndBoard(board, (t.getX()-1 + mod)%mod, t.getY());
                 break;
         }tile.setTileState(TileState.AVAILABLE);
         return tile;
