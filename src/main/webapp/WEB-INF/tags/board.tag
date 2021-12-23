@@ -11,36 +11,43 @@
 </c:forEach>
 
 <script>
-    var canvas = document.getElementById("board");
-    var ctx = canvas.getContext("2d");
 
-    var width = canvas.width;
-    var height = canvas.height;
-    var size = Math.sqrt(${board.tiles.size()});
+    function loadBoard() {
 
-    var x_step = width/size;
-    var y_step = height/size;
+        var canvas = document.getElementById("board");
+        var ctx = canvas.getContext("2d");
 
-    canvas.addEventListener("click", function(event) {
-        var x = Math.floor((event.pageX - canvas.offsetLeft)/x_step);
-        var y = Math.floor((event.pageY - canvas.offsetTop)/y_step);
-        $('<form action="/games/currentGame" method="POST"><input name="x" value="' + x + '"><input name="y" value="' + y + '"><input name="cardId" value="' + $(".active-card")[0].id + '"><input type="hidden" name="${_csrf.getParameterName()}" value="${_csrf.getToken()}"></form>').appendTo('body').submit();
-    });
+        var width = canvas.width;
+        var height = canvas.height;
+        var size = Math.sqrt(${board.tiles.size()});
+
+        var x_step = width/size;
+        var y_step = height/size;
+
+        canvas.addEventListener("click", function(event) {
+            var x = Math.floor((event.pageX - canvas.offsetLeft)/x_step);
+            var y = Math.floor((event.pageY - canvas.offsetTop)/y_step);
+            $('<form action="/games/currentGame" method="POST"><input name="x" value="' + x + '"><input name="y" value="' + y + '"><input name="cardId" value="' + $(".active-card")[0].id + '"><input type="hidden" name="${_csrf.getParameterName()}" value="${_csrf.getToken()}"></form>').appendTo('body').submit();
+        });
+        
+        
+        // dibujando el tablero
+        ctx.beginPath();
+        for(var i=0; i<size+1; i++) {
+            ctx.moveTo(x_step*i, 0);
+            ctx.lineTo(x_step*i, height);
+            ctx.moveTo(0, y_step*i);
+            ctx.lineTo(width, y_step*i);
+        }
+        ctx.stroke();
+        ctx.closePath();
+
+        <c:forEach items="${board.tiles}" var="tile">
+            <eol:tile currentTile="${tile}"></eol:tile>
+        </c:forEach>
     
-    
-    // dibujando el tablero
-    ctx.beginPath();
-    for(var i=0; i<size+1; i++) {
-        ctx.moveTo(x_step*i, 0);
-        ctx.lineTo(x_step*i, height);
-        ctx.moveTo(0, y_step*i);
-        ctx.lineTo(width, y_step*i);
     }
-    ctx.stroke();
-    ctx.closePath();
 
-    <c:forEach items="${board.tiles}" var="tile">
-        <eol:tile currentTile="${tile}"></eol:tile>
-    </c:forEach>
+    window.addEventListener("load", loadBoard);
 
 </script>
