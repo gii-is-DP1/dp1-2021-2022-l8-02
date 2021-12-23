@@ -2,6 +2,7 @@ package org.springframework.samples.endofline.card;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -26,7 +27,7 @@ public class Deck extends BaseEntity {
     private List<Card> cards;
 
     @NotNull
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Usuario user;
     
 }
