@@ -67,7 +67,7 @@ public class GameController {
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
-        this.statisticsGamesService= statisticsGamesService;
+        this.statisticsGamesService = statisticsGamesService;
         this.statisticsService = statisticsService;
     }
 
@@ -109,10 +109,10 @@ public class GameController {
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
         model.addAttribute("user", getLoggedUser());
 
-        List<Power> allPowers = (List) powerService.findAll();
-        List<String> PowersName= new ArrayList<>();
-        for(int i=0; i<allPowers.size(); i++){
-            String name= allPowers.get(i).getName();
+        List<Power> allPowers = powerService.findAll();
+        List<String> PowersName = new ArrayList<>();
+        for(int i = 0; i < allPowers.size(); i++){
+            String name = allPowers.get(i).getName();
             PowersName.add(name);
         }
         model.addAttribute("powers", PowersName);
@@ -142,7 +142,7 @@ public class GameController {
         Game game = new Game();
 
         List<GameMode> allModes = List.of(GameMode.values());
-        
+    
         model.addAttribute("game", game);
         model.addAttribute("modes", allModes);
 
@@ -192,7 +192,7 @@ public class GameController {
         s.setNumPlayers(game.getPlayers().size());
         statisticsService.save(s);
         
-        energyService.initEnergy(getLoggedUser());
+        /*energyService.initEnergy(getLoggedUser());*/
         
         
 
