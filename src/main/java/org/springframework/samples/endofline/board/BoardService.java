@@ -1,34 +1,28 @@
 package org.springframework.samples.endofline.board;
 
+import java.time.LocalTime;
 import java.util.List;
-
 import java.util.Map;
-
 import javax.transaction.Transactional;
 import java.util.Random;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
+import org.springframework.samples.endofline.board.exceptions.TimeOutException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
-
 import org.springframework.samples.endofline.card.CardType;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.usuario.Usuario;
-
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
-import org.springframework.samples.endofline.game.Turn;
-import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
-import org.springframework.samples.endofline.game.Round;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,40 +51,69 @@ public class BoardService {
 
     @Autowired
     private RoundService roundService;
-    private TurnService turnService;
 
     @Autowired
     private PuzzleTileService puzzleTileService;
 
-
     @Transactional
-    public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException{
+    public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException, TimeOutException {
         Game game = gameService.getGameByPlayer(player);
         if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
-            Deck deck = deckService.getDeckFromPlayer(player);
-            Hand hand = handService.findHandByDeck(deck);
-            if (hand != null && hand.getCards().contains(card)) {
-                // TODO: Logica de validacion de una jugada aqui?
-                hand.getCards().remove(card);
-                handService.save(hand);
-                tile.setCard(card);
-                tileService.save(tile);
-            } else {
-                throw new InvalidMoveException();
-            }
+            if (compareHour(game.getRound().getTurns().get(0).getStartTime()) == true) {
+                Deck deck = deckService.getDeckFromPlayer(player);
+                Hand hand = handService.findHandByDeck(deck);
+                if (hand != null && hand.getCards().contains(card)) {
+                    // TODO: Logica de validacion de una jugada aqui?
+                    hand.getCards().remove(card);
+                    handService.save(hand);
+                    tile.setCard(card);
+                    tileService.save(tile);
+                } else {
+                    throw new InvalidMoveException();
+                }
 
-            StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
-            Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
-            statisticsGames.setMap(mapSet);
-            Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
-            statisticsGames.setPoint(pointNew);
-            // Guardar los datos una vez actualizados
-            statisticsGamesService.save(statisticsGames);
-            roundService.refreshRound(game, player);
-            gameService.save(game);
-        }else{
+                StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
+                Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
+                statisticsGames.setMap(mapSet);
+                Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
+                statisticsGames.setPoint(pointNew);
+                // Guardar los datos una vez actualizados
+                statisticsGamesService.save(statisticsGames);
+                roundService.refreshRound(game, player);
+                gameService.save(game);
+            }else{
+                throw new TimeOutException();
+            }
+        } else {
             throw new NotUrTurnException();
         }
+    }
+
+    //Segundos en un día: 86399 (23:59:59)
+    public Boolean compareHour(Integer startTime) {
+        Boolean out = null;
+        Integer hourNow = hourToInteger();
+        if (hourNow > startTime){
+            Integer substract = hourNow - startTime;
+            if(substract < 300){
+                out = true;
+            }else{
+                out = false;
+            }
+        }else{
+            Integer substract = startTime - hourNow;
+            if(substract < 86700){
+                out = false;
+            }else{
+                out = true;
+            }   
+        }
+        return out;
+    }
+
+    public Integer hourToInteger() {
+        LocalTime start = java.time.LocalTime.now();
+        return start.toSecondOfDay();
     }
 
     public Deck deckFromPlayers(Usuario player) {
@@ -151,7 +174,7 @@ public class BoardService {
 
         int maxImplementedPuzzles = 60;
 
-        List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles-1)+1);
+        List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles - 1) + 1);
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + tiles);
 
         for (int x = 0; x < size; x++) {
@@ -160,8 +183,8 @@ public class BoardService {
                 tile.setX(x);
                 tile.setY(y);
                 tile.setTileState(TileState.FREE);
-                for(PuzzleTile pt: tiles) {
-                    if(pt.getX() == x && pt.getY() == y) {
+                for (PuzzleTile pt : tiles) {
+                    if (pt.getX() == x && pt.getY() == y) {
                         Card card = new Card();
                         card.setColor(CardColor.RED);
                         card.setCardType(pt.getCardType());

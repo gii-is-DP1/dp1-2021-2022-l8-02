@@ -7,6 +7,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.board.BoardService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class RoundService {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    BoardService boardSercive;
 
     public Collection<Round> getRounds(){
         return roundRepository.findAll();
@@ -55,6 +59,8 @@ public class RoundService {
             round.getPlayers().get(i).setTurn(turn);
             usuarioService.save(round.getPlayers().get(i));
         }
+        turns.get(0).setStartTime(boardSercive.hourToInteger());
+        turnService.save(turns.get(0));
         round.setTurns(turns);
         save(round);
     }
@@ -64,6 +70,8 @@ public class RoundService {
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
         List<Usuario> players = new ArrayList<>(game.getPlayers());
         turns.remove(turnService.getByUsername(player.getUsername()));
+        turns.get(0).setStartTime(boardSercive.hourToInteger());
+        turnService.save(turns.get(0));
         turnService.delete(turnService.getByUsername(player.getUsername()));
         game.getRound().setTurns(turns);
         if(game.getRound().getTurns().size() == 0){

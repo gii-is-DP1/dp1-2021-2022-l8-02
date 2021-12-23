@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -15,10 +14,10 @@ import org.springframework.samples.endofline.board.StatisticsGamesService;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
+import org.springframework.samples.endofline.board.exceptions.TimeOutException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
-
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -117,6 +116,8 @@ public class GameController {
             model.addAttribute("message", "No puedes realizar esa acción");
         } catch (NotUrTurnException n){
             model.addAttribute("message", "No es tu turno");
+        } catch(TimeOutException t){
+            model.addAttribute("message", "Se acabo el tiempo para realizar el turno");
         }
         return getGame(model, answer);
     }
