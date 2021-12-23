@@ -10,6 +10,15 @@ INSERT INTO usuarios(username, password, email) VALUES ('miguegomgom', '4dm1n', 
 INSERT INTO authorities(id,username,authority) VALUES (5,'miguegomgom','admin');
 INSERT INTO usuarios(username, password, email) VALUES ('mma12', '4dm1n123', 'marmarave@alum.us.es');
 INSERT INTO authorities(id,username,authority) VALUES (6,'mma12','admin');
+--Usuarios de prueba
+INSERT INTO usuarios(username, password, email) VALUES ('a', 'a', 'a@a.a');
+INSERT INTO authorities(id, username, authority) VALUES (7, 'a', 'admin');
+INSERT INTO usuarios(username, password, email) VALUES ('b', 'b', 'b@b.b');
+INSERT INTO authorities(id, username, authority) VALUES (8, 'b', 'admin');
+INSERT INTO usuarios(username, password, email) VALUES ('c', 'c', 'c@c.c');
+INSERT INTO authorities(id, username, authority) VALUES (9, 'c', 'admin');
+INSERT INTO usuarios(username, password, email) VALUES ('d', 'd', 'd@d.d');
+INSERT INTO authorities(id, username, authority) VALUES (10, 'd', 'admin');
 
 INSERT INTO card_Types(id, iniciative, name) VALUES (1, 0, '0');
 INSERT INTO card_Types(id, iniciative, name) VALUES (2, 1, '1');
@@ -46,7 +55,11 @@ INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUE
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'Juangr4');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'martarl11');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'miguegomgom');
-INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'mma12');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'a');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'b');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'c');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'd');
+
 
 
 
