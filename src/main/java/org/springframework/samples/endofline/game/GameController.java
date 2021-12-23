@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,7 +90,7 @@ public class GameController {
     }
     
     @GetMapping("/currentGame")
-    public String getGame(Model model) {
+    public String getGame(Model model, HttpServletResponse response) {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
@@ -99,6 +100,7 @@ public class GameController {
         model.addAttribute("game", game);
         
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
@@ -121,7 +123,7 @@ public class GameController {
     }
 
     @PostMapping("/currentGame")
-    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model) {
+    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
 
         try {
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
@@ -131,7 +133,7 @@ public class GameController {
         } catch (NotUrTurnException n){
             model.addAttribute("message", "No es tu turno");
         }
-        return getGame(model);
+        return getGame(model, response);
     }
 
     @GetMapping("/new")
@@ -194,7 +196,7 @@ public class GameController {
         
         
 
-        if(game.getPlayers().get(0).equals(getLoggedUser()))
+        if(game.getPlayers().get(0).equals(getLoggedUser())) 
             gameService.startGame(game);
         return "redirect:/games/currentGame";
     }
