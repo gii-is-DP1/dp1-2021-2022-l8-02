@@ -55,6 +55,7 @@ INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUE
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'Juangr4');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'martarl11');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'miguegomgom');
+INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'mma12');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'a');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'b');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'c');
