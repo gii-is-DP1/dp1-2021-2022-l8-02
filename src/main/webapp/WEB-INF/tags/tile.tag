@@ -4,5 +4,15 @@
 
 <c:if test="${not empty currentTile.card}">
     var image = document.getElementById("<%= currentTile.getCard().getCardName() %>");
-    ctx.drawImage(image, ${currentTile.x}*x_step, ${currentTile.y}*y_step, x_step, y_step);
+    x = ${currentTile.x} * x_step + x_step/2;
+    y = ${currentTile.y} * y_step + y_step/2;
+    rotation = 0;
+    <c:if test="${not empty currentTile.card.rotation}">
+        rotation = <%= currentTile.getCard().getRotation().ordinal() %> * Math.PI/2;
+    </c:if>
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.drawImage(image, -x_step / 2, -y_step / 2, x_step, y_step);
+    ctx.rotate(-rotation);
+    ctx.translate(-x, -y);
 </c:if>
