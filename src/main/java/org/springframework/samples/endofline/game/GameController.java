@@ -1,5 +1,6 @@
 package org.springframework.samples.endofline.game;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,10 +10,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.StatisticsGamesService;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
+import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
@@ -20,10 +21,12 @@ import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.energies.Powers;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.power.powerService;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
+import org.springframework.samples.endofline.power.Power;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -56,9 +59,8 @@ public class GameController {
     private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
     private EnergyService energyService;
+    private powerService powerService;
     
-
-
     @Autowired
     public GameController(GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
         this.gameService = gameService;
@@ -66,7 +68,6 @@ public class GameController {
         this.boardService = boardService;
         this.statisticsGamesService= statisticsGamesService;
         this.statisticsService = statisticsService;
-
     }
 
     @InitBinder
@@ -82,7 +83,6 @@ public class GameController {
 
     @GetMapping
     public String getGames(Model model) {
-        // Me gustaria hacer el sistema de pageable aqui :D
         Collection<Game> games = gameService.getGames();
         model.addAttribute("games", games);
         return GAME_LIST;
@@ -97,22 +97,25 @@ public class GameController {
         }
 
         model.addAttribute("game", game);
-        System.out.println(game.getGameState());
         
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
         
         model.addAttribute("board", game.getBoard());
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
         model.addAttribute("hand", boardService.handByDeck(deck));
-        // model.addAttribute("deck", boardService.deckFromPlayers(getLoggedUser()));
-        // For rendering card images
-        model.addAttribute("cardTypes",boardService.getAllCardTypes() );
+        model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
-
         model.addAttribute("user", getLoggedUser());
 
-        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
-        model.addAttribute("statistiscPostGame",statisticsGames);
+        List<Power> allPowers = (List) powerService.findAll();
+        List<String> PowersName= new ArrayList<>();
+        for(int i=0; i<allPowers.size(); i++){
+            String name= allPowers.get(i).getName();
+            PowersName.add(name);
+        }
+        model.addAttribute("powers", PowersName);
+
+        model.addAttribute("power",new Power());
 
         return GAME_VIEW;
     }
@@ -121,14 +124,14 @@ public class GameController {
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model) {
 
         try {
-
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
-
             boardService.playCard(getLoggedUser() ,card, tile);
         } catch (InvalidMoveException e) {
-            model.addAttribute("message", "No puedes realizar esa acción"); // Esto no se muestra si se hace un redirect
+            model.addAttribute("message", "No puedes realizar esa acción");
+        } catch (NotUrTurnException n){
+            model.addAttribute("message", "No es tu turno");
         }
-        return getGame(model); // No se si esto es correcto o una buena forma de hacerlo
+        return getGame(model);
     }
 
     @GetMapping("/new")
@@ -167,7 +170,6 @@ public class GameController {
     @GetMapping("/join/{gameId}")
     public String joinGame(@PathVariable("gameId") Game game) {
         gameService.joinGame(game, getLoggedUser());
-        //COMPROBAR QUE EL JUGADOR NO ESTA YA EN LA PARTIDA
         return "redirect:/games/currentGame";
     }
     
@@ -188,10 +190,9 @@ public class GameController {
         s.setNumPlayers(game.getPlayers().size());
         statisticsService.save(s);
         
-        /*List<Powers> allPowers = List.of(Powers.values());
-        model.addAttribute("powers", allPowers);
-
-        /*energyService.initEnergy(game);*/
+        energyService.initEnergy(getLoggedUser());
+        
+        
 
         if(game.getPlayers().get(0).equals(getLoggedUser()))
             gameService.startGame(game);

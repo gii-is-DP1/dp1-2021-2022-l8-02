@@ -20,6 +20,7 @@ import org.springframework.samples.endofline.game.exceptions.GameNotFoundExcepti
 import org.springframework.samples.endofline.usuario.Usuario;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GameService {
@@ -31,10 +32,9 @@ public class GameService {
     private CardService cardService;
     private HandService handService;
     private RoundService roundService;
-    private TurnService turnService;
 
     @Autowired
-    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, TurnService turnService, HandService handService) {
+    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService) {
 
         this.gameRepository = gameRepository;
         this.boardService = boardService;
@@ -43,14 +43,13 @@ public class GameService {
         this.cardService = cardService;
         this.handService = handService;
         this.roundService = roundService;
-        this.turnService = turnService;
     }
 
     public Collection<Game> getGames() {
         return gameRepository.findAll();
     }
 
-
+    @Transactional
     public void save(Game game){
         gameRepository.save(game);
     }
@@ -63,6 +62,7 @@ public class GameService {
         throw new GameNotFoundException();
     }
 
+    @Transactional
     public void createGame(Game game) throws DuplicatedGameNameException {
         game.setGameState(GameState.LOBBY);
 
@@ -76,12 +76,14 @@ public class GameService {
         return gameRepository.getGameByPlayerUsername(player.getUsername());
     }
 
+    @Transactional
     public void joinGame(Game game, Usuario player) {
         leaveGame(player);
         game.getPlayers().add(player);
         gameRepository.save(game);
     }
 
+    @Transactional
     public void leaveGame(Usuario player) {
         Game currentGame = gameRepository.getGameByPlayerUsername(player.getUsername());
         if(currentGame != null) {
@@ -94,6 +96,7 @@ public class GameService {
         }
     }
 
+    @Transactional
     public void startGame(Game game) {
 
         Board board = new Board();
@@ -116,9 +119,11 @@ public class GameService {
             handService.generateDefaultHand(deck);
         }
 
-        // Round round = new Round();
-        // round.setGame(game);
-        // round.setPlayers(new ArrayList<>(game.getPlayers()));
+        Round round = new Round();
+        round.setGame(game);
+        round.setPlayers(new ArrayList<>(game.getPlayers()));
+        roundService.save(round);
+        
 
         //Carta prueba partidas Versus con 1 persona
         Card sPrueba = new Card();
@@ -131,23 +136,23 @@ public class GameService {
             int numplayers = game.getPlayers().size();
             List<Card> cardList = new ArrayList<>(cardService.autoColorAssignInitCards(numplayers));
             if(numplayers < 2){
-                // roundService.generateTurnsByPlayers(round, numplayers);
+                roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardForLess3Players(board, cardList.get(0), sPrueba);
             }else if(numplayers == 2){
-                // roundService.generateTurnsByPlayers(round, numplayers);
+                roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardForLess3Players(board, cardList.get(0), cardList.get(1));
             }else if(numplayers == 3){
-                // roundService.generateTurnsByPlayers(round, numplayers);
+                roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor3Players(board, cardList.get(0), cardList.get(1), cardList.get(2));
             }else if(numplayers == 4){
-                // roundService.generateTurnsByPlayers(round, numplayers);
+                roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor4Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3));
             }else if(numplayers == 5){
-                // roundService.generateTurnsByPlayers(round, numplayers);
+                roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor5Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4));
             }
         }
-        // game.setRound(round);
+        game.setRound(round);
         boardService.save(board);
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);

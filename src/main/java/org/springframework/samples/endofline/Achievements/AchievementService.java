@@ -13,28 +13,18 @@ import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 
-
-
-
 public class AchievementService {
 
     @Autowired
     AchievementRepository achievementRepo;
-
-    
     StatisticsService statsService;
-    
     UsuarioService usuarioService;
 
-
-
-   
     public List<Achievement> findAchievementsByUser(String username){
         Usuario user = usuarioService.findByUsername(username).get();
         return user.getAchievements();
     }
 
-    @Transactional
     public Collection<Achievement> findAll(){
         return achievementRepo.findAll();
     }
@@ -48,11 +38,12 @@ public class AchievementService {
        
     }
 
+    @Transactional
     public void save (Achievement a){
         achievementRepo.save(a);
     }
 
-
+    @Transactional
     public void playGames(String username){
         List<Achievement> achievements= new ArrayList<Achievement>();
         Statistics stats = statsService.findByUser(usuarioService.findByUsername(username).get());

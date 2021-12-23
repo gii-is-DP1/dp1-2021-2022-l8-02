@@ -1,6 +1,7 @@
 package org.springframework.samples.endofline.power;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -18,12 +19,6 @@ public class powerService {
     @Autowired
     powerRepository powerRepo;
 
-    EnergyService energyService;
-
-    GameService gameService;
-
-    UsuarioService userService;
-
    
 
     @Transactional
@@ -32,7 +27,7 @@ public class powerService {
     }
 
     @Transactional
-    public Collection<Power> findAll(){
+    public List<Power> findAll(){
         return powerRepo.findAll();
     }
 

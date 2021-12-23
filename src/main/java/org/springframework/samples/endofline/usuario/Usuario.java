@@ -12,6 +12,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+
 import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.achievements.Achievement;
 
@@ -45,10 +46,6 @@ public class Usuario{
 
    @OneToMany(cascade= CascadeType.ALL)
     private List<Achievement> achievements;
-    /*
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
-    private Set<Usuario> friendsList;
-    */
 
     @OneToOne
     private Turn turn;

@@ -11,8 +11,6 @@ import org.springframework.samples.endofline.usuario.Usuario;
 import lombok.Getter;
 import lombok.Setter;
 
-
-
 @Entity
 @Getter
 @Setter

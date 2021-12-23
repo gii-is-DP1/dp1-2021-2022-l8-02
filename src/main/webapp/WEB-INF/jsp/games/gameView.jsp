@@ -8,14 +8,15 @@
 
 <eol:layoutEOL pageName="${game.name}">
     <h2>${game.name}</h2>
-    <!--form:form method="POST" modelAttribute="Energy" class="form-horizontal">
-    <eol:input label="Poderes" name="powers">
+    <form:form method="POST" modelAttribute="power" class="form-horizontal">
+    <eol:input label="Poderes" name="name">
             
-            <form:select path="powers">
+            <form:select path="name">
                 <form:options items="${powers}"/>
             </form:select>
         </eol:input>
-    </form:form-->
+        <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">Usar Poder</button>
+    </form:form>
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
     </div>

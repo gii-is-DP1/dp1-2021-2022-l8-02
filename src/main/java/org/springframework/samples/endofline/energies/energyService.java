@@ -23,22 +23,25 @@ public class EnergyService {
         return ene;
    }
 
-    /*public  findEnergyOfPlayerInGame(Usuario user){
+    public Integer findEnergyOfPlayerInGame(Usuario user){
         Integer energy=0;
         
 
         return energy;
-    }*/
-
-    public void initEnergy(Game game){
-        List<Usuario> players = new ArrayList<>(game.getPlayers());
-        for(int i = 0; i < players.size(); i++){
-            Energy energyFromPlayer= getEnergyFromPlayer(players.get(i));
-            energyFromPlayer.setCounter(3);
-        }
     }
 
-    /*public void usePower(Usuario user, Power power){
+
+    /*para dar un poder crear una energia con poder
+     que haya cogido en jsp (mirar createGame de gameService)*/
+
+    public Energy initEnergy(Usuario user){
+        Energy energy= new Energy();
+        energy.setUser(user);
+        energy.setCounter(3);
+        return energy;
+    }
+
+    public void usePower(Usuario user, Power power){
         Integer energy = findEnergyOfPlayerInGame(user);
         if(energy <= 3 && energy >0){
             if(power.getId()==1){
@@ -57,8 +60,8 @@ public class EnergyService {
         newEnergy.setUser(user);
         save(newEnergy);
 
-    }*/
-    public void usePower(Usuario user){
+    }
+   /* public void usePower(Usuario user){
         Energy energy = getEnergyFromPlayer(user);
         Integer num= energy.getCounter();
         if(num <= 3 && num >0){
@@ -83,7 +86,7 @@ public class EnergyService {
         newEnergy.setUser(user);
         save(newEnergy);
 
-    }
+    }*/
 
     public void save(Energy energy) {
         energyRepo.save(energy);

@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 public class AchievementContoller {
+    
     public static final String ACHIEVEMENT_LIST="Achievements";
     public static final String USER_ACHIEVEMENT="/user/achievements";
 
