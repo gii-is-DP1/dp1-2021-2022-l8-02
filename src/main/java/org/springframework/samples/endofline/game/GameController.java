@@ -84,7 +84,7 @@ public class GameController {
     }
     
     @GetMapping("/currentGame")
-    public String getGame(Model model, HttpServletResponse answer) {
+    public String getGame(Model model, HttpServletResponse response) {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
@@ -94,6 +94,7 @@ public class GameController {
         model.addAttribute("game", game);
         
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
@@ -101,13 +102,13 @@ public class GameController {
         model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
         model.addAttribute("user", getLoggedUser());
-        answer.addHeader("Refresh", "5");
+        response.addHeader("Refresh", "5");
 
         return GAME_VIEW;
     }
 
     @PostMapping("/currentGame")
-    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse answer) {
+    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
 
         try {
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
@@ -119,7 +120,7 @@ public class GameController {
         } catch(TimeOutException t){
             model.addAttribute("message", "Se acabo el tiempo para realizar el turno");
         }
-        return getGame(model, answer);
+        return getGame(model, response);
     }
 
     @GetMapping("/new")
@@ -179,7 +180,7 @@ public class GameController {
         statisticsService.save(s);
 
 
-        if(game.getPlayers().get(0).equals(getLoggedUser()))
+        if(game.getPlayers().get(0).equals(getLoggedUser())) 
             gameService.startGame(game);
         return "redirect:/games/currentGame";
     }
