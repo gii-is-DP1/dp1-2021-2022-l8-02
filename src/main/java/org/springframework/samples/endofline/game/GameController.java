@@ -111,8 +111,8 @@ public class GameController {
 
         List<Power> allPowers = powerService.findAll();
         List<String> PowersName = new ArrayList<>();
-        for(int i = 0; i < allPowers.size(); i++){
-            String name = allPowers.get(i).getName();
+        for(Power p: allPowers){
+            String name = p.getName();
             PowersName.add(name);
         }
         model.addAttribute("powers", PowersName);
@@ -183,7 +183,7 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/start")
-    public String startGame(/*@ModelAttribute("Energy") @Valid Energy energy,*/ @PathVariable("gameId") Game game, Model model) {
+    public String startGame(@PathVariable("gameId") Game game, Model model) {
         // Cambiar a POST puede ser una mejor opcion
         statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
