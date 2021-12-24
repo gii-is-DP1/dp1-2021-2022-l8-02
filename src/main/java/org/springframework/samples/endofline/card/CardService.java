@@ -208,7 +208,7 @@ public class CardService {
                     card.setRotation(Direction.EAST);
                     break;
                 case 3:
-                    card.setRotation(Direction.WEST);
+                    card.setRotation(Direction.SOUTH);
                     break;
                 case 4:
                     card.setRotation(Direction.SOUTH);
