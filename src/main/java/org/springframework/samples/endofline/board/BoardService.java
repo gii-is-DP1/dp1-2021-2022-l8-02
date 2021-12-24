@@ -92,13 +92,13 @@ public class BoardService {
                 throw new InvalidMoveException();
             }
 
-            StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
+           /* StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
             Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
             statisticsGames.setMap(mapSet);
             Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
             statisticsGames.setPoint(pointNew);
             // Guardar los datos una vez actualizados
-            statisticsGamesService.save(statisticsGames);
+            statisticsGamesService.save(statisticsGames);*/
             roundService.refreshRound(game, player);
             gameService.save(game);
         }else{
