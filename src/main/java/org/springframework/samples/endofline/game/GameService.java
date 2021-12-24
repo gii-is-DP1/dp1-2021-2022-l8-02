@@ -149,6 +149,15 @@ public class GameService {
             }else if(numplayers == 5){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor5Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4));
+            }else if(numplayers == 6){
+                roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardFor6Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5));
+            }else if(numplayers == 7){
+                roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardFor7Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6));
+            }else if(numplayers == 8){
+                roundService.generateTurnsByPlayers(round, numplayers);
+                tileService.setFirstCardFor8Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6), cardList.get(7));
             }
         }
         game.setRound(round);
@@ -156,5 +165,4 @@ public class GameService {
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
     }
-    
 }
