@@ -102,8 +102,6 @@ public class GameController {
         model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
         model.addAttribute("user", getLoggedUser());
-        response.addHeader("Refresh", "5");
-
         return GAME_VIEW;
     }
 

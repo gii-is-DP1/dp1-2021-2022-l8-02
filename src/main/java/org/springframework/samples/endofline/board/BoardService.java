@@ -61,69 +61,72 @@ public class BoardService {
     @Autowired
     private PathService pathService;
 
-
     @Transactional
+    // TODO: No podemos tener un metodo tan largo, hay que hacer minimetodos y luego
+    // llamarlos, como en gameStart
     public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException, TimeOutException {
         Game game = gameService.getGameByPlayer(player);
-        Path p = game.getBoard().getPaths().get(card.getColor().ordinal()); //Returns the path(tiles played)followed by a player
-        List<Tile> occupiedTiles = p.getOccupiedTiles();                    //Returns the list with the occupied tiles
-        Tile lastTile = occupiedTiles.get(occupiedTiles.size()-1);          //Returns the lastTile of the previous mentioned list
-        List<Tile> availableTiles = getAdjacents(lastTile);                 //Returns a list of the available tiles respect to the lastTile given                                    
+        Path p = game.getBoard().getPaths().get(card.getColor().ordinal()); // Returns the path(tiles played)followed by
+                                                                            // a player
+        List<Tile> occupiedTiles = p.getOccupiedTiles(); // Returns the list with the occupied tiles
+        Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1); // Returns the lastTile of the previous mentioned
+                                                                     // list
+        List<Tile> availableTiles = getAdjacents(lastTile); // Returns a list of the available tiles respect to the
+                                                            // lastTile given
         if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
-            if (compareHour(game.getRound().getTurns().get(0).getStartTime()) == true) { //para el temporizador, aun no funciona seguro
-            Deck deck = deckService.getDeckFromPlayer(player);
-            Hand hand = handService.findHandByDeck(deck);
-            if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
-                // TODO: Logica de validacion de una jugada aqui?
-                card.setRotation(cardService.calculateRotation(tile,lastTile));
-                cardService.save(card);
-                hand.getCards().remove(card);
-                handService.save(hand);
-                tile.setCard(card);
-                tileService.save(tile);
-                p.getOccupiedTiles().add(tile);                             //Adds the new tile thats been occupied by the player to his path
-                pathService.save(p);
-            } else {
-                throw new InvalidMoveException();
-            }
+            if (compareHour(game.getRound().getTurns().get(0).getStartTime()) == true) { // para el temporizador, aun no
+                                                                                         // funciona seguro
+                Deck deck = deckService.getDeckFromPlayer(player);
+                Hand hand = handService.findHandByDeck(deck);
+                if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
+                    // TODO: Logica de validacion de una jugada aqui?
+                    card.setRotation(cardService.calculateRotation(tile, lastTile));
+                    cardService.save(card);
+                    hand.getCards().remove(card);
+                    handService.save(hand);
+                    tile.setCard(card);
+                    tileService.save(tile);
+                    p.getOccupiedTiles().add(tile); // Adds the new tile thats been occupied by the player to his path
+                    pathService.save(p);
+                    StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
+                    Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
+                    statisticsGames.setMap(mapSet);
+                    Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
+                    statisticsGames.setPoint(pointNew);
+                    // Guardar los datos una vez actualizados
+                    statisticsGamesService.save(statisticsGames);
 
-                StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
-                Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
-                statisticsGames.setMap(mapSet);
-                Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
-                statisticsGames.setPoint(pointNew);
-                // Guardar los datos una vez actualizados
-                statisticsGamesService.save(statisticsGames);
-                roundService.refreshRound(game, player);
-                gameService.save(game);
-            }else{
+                } else {
+                    throw new InvalidMoveException();
+                }
+            } else {
                 throw new TimeOutException();
             }
         } else {
             throw new NotUrTurnException();
         }
+        roundService.refreshRound(game, player);
+        gameService.save(game);
     }
 
-    //Segundos en un día: 86399 (23:59:59)
+    // Segundos en un día: 86399 (23:59:59)
     public Boolean compareHour(Integer startTime) {
-        Boolean out = null;
         Integer hourNow = hourToInteger();
-        if (hourNow > startTime){
+        if (hourNow > startTime) {
             Integer substract = hourNow - startTime;
-            if(substract < 300){
-                out = true;
-            }else{
-                out = false;
+            if (substract < 300) {
+                return true;
+            } else {
+                return false;
             }
-        }else{
+        } else {
             Integer substract = startTime - hourNow;
-            if(substract < 86700){
-                out = false;
-            }else{
-                out = true;
-            }   
+            if (substract < 86700) {
+                return false;
+            } else {
+                return true;
+            }
         }
-        return out;
     }
 
     public Integer hourToInteger() {
@@ -241,12 +244,12 @@ public class BoardService {
         }
     }
 
-    public List<Tile> getAdjacents(Tile tile){
+    public List<Tile> getAdjacents(Tile tile) {
         return tile.getCard().getCardType().getDirections()
-                    .stream().map(Enum::ordinal)
-                    .map(x -> (x + tile.getCard().getRotation().ordinal())%Direction.values().length)
-                    .map(x -> Direction.values()[x])
-                    .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
-                    .collect(Collectors.toList());
+                .stream().map(Enum::ordinal)
+                .map(x -> (x + tile.getCard().getRotation().ordinal()) % Direction.values().length)
+                .map(x -> Direction.values()[x])
+                .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
+                .collect(Collectors.toList());
     }
 }
