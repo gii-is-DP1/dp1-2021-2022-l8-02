@@ -20,9 +20,9 @@ import lombok.Setter;
 @Table(name = "turns")
 public class Turn extends BaseEntity{
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "turn")
+    @OneToOne(cascade = CascadeType.ALL)
     @NotNull
-    @JoinColumn(name = "usuario")
+    @JoinColumn(name = "usuario_username", referencedColumnName = "username")
     private Usuario usuario;
 
     @ManyToOne

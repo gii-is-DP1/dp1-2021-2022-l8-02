@@ -52,7 +52,7 @@ public class CardService {
         Double aux = Math.sqrt(toBeOccupied.getBoard().getTiles().size());
         Integer boardDimension = aux.intValue();
         Boolean oppositeX = Math.abs(toBeOccupied.getX()-lastTileOccupied.getX()) == boardDimension-1;
-        Boolean oppositeY = Math.abs(toBeOccupied.getY()-lastTileOccupied.getX()) == boardDimension-1;
+        Boolean oppositeY = Math.abs(toBeOccupied.getY()-lastTileOccupied.getY()) == boardDimension-1;
         
         if(toBeOccupied.getX() == lastTileOccupied.getX()){
             if(toBeOccupied.getY() > lastTileOccupied.getY()){
@@ -69,7 +69,7 @@ public class CardService {
         }
         
         if(oppositeX || oppositeY ){
-            Integer auxi = res.ordinal()+2;
+            Integer auxi = (res.ordinal()+2)%4;
             res = Direction.values()[auxi];
         }return res;
     
