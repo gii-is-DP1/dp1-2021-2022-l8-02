@@ -63,6 +63,7 @@ public class RoundService {
 
     public List<Turn> calculateNextRoundTurns(Round round, int numPlayers){
         List<Turn> turns = new ArrayList<>();
+        List<Turn> previousTurns = round.getTurns();
         List<Integer> inics = new ArrayList<>();
         if(round.getId()==1){
             List<Integer> ls = new ArrayList<>();
