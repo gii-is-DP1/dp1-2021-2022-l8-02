@@ -2,11 +2,13 @@ package org.springframework.samples.endofline.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
@@ -57,6 +59,31 @@ public class RoundService {
         }
         round.setTurns(turns);
         save(round);
+    }
+
+    public List<Turn> calculateNextRoundTurns(Round round, int numPlayers){
+        List<Turn> turns = new ArrayList<>();
+        List<Integer> inics = new ArrayList<>();
+        if(round.getId()==1){
+            List<Integer> ls = new ArrayList<>();
+            for(int i = 0;i<numPlayers;i++) ls.add(i);
+            Collections.shuffle(ls);
+            for(Integer e:ls){
+                Turn turn = new Turn();
+                turn.setRound(round);
+                turn.setUsuario(round.getPlayers().get(e));
+                turnService.save(turn);
+                turns.add(turn);
+                round.getPlayers().get(e).setTurn(turn);
+                usuarioService.save(round.getPlayers().get(e));
+            }
+        }else{
+            for(int i = 0;i < numPlayers;i++){
+                List<Tile> ocTiles = round.getGame().getBoard().getPaths().get(i).getOccupiedTiles();//This could be stored maybe to gain efficiency
+                Integer inic = ocTiles.get(ocTiles.size()-1).getCard().getCardType().getIniciative();
+                inics.add(inic);
+            }
+        }return turns;
     }
 
     @Transactional
