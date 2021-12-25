@@ -14,6 +14,7 @@
         <eol:hand cards="${hand.cards}"></eol:hand>
 </div>
 
+
     <form:form method="POST" modelAttribute="hand" action="/games/newHand">
         <div class="row">
             <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">New Hand</button>
@@ -25,6 +26,7 @@
             <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">New Cards</button>
         </div>
     </form:form>
+
     <!-- <div class="row">
         <a href="/statisticsGame/${game.id}/${user.username}"><button>Statistics</button></a>
     </div> -->

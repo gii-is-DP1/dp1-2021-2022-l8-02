@@ -1,7 +1,6 @@
 package org.springframework.samples.endofline.card;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import javax.transaction.Transactional;
@@ -33,6 +32,7 @@ public class HandService {
     public void save(Hand hand){
         handRepository.save(hand);
     }
+
 
     public void generateChangeHand(Deck deck) throws PlayCardWhitHandSizeLessThanFive{
         Hand hand= findHandByDeck(deck);
