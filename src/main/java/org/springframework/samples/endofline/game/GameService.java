@@ -157,4 +157,11 @@ public class GameService {
         gameRepository.save(game);
     }
     
+    // public void userLost(Game game){
+    //     List<Usuario> players = new ArrayList<>(game.getPlayers());
+    //     (Usuario player : game.getPlayers()){
+    //         if()
+    //     }
+    // }
+
 }

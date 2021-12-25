@@ -88,18 +88,19 @@ public class BoardService {
                     tileService.save(tile);
                     p.getOccupiedTiles().add(tile); // Adds the new tile thats been occupied by the player to his path
                     pathService.save(p);
-                    StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
-                    Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
-                    statisticsGames.setMap(mapSet);
-                    Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
-                    statisticsGames.setPoint(pointNew);
+                    // StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
+                    // Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
+                    // statisticsGames.setMap(mapSet);
+                    // Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
+                    // statisticsGames.setPoint(pointNew);
                     // Guardar los datos una vez actualizados
-                    statisticsGamesService.save(statisticsGames);
+                    // statisticsGamesService.save(statisticsGames);
 
                 } else {
                     throw new InvalidMoveException();
                 }
             } else {
+                roundService.refreshRound(game, player);
                 throw new TimeOutException();
             }
         } else {
