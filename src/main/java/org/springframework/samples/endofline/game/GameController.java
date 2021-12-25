@@ -1,23 +1,26 @@
 package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.StatisticsGamesService;
+import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
+import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
+import org.springframework.samples.endofline.card.HandService;
+import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -54,18 +57,17 @@ public class GameController {
     private BoardService boardService;
     private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
+    private HandService handService;
 
     
-
-
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
+    public GameController(GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService, HandService handService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
         this.statisticsGamesService= statisticsGamesService;
         this.statisticsService = statisticsService;
-
+        this.handService = handService;
     }
 
     @InitBinder
@@ -81,14 +83,13 @@ public class GameController {
 
     @GetMapping
     public String getGames(Model model) {
-        // Me gustaria hacer el sistema de pageable aqui :D
         Collection<Game> games = gameService.getGames();
         model.addAttribute("games", games);
         return GAME_LIST;
     }
     
     @GetMapping("/currentGame")
-    public String getGame(Model model) {
+    public String getGame(Model model, HttpServletResponse response) {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
@@ -96,38 +97,55 @@ public class GameController {
         }
 
         model.addAttribute("game", game);
-        System.out.println(game.getGameState());
         
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
         model.addAttribute("hand", boardService.handByDeck(deck));
-        // model.addAttribute("deck", boardService.deckFromPlayers(getLoggedUser()));
-        // For rendering card images
-        model.addAttribute("cardTypes",boardService.getAllCardTypes() );
+        model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
-
         model.addAttribute("user", getLoggedUser());
-
         StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
         model.addAttribute("statistiscPostGame",statisticsGames);
-
         return GAME_VIEW;
     }
 
+    @RequestMapping("/newHand")
+    public String getRestartHand(Model model, HttpServletResponse response, HttpServletRequest request){
+        if(!request.getMethod().equalsIgnoreCase("post")){
+            return "redirect:/games/currentGame";
+        }
+        Deck deck = boardService.deckFromPlayers(getLoggedUser());
+        try{
+        handService.generateChangeHand(deck);
+        }catch(PlayCardWhitHandSizeLessThanFive v){
+        model.addAttribute("message", "No puedes hacer esto recula");
+        return getGame(model, response);
+        }
+        return "redirect:/games/currentGame";
+    }
+
+    @PostMapping("/newCards")
+    public String getNewCards(){
+        Deck deck= boardService.deckFromPlayers(getLoggedUser());
+        handService.generateDefaultHand(deck);
+        return  "redirect:/games/currentGame";
+    }
+    
     @PostMapping("/currentGame")
-    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model) {
+    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
 
         try {
-
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
-
             boardService.playCard(getLoggedUser() ,card, tile);
         } catch (InvalidMoveException e) {
-            model.addAttribute("message", "No puedes realizar esa acción"); // Esto no se muestra si se hace un redirect
+            model.addAttribute("message", "No puedes realizar esa acción");
+        } catch (NotUrTurnException n){
+            model.addAttribute("message", "No es tu turno");
         }
-        return getGame(model); // No se si esto es correcto o una buena forma de hacerlo
+        return getGame(model, response);
     }
 
     @GetMapping("/new")
@@ -166,7 +184,6 @@ public class GameController {
     @GetMapping("/join/{gameId}")
     public String joinGame(@PathVariable("gameId") Game game) {
         gameService.joinGame(game, getLoggedUser());
-        //COMPROBAR QUE EL JUGADOR NO ESTA YA EN LA PARTIDA
         return "redirect:/games/currentGame";
     }
     
@@ -188,7 +205,7 @@ public class GameController {
         statisticsService.save(s);
 
 
-        if(game.getPlayers().get(0).equals(getLoggedUser()))
+        if(game.getPlayers().get(0).equals(getLoggedUser())) 
             gameService.startGame(game);
         return "redirect:/games/currentGame";
     }

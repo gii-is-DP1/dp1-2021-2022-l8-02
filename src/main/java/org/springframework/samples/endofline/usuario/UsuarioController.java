@@ -10,7 +10,6 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -112,7 +111,7 @@ public class UsuarioController {
 		if (result.hasErrors()) {
 			return USUARIOS_FORM;
 		}
-		else if(list.contains(usuario.getUsername())){
+		else if(usuarioService.getallUsernames().contains(usuario.getUsername())){
 			return USUARIOS_FORM;
 		}
 		else{
@@ -127,37 +126,25 @@ public class UsuarioController {
 		return REGISTER_USER;
 	}
 
-	// Post para registrarse como nuevo usuario
 	@PostMapping("/register")
 	public String registerUser(@Valid Usuario usuario, BindingResult binding) {
-		List<String> usernames = new ArrayList<>();
-		List<String> emails = new ArrayList<>();
-		for (Usuario user : usuarioService.findAll()) {
-			String name = user.getUsername();
-			String email = user.getEmail();
-			usernames.add(name);
-			emails.add(email);
-		}
 		if (binding.hasErrors()) {
 			return REGISTER_USER;
-		}else if (usernames.contains(usuario.getUsername())) {
+		} else if (usuarioService.getallUsernames().contains(usuario.getUsername())) {
 			binding.rejectValue("username", "usernamex2", "Ya existe un usuario con este nombre");
 			return REGISTER_USER;
-		} else if (emails.contains(usuario.getEmail())) {
+		} else if (usuarioService.getallEmails().contains(usuario.getEmail())) {
 			binding.rejectValue("email", "emailx2", "Ya existe un usuario con este email");
 			return REGISTER_USER;
-		} else {
+		} //else if (binding.getFieldValue("password") != binding.getFieldValue("passwordRepeat")){
+		// 	binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
+		// 	return REGISTER_USER;
+		// }
+		 else {
 			this.usuarioService.save(usuario);
 			this.authoritiesSer.saveAuthorities(usuario.getUsername(), "jugador");
-			Statistics s = new Statistics();
-			s.setUsuario(usuario);
-			s.setNumPlayers(0);
-			s.setNumGames(0);
-			s.setDuration(0);
-			statisticsService.save(s);
+			statisticsService.initStatistics(usuario);
 			return "redirect:/lobby";
-			/*Authentication authentication=;
-			SecurityContextHolder.getContext().setAuthentication(authentication);*/
 		}
 	}
 
@@ -166,11 +153,6 @@ public class UsuarioController {
 		return INICIO;
 	}
 
-	/*@GetMapping("/lobby")
-	public String PagLobby(Model model) {
-		model.addAttribute("userName", getLoggedUser().getUsername());
-		return LOBBY;
-	}*/
 	private Usuario getLoggedUser() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) auth.getPrincipal();
@@ -187,10 +169,4 @@ public class UsuarioController {
 		model.addAttribute("usuario", getLoggedUser());
 		return PROFILE;
 	}
-
-	// @GetMapping("/login-error")
-	// public String logError(ModelMap model){
-	// model.addAttribute("usuario", new Usuario());
-	// return ERROR;
-	// }
 }
