@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.model.BaseEntity;
 import org.springframework.samples.endofline.usuario.Usuario;
 
@@ -36,5 +37,6 @@ public class Round extends BaseEntity{
     @NotNull
     private List<Usuario> players = new ArrayList<>();
 
+ 
     
 }

@@ -15,6 +15,7 @@ import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.card.HandService;
+import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -32,9 +33,10 @@ public class GameService {
     private CardService cardService;
     private HandService handService;
     private RoundService roundService;
+    private EnergyService energyService;
 
     @Autowired
-    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService) {
+    public GameService(EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService) {
 
         this.gameRepository = gameRepository;
         this.boardService = boardService;
@@ -43,6 +45,7 @@ public class GameService {
         this.cardService = cardService;
         this.handService = handService;
         this.roundService = roundService;
+        this.energyService = energyService;
     }
 
     public Collection<Game> getGames() {
@@ -125,13 +128,14 @@ public class GameService {
         roundService.save(round);
         
 
-        //Carta prueba partidas Versus con 1 persona
+        //Carta prueba partidas Versus con 1 persona 
         Card sPrueba = new Card();
         sPrueba.setCardType(cardService.findCardTypeByIniciative(-1));
         sPrueba.setColor(CardColor.GREEN);
         cardService.save(sPrueba);
 
         if(game.getGameMode() == GameMode.VERSUS){
+            
             int numplayers = game.getPlayers().size();
             List<Card> cardList = new ArrayList<>(cardService.autoColorAssignInitCards(numplayers));
             if(numplayers < 2){
@@ -160,11 +164,18 @@ public class GameService {
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor8Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6), cardList.get(7));
             }
+
+            /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+            
+            
+            energyService.initEnergy(game.getPlayers());
         }
         game.setRound(round);
         boardService.save(board);
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
+
+
     }
 
     public List<Game> getGameByState(GameState state) {
