@@ -51,24 +51,31 @@ public class TileService {
         tile1.setBoard(board);
         tile1.setCard(sRed);
         tile1.setTileState(TileState.TAKEN);
+
         pathService.initPath(board,sRed.getColor(), tile1);
+
         save(tile1);
         Tile tile2 = findTileByCoordsAndBoard(board, 4, 6);
         tile2.setBoard(board);
         tile2.setCard(sGreen);
         tile2.setTileState(TileState.TAKEN);
+
         pathService.initPath(board,sGreen.getColor(), tile2);
+
         save(tile2);
         Tile tile3 = findTileByCoordsAndBoard(board, 3, 5);
         tile3.setBoard(board);
         tile3.setCard(sWhite);
         tile3.setTileState(TileState.TAKEN);
+
         pathService.initPath(board,sWhite.getColor(), tile3);
+
         save(tile3);
     }
 
     @Transactional
     public void setFirstCardFor4Players(Board board, Card sRed, Card sGreen, Card sWhite, Card sBlue){
+
         Tile tile1 = findTileByCoordsAndBoard(board, 4, 3);
         tile1.setBoard(board);
         tile1.setCard(sRed);
@@ -101,6 +108,7 @@ public class TileService {
         tile1.setBoard(board);
         tile1.setCard(sRed);
         tile1.setTileState(TileState.TAKEN);
+
         pathService.initPath(board,sRed.getColor(), tile1);
         save(tile1);
         Tile tile2 = findTileByCoordsAndBoard(board, 5, 3);

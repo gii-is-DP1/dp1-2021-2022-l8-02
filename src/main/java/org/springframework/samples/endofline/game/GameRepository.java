@@ -15,7 +15,6 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 
     Game findByName(String name);
 
-    
     @Query("SELECT game FROM Game game WHERE game.gameState = ?1")
     List<Game> getGameByGameState(GameState state);
     
