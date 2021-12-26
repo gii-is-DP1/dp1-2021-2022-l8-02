@@ -2,7 +2,6 @@ package org.springframework.samples.endofline.board;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 import javax.transaction.Transactional;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -101,6 +100,7 @@ public class BoardService {
                 }
             } else {
                 roundService.refreshRound(game, player);
+                gameService.save(game);
                 throw new TimeOutException();
             }
         } else {
