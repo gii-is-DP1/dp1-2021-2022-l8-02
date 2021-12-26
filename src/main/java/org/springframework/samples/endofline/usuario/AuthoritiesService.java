@@ -53,7 +53,6 @@ public class AuthoritiesService {
 		if(usuario.isPresent()) {
 			authority.setUsuario(usuario.get());
 			authority.setAuthority(role);
-			//user.get().getAuthorities().add(authority);
 			authoritiesRepository.save(authority);
 		}else
 			throw new DataAccessException("Usuario '"+username+"' no encontrado!") {};

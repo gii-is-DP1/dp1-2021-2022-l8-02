@@ -1,12 +1,8 @@
 package org.springframework.samples.endofline.board;
 
-import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
-
-import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 
 import org.springframework.stereotype.Controller;
@@ -27,12 +23,6 @@ public class StatisticsGamesController {
 
     @Autowired
     GameService gameService;
-    // @GetMapping("/staticsGames")
-    // public String findAll(ModelMap modelMap){
-    //     Collection<StatisticsGames> collec= statisticsGamesService.findAll();
-    //     modelMap.addAllAttributes(collec);
-    //     return STATISTICSGAME;
-    // }
 
     @GetMapping("/statisticsGame/{gameId}/{userName}")
     public String findStatisticsGameByUser(@PathVariable("gameId") Integer gameId, @PathVariable("userName") String userName, ModelMap model){

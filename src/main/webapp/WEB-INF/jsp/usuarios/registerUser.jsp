@@ -7,30 +7,39 @@
 <%@ taglib prefix="endofline" tagdir="/WEB-INF/tags" %>
 
 <endofline:layoutEOL pageName="register">
-    <form:form modelAttribute="usuario" class="form-horizontal" id="register-form">
-        <div class="form-group has-feedback">
-            <legend style="text-align: center;font-size: 100px; margin-top: 5%;">Registro</legend>
-            <div class ="row">
-            <div style="margin-top: 10%; margin-left: 30%;">
-                <h2 style="font-size: 30px;">Nombre de usuario</h2>
-            <endofline:inputFieldLogin name="username" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
-            <h2 style="font-size: 30px; text-align: center;">Contrase&ntilde;a</h2>
-            <label for="password" class="col-sm-2 control-label" style="font-size: 30px; margin-left: 16%;"></label>
-            <br>
-            <form:password class="form-control" path="password" style="margin-top: 3%;width: 250px; height: 35px;border-radius: 25px;text-align: center;"/>
-            <br>
-            <h2 style="font-size: 30px;" >Repetir contrase&ntilde;a</h2>
-            <label for="PasswordRepeat" class="col-sm-2 control-label" style="font-size: 30px; margin-left: 16%;"></label>
-            <br>
-            <input id="PasswordRepeat" name="passwordRepeat" placeholder="securePassword" type="password" style="width: 250px; height: 35px;border-radius: 25px;text-align: center;"/>
-            <h2 style="font-size: 30px; text-align: center;">Email</h2>
-            <endofline:inputFieldLogin name="email" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
-            </div>            
-        </div>
-    </div>
+
+        <div class="row" style="text-align: center!important;">
+            <p style="font-size:50px; font-style: italic; font-weight: bold;">REGISTRO</p>
+        </div>    
+        <form:form modelAttribute="usuario" class="form-horizontal" id="register-form">
+            <div class="form-group has-feedback" style="text-align: center;">
+                <div class ="row">
+                        <p style="font-size: 20px; margin-bottom: 0px; margin-top: 5px;">Nombre de usuario</p>
+                    <endofline:inputFieldLogin name="username" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+                </div>
+                <div class="row">
+                    
+                    <p style="font-size: 20px; text-align: center;margin-bottom: 0px; margin-top: 5px;">Contrase&ntilde;a</p>
+                    <!--label for="password" class="col-sm-2 control-label" style="font-size: 20px; margin-left: 16%;"></label-->
+                   
+                    <form:password name= "password" class="form-control" path="password" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+                
+                </div>
+                <div class="row">
+                    <p style="font-size: 20px; margin-bottom: 0px; margin-top: 5px;" >Repetir contrase&ntilde;a</p>
+                    <!--label for="PasswordRepeat" class="col-sm-2 control-label" style="font-size: 20px; margin-left: 16%;"></label-->
+                   
+                    <input id="passwordRepeat" name="passwordRepeat" placeholder="securePassword" type="password"style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+                </div>
+                <div class="row">
+                    <p style="font-size: 20px; text-align: center; margin-bottom: 0px; margin-top: 5px;">Email</p>
+                    <endofline:inputFieldLogin name="email" style="margin-bottom: 4%;margin-top: 3%;width: 250px; height: 35px; border-radius: 25px; text-align: center;"/>
+                </div>            
+            </div>
+    
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10" style="margin-left: 37%; margin-top: 3.5%;">
-                <button class="btn btn-default" type="submit" style="width: 150px; height: 30px; border-radius: 25px;">Registrarse</button>
+            <div class="col-sm-offset-2 col-sm-10" style=" text-align: center;">
+                <button class="neon-button" type="submit" style="background-color: transparent; font-size: 20px;">Registrarse</button>
             </div>
         </div>
     </form:form>

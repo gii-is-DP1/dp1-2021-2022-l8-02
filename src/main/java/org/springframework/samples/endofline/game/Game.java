@@ -9,7 +9,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -41,7 +40,6 @@ public class Game extends BaseEntity {
     @Column(name = "hidden")
     private Boolean hidden;
 
-    // @NotNull Si no se comenta falla al crear la sala del juego
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "game")
     private Board board;
 
@@ -50,6 +48,9 @@ public class Game extends BaseEntity {
     private GameMode gameMode;
 
     @Enumerated(EnumType.STRING)
-    private GameState GameState;
-    
+    private GameState gameState;
+
+    @OneToOne
+    private Round round;
+
 }
