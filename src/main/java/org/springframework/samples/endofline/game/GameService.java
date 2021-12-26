@@ -166,4 +166,8 @@ public class GameService {
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
     }
+
+    public List<Game> getGameByState(GameState state) {
+        return gameRepository.getGameByGameState(state);
+    }
 }

@@ -214,4 +214,15 @@ public class GameController {
         return "redirect:/games/currentGame";
     }
 
+    @GetMapping("/listGames/{gameState}")
+    public String listGamesByState(@PathVariable("gameState") String gameState, Model model){
+        for(Game g: gameService.getGames()){
+            if((g.getGameState().toString().toLowerCase()).equals(gameState)){
+                List<Game>  pg = gameService.getGameByState(g.getGameState());
+                model.addAttribute("games", pg);
+            }
+        }
+    return "games/listGames";
+    }    
+
 }
