@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
 import org.springframework.samples.endofline.board.StatisticsGamesService;
+import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
@@ -18,6 +22,9 @@ import org.springframework.samples.endofline.board.exceptions.TimeOutException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
+import org.springframework.samples.endofline.card.HandService;
+import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
+
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -54,15 +61,18 @@ public class GameController {
     private BoardService boardService;
     private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
+    private HandService handService;
 
     
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
+    public GameController(GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService, HandService handService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
         this.statisticsGamesService= statisticsGamesService;
         this.statisticsService = statisticsService;
+        this.handService = handService;
+
     }
 
     @InitBinder
@@ -102,9 +112,33 @@ public class GameController {
         model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
         model.addAttribute("user", getLoggedUser());
+        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
+        model.addAttribute("statistiscPostGame",statisticsGames);
         return GAME_VIEW;
     }
 
+    @RequestMapping("/newHand")
+    public String getRestartHand(Model model, HttpServletResponse response, HttpServletRequest request){
+        if(!request.getMethod().equalsIgnoreCase("post")){
+            return "redirect:/games/currentGame";
+        }
+        Deck deck = boardService.deckFromPlayers(getLoggedUser());
+        try{
+        handService.generateChangeHand(deck);
+        }catch(PlayCardWhitHandSizeLessThanFive v){
+        model.addAttribute("message", "No puedes hacer esto recula");
+        return getGame(model, response);
+        }
+        return "redirect:/games/currentGame";
+    }
+
+    @PostMapping("/newCards")
+    public String getNewCards(){
+        Deck deck= boardService.deckFromPlayers(getLoggedUser());
+        handService.generateDefaultHand(deck);
+        return  "redirect:/games/currentGame";
+    }
+    
     @PostMapping("/currentGame")
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
 

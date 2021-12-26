@@ -165,10 +165,14 @@ public class BoardService {
         int numPlayers = board.getGame().getPlayers().size();
         int size = 0;
 
-        if (numPlayers < 4) {
-            size = 7;
-        } else if (numPlayers > 3) {
+        if (numPlayers > 7) {
+            size = 13;
+        } else if (numPlayers > 5) {
+            size = 11;
+        }else if (numPlayers > 3){
             size = 9;
+        }else{
+            size = 7;
         }
 
         for (int x = 0; x < size; x++) {
