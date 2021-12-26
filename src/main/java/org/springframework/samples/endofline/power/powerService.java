@@ -16,10 +16,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class powerService {
+public class PowerService {
     
     @Autowired
-    powerRepository powerRepo;
+    PowerRepository powerRepo;
 
    public Power findByName(String name){
        return powerRepo.findByName(name);

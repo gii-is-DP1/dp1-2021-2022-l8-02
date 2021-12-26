@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface powerRepository extends CrudRepository<Power, Integer> {
+public interface PowerRepository extends CrudRepository<Power, Integer> {
     
     List<Power> findAll();
 

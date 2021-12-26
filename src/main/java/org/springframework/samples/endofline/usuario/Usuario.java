@@ -48,7 +48,7 @@ public class Usuario{
    @OneToMany(cascade = CascadeType.ALL)
     private List<Achievement> achievements;
 
-    @OneToOne
+    @OneToOne(mappedBy = "usuario")
     private Turn turn;
 
     @OneToOne

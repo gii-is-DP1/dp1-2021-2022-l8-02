@@ -6,7 +6,10 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.endofline.power.powerService;
+import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
+import org.springframework.samples.endofline.game.Round;
+import org.springframework.samples.endofline.game.RoundService;
+import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
@@ -18,8 +21,9 @@ public class EnergyService {
     @Autowired 
     private EnergyRepository energyRepo;
 
-    private powerService powerService;
+    private PowerService powerService;
     private UsuarioService userService;
+    private RoundService roundService;
 
     public Energy getEnergyFromPlayer(Usuario user){
         return energyRepo.findEnergyByPlayerUsername(user.getUsername());
@@ -37,32 +41,39 @@ public class EnergyService {
         Energy energy= new Energy();
         energy.setCounter(3);
         energy.setUser(u);
+        /*energy.setRound(u.getTurn().getRound());*/
         u.setEnergy(energy);
         save(energy);
     }
        
     }
-
-    public void usePower(Usuario user, String powerName){
+    public void usePower(Usuario user, Integer powerId) throws DontUsePowerInTheSameRound{
         Integer energy = getEnergyFromPlayer(user).getCounter();
-        if(energy <= 3 && energy >0){
-            if(powerService.findByName(powerName).getId()==1){
+        Round round = user.getTurn().getRound();
+        if(round.getId()>2 && getEnergyFromPlayer(user).getLastRound() != user.getTurn().getRound().getId()){
+            if(energy <= 3 && energy >0){
+                if(powerId == 1){
+                
+                }else if(powerId == 2){
 
-            }else if(powerService.findByName(powerName).getId()==2){
+                }else if(powerId == 3){
 
-            }else if(powerService.findByName(powerName).getId()==3){
-
-            }else if(powerService.findByName(powerName).getId()==4){
-
+                }else if(powerId == 4){ 
+                
+                }
+                energy-=1;
             }
-            energy-=1;
+        }else{
+            throw new DontUsePowerInTheSameRound();
         }
         Energy newEnergy= new Energy();
         newEnergy.setCounter(energy);
         newEnergy.setUser(user);
+        newEnergy.setLastRound(user.getTurn().getRound().getId());
+        user.setEnergy(newEnergy);
         save(newEnergy);
-
     }
+ 
    /* public void usePower(Usuario user){
         Energy energy = getEnergyFromPlayer(user);
         Integer num= energy.getCounter();
