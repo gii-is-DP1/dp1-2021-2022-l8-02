@@ -3,13 +3,15 @@ package org.springframework.samples.endofline.energies;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.endofline.game.Game;
-import org.springframework.samples.endofline.power.Power;
-import org.springframework.samples.endofline.power.powerRepository;
 import org.springframework.samples.endofline.power.powerService;
 import org.springframework.samples.endofline.usuario.Usuario;
+import org.springframework.samples.endofline.usuario.UsuarioService;
+import org.springframework.stereotype.Service;
 
+@Service
 public class EnergyService {
     
 
@@ -17,40 +19,40 @@ public class EnergyService {
     private EnergyRepository energyRepo;
 
     private powerService powerService;
+    private UsuarioService userService;
 
     public Energy getEnergyFromPlayer(Usuario user){
-       Energy ene= energyRepo.findEnergyByPlayerUsername(user.getUsername());
-        return ene;
+        return energyRepo.findEnergyByPlayerUsername(user.getUsername());
+    
    }
 
-    public Integer findEnergyOfPlayerInGame(Usuario user){
-        Integer energy=0;
-        
-
-        return energy;
-    }
+   
 
 
     /*para dar un poder crear una energia con poder
      que haya cogido en jsp (mirar createGame de gameService)*/
-
-    public Energy initEnergy(Usuario user){
+   @Transactional
+    public void initEnergy(List<Usuario> users){
+        for(Usuario u : users ){
         Energy energy= new Energy();
-        energy.setUser(user);
         energy.setCounter(3);
-        return energy;
+        energy.setUser(u);
+        u.setEnergy(energy);
+        save(energy);
+    }
+       
     }
 
-    public void usePower(Usuario user, Power power){
-        Integer energy = findEnergyOfPlayerInGame(user);
+    public void usePower(Usuario user, String powerName){
+        Integer energy = getEnergyFromPlayer(user).getCounter();
         if(energy <= 3 && energy >0){
-            if(power.getId()==1){
+            if(powerService.findByName(powerName).getId()==1){
 
-            }else if(power.getId()==2){
+            }else if(powerService.findByName(powerName).getId()==2){
 
-            }else if(power.getId()==3){
+            }else if(powerService.findByName(powerName).getId()==3){
 
-            }else if(power.getId()==4){
+            }else if(powerService.findByName(powerName).getId()==4){
 
             }
             energy-=1;

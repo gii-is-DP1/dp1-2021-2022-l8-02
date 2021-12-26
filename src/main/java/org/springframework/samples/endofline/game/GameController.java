@@ -63,12 +63,14 @@ public class GameController {
     private powerService powerService;
     
     @Autowired
-    public GameController(GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
+    public GameController(EnergyService energyService, powerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
         this.statisticsGamesService = statisticsGamesService;
         this.statisticsService = statisticsService;
+        this.powerService = powerService;
+        this.energyService = energyService; 
     }
 
     @InitBinder
@@ -118,6 +120,10 @@ public class GameController {
         model.addAttribute("powers", PowersName);
 
         model.addAttribute("power",new Power());
+
+       
+        model.addAttribute("energy", getLoggedUser().getEnergy());
+        
 
         return GAME_VIEW;
     }
@@ -169,6 +175,8 @@ public class GameController {
         return "redirect:/games/currentGame";
     }
 
+
+
     @GetMapping("/join/{gameId}")
     public String joinGame(@PathVariable("gameId") Game game) {
         gameService.joinGame(game, getLoggedUser());
@@ -192,9 +200,9 @@ public class GameController {
         s.setNumPlayers(game.getPlayers().size());
         statisticsService.save(s);
         
-        /*energyService.initEnergy(getLoggedUser());*/
+
         
-        
+       
 
         if(game.getPlayers().get(0).equals(getLoggedUser())) 
             gameService.startGame(game);
