@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.samples.endofline.board.BoardService;
 import org.springframework.samples.endofline.board.StatisticsGamesService;
 import org.springframework.samples.endofline.board.Tile;
@@ -19,6 +20,7 @@ import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
 
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -84,16 +86,19 @@ public class GameController {
     }
     
     @GetMapping("/currentGame")
-    public String getGame(Model model, HttpServletResponse response) {
+    public String getGame(Model model, HttpServletResponse response, @RequestParam(required = false) String errorMessage) {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
             return GAME_LIST;
         }
-
+        
         model.addAttribute("game", game);
         
-        if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        if(game.getGameState() == GameState.LOBBY){
+            model.addAttribute("errorMessage", errorMessage); 
+            return GAME_LOBBY;
+        }  
         response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
@@ -166,8 +171,8 @@ public class GameController {
         return "redirect:/games";
     }
 
-    @GetMapping("/{gameId}/start")
-    public String startGame(@PathVariable("gameId") Game game, Model model) {
+    @GetMapping("/{gameId}/start/")
+    public String startGame(@PathVariable("gameId") Game game, Model model, @Param("errorMessage") String errorMessage) {
         // Cambiar a POST puede ser una mejor opcion
         statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
@@ -178,7 +183,11 @@ public class GameController {
 
 
         if(game.getPlayers().get(0).equals(getLoggedUser())) 
-            gameService.startGame(game);
+            try{
+                gameService.startGame(game);
+            }catch(TwoPlayersAtLeastException t){
+                return "redirect:/games/currentGame/?errorMessage=aa";
+            }
         return "redirect:/games/currentGame";
     }
 
