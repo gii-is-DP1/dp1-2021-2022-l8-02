@@ -84,8 +84,8 @@ public class RoundService {
         turnService.delete(turnService.getByUsername(player.getUsername()));
         game.getRound().setTurns(turns);
         if(game.getRound().getTurns().size() == 0){
-            delete(game.getRound());
-            Round round = new Round();
+            Round round = game.getRound();
+            round.setNumber(game.getRound().getNumber()+1);
             round.setGame(game);
             round.setPlayers(players);
             save(round);

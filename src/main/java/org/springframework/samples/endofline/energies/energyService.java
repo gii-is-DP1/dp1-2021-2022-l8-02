@@ -67,7 +67,7 @@ public class EnergyService {
         Map<Power, Boolean> powers = user.getEnergy().getPowers();
         System.out.println(powers);
         Round round = user.getTurn().getRound();
-        if(round.getId()>2 && getEnergyFromPlayer(user).getLastRound() != user.getTurn().getRound().getId()){
+        if(round.getNumber()>2 && getEnergyFromPlayer(user).getLastRound() != user.getTurn().getRound().getNumber()){
             if(energy <= 3 && energy >0){
                 if(powerId == 1){/*aceleron*/
                     powers.put(powerService.findById(1), true);

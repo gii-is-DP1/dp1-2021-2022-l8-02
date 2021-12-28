@@ -6,7 +6,9 @@ import java.util.Map;
 
 import javax.transaction.Transactional;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
@@ -21,6 +23,7 @@ import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.card.Direction;
 import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
+import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
 
@@ -29,6 +32,7 @@ import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
+import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
@@ -73,6 +77,9 @@ public class BoardService {
 
     @Autowired
     private PowerService powerService;
+
+    @Autowired
+    private EnergyService energyService;
 
 
     @Transactional
@@ -240,13 +247,24 @@ public class BoardService {
     }
 
     public List<Tile> getAdjacents(Tile tile, Usuario user, Path p){
+        System.out.println(p.getOccupiedTiles().size());
         if(user.getEnergy().getPowers().get(powerService.findById(3)).booleanValue() == true){
+            Tile tile2 = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2);
             Card card = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2).getCard();
+            Map<Power, Boolean> map = user.getEnergy().getPowers();
+            Set<Power> powers = map.keySet();
+            for(Power po: powers){
+            map.put(po, false);
+            }
+            Energy ene = user.getEnergy();
+            ene.setPowers(map);
+            user.setEnergy(ene);
+            energyService.save(ene);
             return card.getCardType().getDirections()
             .stream().map(Enum::ordinal)
-            .map(x -> (x + tile.getCard().getRotation().ordinal())%Direction.values().length)
+            .map(x -> (x + tile2.getCard().getRotation().ordinal())%Direction.values().length)
             .map(x -> Direction.values()[x])
-            .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
+            .map(x -> tileService.creaTile(x, tile2, tile2.getBoard()))
             .collect(Collectors.toList());
         }
         return tile.getCard().getCardType().getDirections()

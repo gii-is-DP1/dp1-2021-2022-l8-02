@@ -54,14 +54,14 @@ public class TurnService {
         t.setCardCounter(count);
         save(t);
         player.setTurn(t);
-        if(player.getTurn().getRound().getId() == 1 || powers.get(powerService.findById(2)).booleanValue() == true){
+        if(player.getTurn().getRound().getNumber() == 1 || powers.get(powerService.findById(2)).booleanValue() == true){
             roundService.refreshRound(game, player);
         }else if(powers.get(powerService.findById(1)).booleanValue() == true){
             if(player.getTurn().getCardCounter() == 3){
                 roundService.refreshRound(game, player);
             }
         }
-        else if (player.getTurn().getRound().getId() >= 2){
+        else if (player.getTurn().getRound().getNumber() >= 2){
             if(player.getTurn().getCardCounter() == 2){
                 roundService.refreshRound(game, player);
             }

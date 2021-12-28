@@ -37,6 +37,8 @@ public class Round extends BaseEntity{
     @NotNull
     private List<Usuario> players = new ArrayList<>();
 
+    @NotNull
+    private Integer number = 1;
  
     
 }
