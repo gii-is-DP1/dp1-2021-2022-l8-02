@@ -3,10 +3,15 @@ package org.springframework.samples.endofline.game;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.energies.Energy;
+import org.springframework.samples.endofline.energies.EnergyService;
+import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
@@ -22,6 +27,9 @@ public class RoundService {
 
     @Autowired
     UsuarioService usuarioService;
+
+    @Autowired
+    EnergyService energyService;
 
     public Collection<Round> getRounds(){
         return roundRepository.findAll();
@@ -61,6 +69,15 @@ public class RoundService {
 
     @Transactional
     public void refreshRound(Game game, Usuario player){
+        Map<Power, Boolean> map = player.getEnergy().getPowers();
+        Set<Power> powers = map.keySet();
+        for(Power p: powers){
+           map.put(p, false);
+        }
+        Energy ene = player.getEnergy();
+        ene.setPowers(map);
+        player.setEnergy(ene);
+        energyService.save(ene);
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
         List<Usuario> players = new ArrayList<>(game.getPlayers());
         turns.remove(turnService.getByUsername(player.getUsername()));

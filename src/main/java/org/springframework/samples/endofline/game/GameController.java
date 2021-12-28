@@ -67,13 +67,13 @@ public class GameController {
     private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
-    
+    private TurnService turnService;
    
     private HandService handService;
 
     
     @Autowired
-    public GameController(EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService, HandService handService){
+    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService, HandService handService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
@@ -82,6 +82,7 @@ public class GameController {
         this.powerService = powerService;
         this.energyService = energyService; 
         this.handService = handService;
+        this.turnService = turnService;
 
     }
 
@@ -182,7 +183,7 @@ public class GameController {
 
         try {
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
-            boardService.playCard(getLoggedUser() ,card, tile);
+            boardService.playCard(getLoggedUser(),card, tile);
         } catch (InvalidMoveException e) {
             model.addAttribute("message", "No puedes realizar esa acción");
         } catch (NotUrTurnException n){

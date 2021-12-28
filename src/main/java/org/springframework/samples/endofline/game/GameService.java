@@ -18,6 +18,7 @@ import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
+import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 
 import org.springframework.stereotype.Service;
@@ -34,9 +35,10 @@ public class GameService {
     private HandService handService;
     private RoundService roundService;
     private EnergyService energyService;
+    private PowerService powerService;
 
     @Autowired
-    public GameService(EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService) {
+    public GameService(PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService) {
 
         this.gameRepository = gameRepository;
         this.boardService = boardService;
@@ -46,6 +48,7 @@ public class GameService {
         this.handService = handService;
         this.roundService = roundService;
         this.energyService = energyService;
+        this.powerService = powerService;
     }
 
     public Collection<Game> getGames() {
@@ -114,6 +117,8 @@ public class GameService {
                 boardService.generateSolitaireBoard(board);
                 break;
             default:
+            /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
 
@@ -165,10 +170,10 @@ public class GameService {
                 tileService.setFirstCardFor8Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6), cardList.get(7));
             }
 
-            /*INICIALIZAR ENERGIA A CADA JUGADOR*/
             
             
-            energyService.initEnergy(game.getPlayers());
+            
+            
         }
         game.setRound(round);
         boardService.save(board);
