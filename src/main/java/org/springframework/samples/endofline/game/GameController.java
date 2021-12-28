@@ -253,7 +253,7 @@ public class GameController {
 
         
        
-
+        System.out.println(game.getPlayers().get(0).getUsername());
         if(game.getPlayers().get(0).equals(getLoggedUser())) 
             gameService.startGame(game);
         return "redirect:/games/currentGame";
