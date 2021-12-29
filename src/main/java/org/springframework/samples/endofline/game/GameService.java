@@ -18,7 +18,11 @@ import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
+
+import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
+
 import org.springframework.samples.endofline.power.PowerService;
+
 import org.springframework.samples.endofline.usuario.Usuario;
 
 import org.springframework.stereotype.Service;
@@ -103,8 +107,10 @@ public class GameService {
     }
 
     @Transactional
-    public void startGame(Game game) {
-
+    public void startGame(Game game) throws TwoPlayersAtLeastException {
+        if(game.getPlayers().size()==1){
+            throw new TwoPlayersAtLeastException();
+        }
         Board board = new Board();
         board.setGame(game);
         boardService.save(board);

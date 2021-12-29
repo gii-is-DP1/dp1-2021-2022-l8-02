@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import org.springframework.samples.endofline.energies.exception.DontUsePowerInTh
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -105,16 +107,23 @@ public class GameController {
     }
     
     @GetMapping("/currentGame")
-    public String getGame(Model model, HttpServletResponse response) {
+    public String getGame(HttpSession session, Model model, HttpServletResponse response) {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
             return GAME_LIST;
         }
-
+        
         model.addAttribute("game", game);
         
-        if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
+            model.addAttribute("message", session.getAttribute("errorMessage"));
+        }
+
+        if(game.getGameState() == GameState.LOBBY){
+            return GAME_LOBBY;
+        }
+
         response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
@@ -189,7 +198,8 @@ public class GameController {
         } catch (NotUrTurnException n){
             model.addAttribute("message", "No es tu turno");
         }
-        return getGame(model, response);
+        //return getGame(model, response);
+        return "redirect:/games/currentGame";
     }
 
     @GetMapping("/new")
@@ -241,7 +251,7 @@ public class GameController {
     }
 
     @GetMapping("/{gameId}/start")
-    public String startGame(@PathVariable("gameId") Game game, Model model) {
+    public String startGame(@PathVariable("gameId") Game game, Model model, HttpSession session) {
         // Cambiar a POST puede ser una mejor opcion
         statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
@@ -255,7 +265,13 @@ public class GameController {
        
         System.out.println(game.getPlayers().get(0).getUsername());
         if(game.getPlayers().get(0).equals(getLoggedUser())) 
-            gameService.startGame(game);
+            try{
+                gameService.startGame(game);
+            }catch(TwoPlayersAtLeastException t){
+                String errorMsg = "Para comenzar una partida se necesitan mínimo 2 jugadores.";
+                session.setAttribute("errorMessage", errorMsg);
+                return "redirect:/games/currentGame";
+            }
         return "redirect:/games/currentGame";
     }
 
