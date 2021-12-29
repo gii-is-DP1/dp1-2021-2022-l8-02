@@ -50,6 +50,12 @@ INSERT INTO achievements(id, name, type, description) VALUES (1, 'Jugar 5 partid
 INSERT INTO achievements(id, name, type, description) VALUES (2, 'Jugar 10 partidas', 'BRONCE', 'el jugador debe haber jugado 10 partidas para poder conseguir este logro' );
 INSERT INTO achievements(id, name, type, description) VALUES (3, 'Jugar 50 partidas', 'PLATA', 'el jugador debe haber jugado 50 partidas para poder conseguir este logro' );
 
+
+INSERT INTO powers(id, name) VALUES(1, 'Aceleron');
+INSERT INTO powers(id, name) VALUES(2, 'Frenazo');
+INSERT INTO powers(id, name) VALUES(3, 'Marcha atras');
+INSERT INTO powers(id, name) VALUES(4, 'Gas extra');
+
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'kikovilapavon');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'chemaccs');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'Juangr4');
