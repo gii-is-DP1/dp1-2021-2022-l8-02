@@ -35,6 +35,7 @@ public class CardService {
     @Transactional
     public List<Card> autoColorAssignInitCards(int numPlayers){
         List<Card> list = new ArrayList<>();
+
         switch(numPlayers){
             case 1:
             case 2:
@@ -89,6 +90,7 @@ public class CardService {
             Integer auxi = (res.ordinal()+2)%4;
             res = Direction.values()[auxi];
         }return res;
+
     }
 
     //First card auxiliary init methods
@@ -273,6 +275,5 @@ public class CardService {
             list.add(card);
         }
     }
-
     
 }
