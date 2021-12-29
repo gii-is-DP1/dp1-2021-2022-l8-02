@@ -19,6 +19,7 @@ import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameMode;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.usuario.Authorities;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
@@ -80,6 +81,9 @@ public class GameStatisticsTest {
 
             System.out.println("Ya existe la partida");
 
+        } catch (TwoPlayersAtLeastException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
         //Game2
@@ -93,6 +97,9 @@ public class GameStatisticsTest {
 
             System.out.println("Ya existe la partida");
 
+        } catch (TwoPlayersAtLeastException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
 
         StatisticsGames stat = new StatisticsGames();

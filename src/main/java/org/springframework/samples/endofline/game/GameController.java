@@ -6,10 +6,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.samples.endofline.board.BoardService;
 import org.springframework.samples.endofline.board.StatisticsGamesService;
 import org.springframework.samples.endofline.board.Tile;
@@ -86,7 +86,7 @@ public class GameController {
     }
     
     @GetMapping("/currentGame")
-    public String getGame(Model model, HttpServletResponse response, @RequestParam(required = false) String errorMessage) {
+    public String getGame(HttpSession session, Model model, HttpServletResponse response) {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
@@ -95,10 +95,14 @@ public class GameController {
         
         model.addAttribute("game", game);
         
+        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
+            model.addAttribute("message", session.getAttribute("errorMessage"));
+        }
+
         if(game.getGameState() == GameState.LOBBY){
-            model.addAttribute("errorMessage", errorMessage); 
             return GAME_LOBBY;
-        }  
+        }
+
         response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
@@ -122,7 +126,8 @@ public class GameController {
         } catch (NotUrTurnException n){
             model.addAttribute("message", "No es tu turno");
         }
-        return getGame(model, response);
+        //return getGame(model, response);
+        return "redirect:/games/currentGame";
     }
 
     @GetMapping("/new")
@@ -171,8 +176,8 @@ public class GameController {
         return "redirect:/games";
     }
 
-    @GetMapping("/{gameId}/start/")
-    public String startGame(@PathVariable("gameId") Game game, Model model, @Param("errorMessage") String errorMessage) {
+    @GetMapping("/{gameId}/start")
+    public String startGame(@PathVariable("gameId") Game game, Model model, HttpSession session) {
         // Cambiar a POST puede ser una mejor opcion
         statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
@@ -186,7 +191,9 @@ public class GameController {
             try{
                 gameService.startGame(game);
             }catch(TwoPlayersAtLeastException t){
-                return "redirect:/games/currentGame/?errorMessage=aa";
+                String errorMsg = "Para comenzar una partida se necesitan mínimo 2 jugadores.";
+                session.setAttribute("errorMessage", errorMsg);
+                return "redirect:/games/currentGame";
             }
         return "redirect:/games/currentGame";
     }

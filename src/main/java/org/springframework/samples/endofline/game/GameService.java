@@ -98,7 +98,7 @@ public class GameService {
     }
 
     @Transactional
-    public void startGame(Game game) throws TwoPlayersAtLeastException{
+    public void startGame(Game game) throws TwoPlayersAtLeastException {
         if(game.getPlayers().size()==1){
             throw new TwoPlayersAtLeastException();
         }
