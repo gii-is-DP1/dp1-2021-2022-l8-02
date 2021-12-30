@@ -100,9 +100,10 @@ public class GameController {
     }
 
     @GetMapping
-    public String getGames(Model model) {
+    public String getGames(Model model, HttpServletResponse response) {
         Collection<Game> games = gameService.getGames();
         model.addAttribute("games", games);
+        response.addHeader("Refresh", "5");
         return GAME_LIST;
     }
     
@@ -122,6 +123,7 @@ public class GameController {
         }
 
         if(game.getGameState() == GameState.LOBBY){
+            response.addHeader("Refresh", "5");
             return GAME_LOBBY;
         }
 
