@@ -82,7 +82,6 @@ public class GameStatisticsTest {
             System.out.println("Ya existe la partida");
 
         } catch (TwoPlayersAtLeastException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -98,7 +97,6 @@ public class GameStatisticsTest {
             System.out.println("Ya existe la partida");
 
         } catch (TwoPlayersAtLeastException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
