@@ -13,6 +13,8 @@
             <div class=" align-items-center" style="text-align: center!important; font-size: 20px; margin-bottom: 20px;">
                 <div class="col-sm"><p> ${usuario.username}</p></p></div>
                 <div class="col-sm"><p> ${usuario.email}</p></p></div>
+                <th style="width: 20%;" ><a href="/profile/${usuario.username}/edit"style="font-size: 17px"  class="neon-button">Editar perfil</a></th>
+
             </div>
             <table style=" margin-bottom: 10px; min-width:1000px; max-width: 70%; ">
                 <th style="width:30% ;">

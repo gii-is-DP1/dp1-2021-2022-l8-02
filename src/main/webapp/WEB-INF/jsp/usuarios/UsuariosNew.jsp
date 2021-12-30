@@ -12,19 +12,15 @@
     </h2>
     <form:form modelAttribute="usuario" class="form-horizontal" id="add-owner-form">
         <div class="form-group has-feedback">
+            <petclinic:inputField label="Username" name="username"/>
             <petclinic:inputField label="Password" name="password"/>
             <petclinic:inputField label="Email" name="email"/>            
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <c:choose>
-                    <c:when test="${usuarios['new']}">
-                        <button class="btn btn-default" type="submit">Añadir Usuario</button>
-                    </c:when>
-                    <c:otherwise>
-                        <button class="btn btn-default" type="submit">Actualizar Usuario</button>
-                    </c:otherwise>
-                </c:choose>
+               
+            <button class="btn btn-default" type="submit">Anadir Usuario</button>
+                   
             </div>
         </div>
     </form:form>

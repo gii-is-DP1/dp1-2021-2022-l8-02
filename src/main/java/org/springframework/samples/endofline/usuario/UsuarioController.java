@@ -34,6 +34,7 @@ public class UsuarioController {
 	public static final String ERROR = "login-error";
 	public static final String LOBBY = "lobby";
 	public static final String PROFILE = "profile";
+	public static final String USUARIOS_NEW = "usuarios/UsuariosNew";
 
 	@Autowired
 	UsuarioService usuarioService;
@@ -98,7 +99,7 @@ public class UsuarioController {
 	public String initCreationForm(Map<String, Object> model) {
 		Usuario usuario = new Usuario();
 		model.put("usuario", usuario);
-		return USUARIOS_FORM;
+		return USUARIOS_NEW;
 	}
 
 	@PostMapping(value = "/usuarios/new")
@@ -109,10 +110,10 @@ public class UsuarioController {
 			list.add(name);
 		}
 		if (result.hasErrors()) {
-			return USUARIOS_FORM;
+			return USUARIOS_NEW;
 		}
 		else if(usuarioService.getallUsernames().contains(usuario.getUsername())){
-			return USUARIOS_FORM;
+			return USUARIOS_NEW;
 		}
 		else{
 			this.usuarioService.save(usuario);
@@ -168,5 +169,31 @@ public class UsuarioController {
 	public String profileLoggedUser(ModelMap model){
 		model.addAttribute("usuario", getLoggedUser());
 		return PROFILE;
+	}
+
+	@GetMapping("/profile/{username}/edit")
+	public String editProfile(@PathVariable("username") String username, ModelMap model) {
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if (usuario.isPresent()) {
+			model.addAttribute("usuario", usuario.get());
+			return USUARIOS_FORM;
+		} else {
+			model.addAttribute("message", "We cannot find the user you tried to edit!");
+			return PROFILE;
+		}
+	}
+
+	@PostMapping("/profile/{username}/edit")
+	public String editProfile(@PathVariable("username") String username, @Valid Usuario modifiedUsuario,
+			BindingResult binding, ModelMap model) {
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if (binding.hasErrors()) {
+			return USUARIOS_FORM;
+		} else {
+			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
+			usuarioService.save(usuario.get());
+			model.addAttribute("message", "User updated succesfully!");
+			return PROFILE;
+		}
 	}
 }

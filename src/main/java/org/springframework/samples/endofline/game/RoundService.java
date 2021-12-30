@@ -6,9 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.energies.Energy;
