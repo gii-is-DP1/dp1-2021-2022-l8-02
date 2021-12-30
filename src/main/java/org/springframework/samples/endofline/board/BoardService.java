@@ -93,7 +93,6 @@ public class BoardService {
             Deck deck = deckService.getDeckFromPlayer(player);
             Hand hand = handService.findHandByDeck(deck);
             if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
-                // TODO: Logica de validacion de una jugada aqui?
                 card.setRotation(cardService.calculateRotation(tile,lastTile));
                 cardService.save(card);
                 hand.getCards().remove(card);
