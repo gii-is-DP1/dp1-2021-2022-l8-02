@@ -8,9 +8,8 @@
 <petclinic:layout pageName="usuarios">
     <h2>Usuarios
         <td>
-            <spring:url value="usuarios/new" var="createUrl"></spring:url>
-            <a href="${fn:escapeXml(createUrl)}" style="margin-left: 90%;">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            <a href="/usuarios/new">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" style="margin-left: 90%;"></span>
             </a>
         </td>
     </h2>
