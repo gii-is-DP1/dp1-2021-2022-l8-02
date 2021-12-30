@@ -15,7 +15,9 @@ import javax.validation.constraints.NotEmpty;
 
 import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.achievements.Achievement;
+
 import org.springframework.samples.endofline.energies.Energy;
+
 
 import lombok.Getter;
 import lombok.Setter;
