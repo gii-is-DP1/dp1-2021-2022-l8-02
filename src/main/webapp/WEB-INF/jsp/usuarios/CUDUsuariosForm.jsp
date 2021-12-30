@@ -8,18 +8,17 @@
 
 <petclinic:layout pageName="usuarios">
     <h2>
-        <c:if test="${usuario['new']}">Crear o editar usuario</c:if>
+        <c:if test="${usuarios['new']}">Crear o editar usuario</c:if>
     </h2>
     <form:form modelAttribute="usuario" class="form-horizontal" id="add-owner-form">
         <div class="form-group has-feedback">
-            <petclinic:inputField label="Username" name="username"/>
             <petclinic:inputField label="Password" name="password"/>
             <petclinic:inputField label="Email" name="email"/>            
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <c:choose>
-                    <c:when test="${usuario['new']}">
+                    <c:when test="${usuarios['new']}">
                         <button class="btn btn-default" type="submit">Añadir Usuario</button>
                     </c:when>
                     <c:otherwise>

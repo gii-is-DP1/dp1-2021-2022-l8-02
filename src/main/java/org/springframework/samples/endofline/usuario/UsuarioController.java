@@ -169,4 +169,30 @@ public class UsuarioController {
 		model.addAttribute("usuario", getLoggedUser());
 		return PROFILE;
 	}
+
+	@GetMapping("/profile/{username}/edit")
+	public String editProfile(@PathVariable("username") String username, ModelMap model) {
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if (usuario.isPresent()) {
+			model.addAttribute("usuario", usuario.get());
+			return USUARIOS_FORM;
+		} else {
+			model.addAttribute("message", "We cannot find the user you tried to edit!");
+			return PROFILE;
+		}
+	}
+
+	@PostMapping("/profile/{username}/edit")
+	public String editProfile(@PathVariable("username") String username, @Valid Usuario modifiedUsuario,
+			BindingResult binding, ModelMap model) {
+		Optional<Usuario> usuario = usuarioService.findByUsername(username);
+		if (binding.hasErrors()) {
+			return USUARIOS_FORM;
+		} else {
+			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
+			usuarioService.save(usuario.get());
+			model.addAttribute("message", "User updated succesfully!");
+			return PROFILE;
+		}
+	}
 }
