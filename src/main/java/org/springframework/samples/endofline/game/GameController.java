@@ -118,6 +118,7 @@ public class GameController {
         
         if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
             model.addAttribute("message", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage");
         }
 
         if(game.getGameState() == GameState.LOBBY){
@@ -153,7 +154,7 @@ public class GameController {
     }
 
     @RequestMapping("/newHand")
-    public String getRestartHand(Model model, HttpServletResponse response, HttpServletRequest request){
+    public String getRestartHand(HttpSession session, Model model, HttpServletResponse response, HttpServletRequest request){
         if(!request.getMethod().equalsIgnoreCase("post")){
             return "redirect:/games/currentGame";
         }
@@ -162,7 +163,7 @@ public class GameController {
         handService.generateChangeHand(deck);
         }catch(PlayCardWhitHandSizeLessThanFive v){
         model.addAttribute("message", "No puedes hacer esto recula");
-        return getGame(model, response);
+        return getGame(session, model, response);
         }
         return "redirect:/games/currentGame";
     }
@@ -253,25 +254,25 @@ public class GameController {
     @GetMapping("/{gameId}/start")
     public String startGame(@PathVariable("gameId") Game game, Model model, HttpSession session) {
         // Cambiar a POST puede ser una mejor opcion
-        statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
-
-        Statistics s = statisticsService.findByUser(getLoggedUser());
-        s.setNumGames(s.getNumGames()+1);
-        s.setNumPlayers(game.getPlayers().size());
-        statisticsService.save(s);
-        
-
-        
-       
         System.out.println(game.getPlayers().get(0).getUsername());
-        if(game.getPlayers().get(0).equals(getLoggedUser())) 
+        if(game.getPlayers().get(0).equals(getLoggedUser())) {
             try{
                 gameService.startGame(game);
+
+                statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
+
+                Statistics s = statisticsService.findByUser(getLoggedUser());
+                s.setNumGames(s.getNumGames()+1);
+                s.setNumPlayers(game.getPlayers().size());
+                statisticsService.save(s);
+                
             }catch(TwoPlayersAtLeastException t){
                 String errorMsg = "Para comenzar una partida se necesitan mínimo 2 jugadores.";
                 session.setAttribute("errorMessage", errorMsg);
                 return "redirect:/games/currentGame";
             }
+        }
+       
         return "redirect:/games/currentGame";
     }
 
