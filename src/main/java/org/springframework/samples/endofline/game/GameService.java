@@ -103,7 +103,7 @@ public class GameService {
 
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
-        if(game.getPlayers().size()==1){
+        if(game.getGameMode().equals(GameMode.VERSUS) && game.getPlayers().size()==1){
             throw new TwoPlayersAtLeastException();
         }
         Board board = new Board();
@@ -115,7 +115,7 @@ public class GameService {
                 boardService.generatePuzzleBoard(board);
                 break;
             case SOLITAIRE:
-                boardService.generateSolitaireBoard(board);
+                boardService.generatePuzzleBoard(board); //On purpose, generateSolitaire does not work
                 break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/

@@ -185,7 +185,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void generatePuzzleBoard(Board board) {
+    public void generatePuzzleBoard(Board board) { //I THINK THIS CAN BE USED FOR SOLITAIRE AS WELL
 
         int size = 5;
 
@@ -202,15 +202,26 @@ public class BoardService {
                 tile.setX(x);
                 tile.setY(y);
                 tile.setTileState(TileState.FREE);
-                for(PuzzleTile pt: tiles) {
-                    if(pt.getX() == x && pt.getY() == y) {
-                        Card card = new Card();
-                        card.setColor(CardColor.RED);
-                        card.setCardType(pt.getCardType());
-                        cardService.save(card);
-                        tile.setTileState(TileState.TAKEN);
-                        tile.setCard(card);
-                        break;
+                if (x == 2 && y == 2) {
+                    Card card = new Card();
+                    card.setColor(CardColor.RED);
+                    card.setCardType(cardService.findCardTypeByIniciative(-1));
+                    System.out.println(card.getCardType().getIniciative());
+                    cardService.save(card);
+                    tile.setCard(card);
+                    tile.setTileState(TileState.TAKEN);
+                    pathService.initPath(board,card.getColor(), tile);
+                }else{
+                    for(PuzzleTile pt: tiles) {
+                        if(pt.getX() == x && pt.getY() == y) {
+                            Card card = new Card();
+                            card.setColor(CardColor.RED);
+                            card.setCardType(pt.getCardType());
+                            cardService.save(card);
+                            tile.setTileState(TileState.TAKEN);
+                            tile.setCard(card);
+                            break;
+                        }
                     }
                 }
                 tile.setBoard(board);
@@ -232,7 +243,7 @@ public class BoardService {
                 tile.setY(y);
                 tile.setTileState(TileState.FREE);
                 tile.setBoard(board);
-                if (x == 2 && y == 3) {
+                if (x == 2 && y == 2) {
                     Card card = new Card();
                     card.setColor(CardColor.RED);
                     card.setCardType(cardService.findCardTypeByIniciative(-1));

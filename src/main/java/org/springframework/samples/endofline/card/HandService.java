@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
+import org.springframework.samples.endofline.game.GameMode;
+import org.springframework.samples.endofline.game.GameRepository;
 import org.springframework.samples.endofline.game.Round;
 import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
@@ -20,6 +22,9 @@ public class HandService {
 
     @Autowired
     HandRepository handRepository;
+
+    @Autowired
+    GameRepository gameRepo;
 
     @Autowired
     DeckService deckService;
@@ -76,17 +81,27 @@ public class HandService {
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
         }
-        if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
-            while(hand.getCards().size()<6){
-                Integer rand= random.nextInt(deck.getCards().size());
-                Card card=deck.getCards().get(rand);
-                hand.getCards().add(card);
-                deck.getCards().remove(card);
-                deckService.save(deck); 
-            }
-        
+        if(gameRepo.getGameByPlayerUsername(deck.getUser().getUsername()).getGameMode().equals(GameMode.VERSUS)){
+            if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
+                while(hand.getCards().size()<6){
+                    Integer rand= random.nextInt(deck.getCards().size());
+                    Card card=deck.getCards().get(rand);
+                    hand.getCards().add(card);
+                    deck.getCards().remove(card);
+                    deckService.save(deck); 
+                }
+            
+            }else{
+                while(hand.getCards().size()<5){
+                    Integer rand= random.nextInt(deck.getCards().size());
+                    Card card=deck.getCards().get(rand);
+                    hand.getCards().add(card);
+                    deck.getCards().remove(card);
+                    deckService.save(deck); 
+                }
+            }  
         }else{
-        while(hand.getCards().size()<5){
+            while(hand.getCards().size()<5){
                 Integer rand= random.nextInt(deck.getCards().size());
                 Card card=deck.getCards().get(rand);
                 hand.getCards().add(card);
