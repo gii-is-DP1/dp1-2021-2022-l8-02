@@ -2,8 +2,12 @@ package org.springframework.samples.endofline.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Board;
@@ -96,6 +100,22 @@ public class GameService {
         }
     }
 
+    // public Map<Usuario,List<Integer>> diccConteinsAll(Map<Usuario,List<Integer>> dicc){
+
+    // }
+    // public Map<Usuario,List<Integer>> turnsForPlayer(List<Usuario>players){
+    //     Map<Usuario,List<Integer>> dicc= new HashMap<>();
+
+    // }
+
+    public List<Integer> getFirstRoundInitiatives(Map<Usuario, List<Integer>> m){
+        List<Integer> res = new ArrayList<>();
+        for(List<Integer> ls:m.values()){
+            res.add(ls.get(0));
+        }Collections.sort(res);
+        return res;
+    }
+
     @Transactional
     public void startGame(Game game) {
 
@@ -121,7 +141,35 @@ public class GameService {
 
         Round round = new Round();
         round.setGame(game);
-        round.setPlayers(new ArrayList<>(game.getPlayers()));
+
+        //Metodo para decidir a inicio que usuarios, juegan.(Crear un diccionario donde se guarde jugador y iniciativa, si la iniciativa 
+        //es igual entonces )
+        Map<Usuario, List<Integer>> dicc= new HashMap<>();
+        Random random= new Random();
+        for(Usuario user: game.getPlayers()){
+            List<Integer> list= new ArrayList<>();
+            Deck deck= deckService.getDeckFromPlayer(user);
+            Integer sumCards= deck.getCards().size();
+            Integer valRandom= random.nextInt(sumCards);
+            Card card= deck.getCards().get(valRandom);
+            Integer iniciative= card.getCardType().getIniciative();
+            list.add(iniciative);
+            dicc.put(user,list);
+        }
+
+        List<Integer> firstRoundInitiatives = getFirstRoundInitiatives(dicc);
+        List<Usuario> usersList = new ArrayList<>();
+        for(Integer e: firstRoundInitiatives){
+            List<Usuario> auxLs = new ArrayList<>();
+            for(Usuario u: dicc.keySet()){
+                if(dicc.get(u).get(0)==e){
+                    auxLs.add(u);
+                }
+            }
+        Collections.shuffle(auxLs);
+        usersList.addAll(auxLs);
+        }
+        round.setPlayers(usersList);
         roundService.save(round);
         
 
