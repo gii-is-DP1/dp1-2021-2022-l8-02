@@ -28,6 +28,7 @@ import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
 
 import org.springframework.samples.endofline.game.Game;
+import org.springframework.samples.endofline.game.GameMode;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.game.Turn;
@@ -89,7 +90,7 @@ public class BoardService {
         List<Tile> occupiedTiles = p.getOccupiedTiles();                    //Returns the list with the occupied tiles
         Tile lastTile = occupiedTiles.get(occupiedTiles.size()-1);          //Returns the lastTile of the previous mentioned list
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);                 //Returns a list of the available tiles respect to the lastTile given                                    
-        if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
+        if (!game.getGameMode().equals(GameMode.VERSUS) || game.getRound().getTurns().get(0).getUsuario().equals(player)) {
             Deck deck = deckService.getDeckFromPlayer(player);
             Hand hand = handService.findHandByDeck(deck);
             if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
@@ -98,6 +99,7 @@ public class BoardService {
                 hand.getCards().remove(card);
                 handService.save(hand);
                 tile.setCard(card);
+                tile.setTileState(TileState.TAKEN);
                 tileService.save(tile);
                 p.getOccupiedTiles().add(tile);                             //Adds the new tile thats been occupied by the player to his path
                 pathService.save(p);
@@ -112,7 +114,7 @@ public class BoardService {
             statisticsGames.setPoint(pointNew);
             // Guardar los datos una vez actualizados
             statisticsGamesService.save(statisticsGames);*/
-            turnService.cardCounter(player, game, player.getEnergy().getPowers());
+            if(game.getGameMode().equals(GameMode.VERSUS)) turnService.cardCounter(player, game, player.getEnergy().getPowers());
             /*if(player.getTurn().getRound().getId() == 1){
                 roundService.refreshRound(game, player);
             }
@@ -206,6 +208,7 @@ public class BoardService {
                     Card card = new Card();
                     card.setColor(CardColor.RED);
                     card.setCardType(cardService.findCardTypeByIniciative(-1));
+                    card.setRotation(Direction.NORTH);
                     System.out.println(card.getCardType().getIniciative());
                     cardService.save(card);
                     tile.setCard(card);
@@ -282,6 +285,7 @@ public class BoardService {
                     .map(x -> (x + tile.getCard().getRotation().ordinal())%Direction.values().length)
                     .map(x -> Direction.values()[x])
                     .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
+                    .filter(x->!x.getTileState().equals(TileState.TAKEN))
                     .collect(Collectors.toList());
     }
 }
