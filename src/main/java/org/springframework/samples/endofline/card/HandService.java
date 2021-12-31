@@ -9,6 +9,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
+import org.springframework.samples.endofline.game.GameMode;
+import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.Round;
 import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
@@ -29,6 +31,9 @@ public class HandService {
     
     @Autowired
     PowerService powerService;
+
+    @Autowired
+    GameService gameService;
     
     public Hand findHandByDeck(Deck deck){
         return handRepository.findHandByDeck(deck);
@@ -69,14 +74,15 @@ public class HandService {
     }
 
     public Hand generateDefaultHand(Deck deck){
-        Hand hand= findHandByDeck(deck);
-        Random random= new Random();
+        Hand hand = findHandByDeck(deck);
+        Random random = new Random();
         if(hand == null){
-            hand= new Hand();
+            hand = new Hand();
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
         }
-        if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
+        if(gameService.getGameByPlayer(deck.getUser()).getGameMode() ==  GameMode.VERSUS && 
+        deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
             while(hand.getCards().size()<6){
                 Integer rand= random.nextInt(deck.getCards().size());
                 Card card=deck.getCards().get(rand);
@@ -87,7 +93,7 @@ public class HandService {
         
         }else{
         while(hand.getCards().size()<5){
-                Integer rand= random.nextInt(deck.getCards().size());
+                Integer rand = random.nextInt(deck.getCards().size());
                 Card card=deck.getCards().get(rand);
                 hand.getCards().add(card);
                 deck.getCards().remove(card);

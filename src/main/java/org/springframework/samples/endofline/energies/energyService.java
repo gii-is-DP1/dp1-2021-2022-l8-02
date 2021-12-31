@@ -92,32 +92,7 @@ public class EnergyService {
         save(newEnergy);
     }
  
-   /* public void usePower(Usuario user){
-        Energy energy = getEnergyFromPlayer(user);
-        Integer num= energy.getCounter();
-        if(num <= 3 && num >0){
-            switch(energy.getPowers()) {
-                case ACELERON:
-
-                break;
-                case FRENAZO:
-                
-                    break;
-                case GAS_EXTRA:
-                
-                break;
-                case MARCHA_ATRAS:
-                
-                break;
-            }
-            num-=1;
-        }
-        Energy newEnergy= new Energy();
-        newEnergy.setCounter(num);
-        newEnergy.setUser(user);
-        save(newEnergy);
-
-    }*/
+  
 
     public void save(Energy energy) {
         energyRepo.save(energy);

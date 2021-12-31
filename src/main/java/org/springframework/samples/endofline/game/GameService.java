@@ -103,9 +103,6 @@ public class GameService {
 
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
-        if(game.getPlayers().size()==1){
-            throw new TwoPlayersAtLeastException();
-        }
         Board board = new Board();
         board.setGame(game);
         boardService.save(board);
@@ -119,6 +116,9 @@ public class GameService {
                 break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+            if(game.getPlayers().size()==1){
+                throw new TwoPlayersAtLeastException();
+            }
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
