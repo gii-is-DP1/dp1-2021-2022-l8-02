@@ -113,9 +113,9 @@ public class BoardService {
             statisticsGames.setPoint(pointNew);
             // Guardar los datos una vez actualizados
             statisticsGamesService.save(statisticsGames);*/
-            if(gameService.getGameByPlayer(player).getGameMode() == GameMode.VERSUS){
+            
             turnService.cardCounter(player, game, player.getEnergy().getPowers());
-            }
+        
             /*if(player.getTurn().getRound().getId() == 1){
                 roundService.refreshRound(game, player);
             }
@@ -250,7 +250,7 @@ public class BoardService {
 
     public List<Tile> getAdjacents(Tile tile, Usuario user, Path p){
         System.out.println(p.getOccupiedTiles().size());
-        if(gameService.getGameByPlayer(user).getGameMode()== GameMode.VERSUS && user.getEnergy().getPowers().get(powerService.findById(3)).booleanValue() == true ){
+        if(user.getEnergy().getPowers().get(powerService.findById(3)).booleanValue() == true ){
             Tile tile2 = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2);
             Card card = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2).getCard();
             Map<Power, Boolean> map = user.getEnergy().getPowers();

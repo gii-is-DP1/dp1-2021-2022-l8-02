@@ -81,8 +81,7 @@ public class HandService {
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
         }
-        if(gameService.getGameByPlayer(deck.getUser()).getGameMode() ==  GameMode.VERSUS && 
-        deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
+        if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
             while(hand.getCards().size()<6){
                 Integer rand= random.nextInt(deck.getCards().size());
                 Card card=deck.getCards().get(rand);

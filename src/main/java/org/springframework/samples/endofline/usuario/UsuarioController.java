@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.security.core.Authentication;
@@ -174,7 +175,9 @@ public class UsuarioController {
 		model.addAttribute("usuario", getLoggedUser());
 		/*para ver el listado de juegos por usuario*/
 		model.addAttribute("games", gameService.getGameByPlayer(getLoggedUser()));
-
+		List<Game> allGameByPlayer = gameService.getGamesByPlayer(getLoggedUser());
+		model.addAttribute("games", allGameByPlayer);
+        
 		return PROFILE;
 	}
 

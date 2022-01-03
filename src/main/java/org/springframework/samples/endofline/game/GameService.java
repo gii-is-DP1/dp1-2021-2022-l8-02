@@ -53,6 +53,7 @@ public class GameService {
     public Collection<Game> getGames() {
         return gameRepository.findAll();
     }
+   
 
     @Transactional
     public void save(Game game){
@@ -110,9 +111,11 @@ public class GameService {
         switch(game.getGameMode()) {
             case PUZZLE:
                 boardService.generatePuzzleBoard(board);
+                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 break;
             case SOLITAIRE:
                 boardService.generateSolitaireBoard(board);
+                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
