@@ -18,6 +18,8 @@ import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
+import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.HandService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -43,6 +45,12 @@ public class RoundService {
 
     @Autowired
     PowerService powerService;
+
+    @Autowired
+    private DeckService deckService;
+
+    @Autowired
+    private HandService handService;
 
     public Collection<Round> getRounds(){
         return roundRepository.findAll();
@@ -105,15 +113,6 @@ public class RoundService {
 
     @Transactional
     public void refreshRound(Game game, Usuario player, Card card){
-        Map<Power, Boolean> map = player.getEnergy().getPowers();
-        Set<Power> powers = map.keySet();
-        for(Power p: powers){
-           map.put(p, false);
-        }
-        Energy ene = player.getEnergy();
-        ene.setPowers(map);
-        player.setEnergy(ene);
-        energyService.save(ene);
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
         List<Usuario> players = new ArrayList<>(game.getPlayers());
         if(players.size() == 2){
@@ -146,11 +145,48 @@ public class RoundService {
         t.setCardCounter(count);
         turnService.save(t);
         if(game.getRound().getNumber() >= 2){
-            if(player.getTurn().getCardCounter() < 2 && !player.getEnergy().getPowers().get(powerService.findById(2)).booleanValue()){
+            if(player.getEnergy().getPowers().get(powerService.findById(2)).booleanValue()){
+                    Map<Power, Boolean> map = player.getEnergy().getPowers();
+                    Set<Power> powers = map.keySet();
+                    for(Power p: powers){
+                    map.put(p, false);
+                    }
+                    Energy ene = player.getEnergy();
+                    ene.setPowers(map);
+                    player.setEnergy(ene);
+                    energyService.save(ene);
+                
+            }else if(player.getEnergy().getPowers().get(powerService.findById(4)).booleanValue()){
+                handService.generateDefaultHand(deckService.getDeckFromPlayer(player));
+                Map<Power, Boolean> map = player.getEnergy().getPowers();
+                Set<Power> powers = map.keySet();
+                for(Power p: powers){
+                map.put(p, false);
+                }
+                Energy ene = player.getEnergy();
+                ene.setPowers(map);
+                player.setEnergy(ene);
+                energyService.save(ene);
                 return;
             }else if(player.getTurn().getCardCounter() <= 2 && player.getEnergy().getPowers().get(powerService.findById(1)).booleanValue()){
+                if(player.getTurn().getCardCounter()<3){
+                    return;
+                }else if (player.getTurn().getCardCounter()==3){
+                    Map<Power, Boolean> map = player.getEnergy().getPowers();
+                    Set<Power> powers = map.keySet();
+                    for(Power p: powers){
+                    map.put(p, false);
+                    }
+                    Energy ene = player.getEnergy();
+                    ene.setPowers(map);
+                    player.setEnergy(ene);
+                    energyService.save(ene);
+                }
+            }else if(player.getTurn().getCardCounter() < 2){
                 return;
             }
+        
+
         }
         turns.remove(turnService.getByUsername(player.getUsername()));
         if(turns.size() > 0){
@@ -160,6 +196,9 @@ public class RoundService {
         turnService.delete(turnService.getByUsername(player.getUsername()));
         game.getRound().setTurns(turns);
         if(game.getRound().getTurns().size() == 0){
+            for(Usuario p : game.getPlayers()){
+            handService.generateDefaultHand(deckService.getDeckFromPlayer(p));
+            }
             Round round = game.getRound();
             round.setNumber(game.getRound().getNumber()+1);
             round.setGame(game);
@@ -169,6 +208,7 @@ public class RoundService {
             save(round);
             game.setRound(round);
         }
+        
         save(game.getRound());
     }
 }

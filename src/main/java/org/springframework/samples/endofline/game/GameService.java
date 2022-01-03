@@ -58,6 +58,7 @@ public class GameService {
     public Collection<Game> getGames() {
         return gameRepository.findAll();
     }
+   
 
     @Transactional
     public void save(Game game){
@@ -108,9 +109,6 @@ public class GameService {
 
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
-        if(game.getPlayers().size()==1){
-            throw new TwoPlayersAtLeastException();
-        }
         Board board = new Board();
         board.setGame(game);
         boardService.save(board);
@@ -118,12 +116,17 @@ public class GameService {
         switch(game.getGameMode()) {
             case PUZZLE:
                 boardService.generatePuzzleBoard(board);
+                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 break;
             case SOLITAIRE:
                 boardService.generateSolitaireBoard(board);
+                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+            if(game.getPlayers().size()==1){
+                throw new TwoPlayersAtLeastException();
+            }
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }

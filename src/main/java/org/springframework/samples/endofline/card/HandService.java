@@ -26,6 +26,8 @@ public class HandService {
     
     @Autowired
     PowerService powerService;
+
+    
     
     public Hand findHandByDeck(Deck deck){
         return handRepository.findHandByDeck(deck);
@@ -66,8 +68,8 @@ public class HandService {
     }
 
     public Hand generateDefaultHand(Deck deck){
-        Hand hand= findHandByDeck(deck);
-        Random random= new Random();
+        Hand hand = findHandByDeck(deck);
+        Random random = new Random();
         if(hand == null){
             hand = new Hand();
             hand.setDeck(deck);

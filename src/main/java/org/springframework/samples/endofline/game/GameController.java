@@ -113,7 +113,8 @@ public class GameController {
         if(game == null) {
             return GAME_LIST;
         }
-        
+        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
+        model.addAttribute("statistiscPostGame",statisticsGames);
         model.addAttribute("game", game);
         
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
@@ -155,9 +156,8 @@ public class GameController {
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
         
-
-        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
-        model.addAttribute("statistiscPostGame",statisticsGames);
+        /*AQUI VOY A METER EL ACTUALIZAR MANO POR RONDA*/
+        
         
         return GAME_VIEW;
     }
@@ -179,8 +179,8 @@ public class GameController {
 
     @PostMapping("/newCards")
     public String getNewCards(){
-        Deck deck= boardService.deckFromPlayers(getLoggedUser());
-        handService.generateDefaultHand(deck);
+        /*Deck deck= boardService.deckFromPlayers(getLoggedUser());
+        handService.generateDefaultHand(deck);*/
         return  "redirect:/games/currentGame";
     }
     
