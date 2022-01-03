@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.Path;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.energies.Energy;
