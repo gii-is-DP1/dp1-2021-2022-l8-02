@@ -2,8 +2,11 @@ package org.springframework.samples.endofline.board;
 
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+
 import javax.transaction.Transactional;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,15 @@ import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.card.Direction;
 import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
+import org.springframework.samples.endofline.energies.Energy;
+import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
+import org.springframework.samples.endofline.game.TurnService;
+import org.springframework.samples.endofline.power.Power;
+import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
 import org.springframework.stereotype.Service;
@@ -46,19 +54,25 @@ public class BoardService {
     private HandService handService;
 
     @Autowired
-    private StatisticsGamesService statisticsGamesService;
-
-    @Autowired
     private GameService gameService;
 
     @Autowired
     private RoundService roundService;
 
     @Autowired
+    private TurnService turnService;
+
+    @Autowired
     private PuzzleTileService puzzleTileService;
 
     @Autowired
     private PathService pathService;
+
+    @Autowired
+    private PowerService powerService;
+
+    @Autowired
+    private EnergyService energyService;
 
     @Transactional
     // TODO: No podemos tener un metodo tan largo, hay que hacer minimetodos y luego
@@ -68,7 +82,7 @@ public class BoardService {
         Path p = game.getBoard().getPaths().get(card.getColor().ordinal());
         List<Tile> occupiedTiles = p.getOccupiedTiles();
         Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
-        List<Tile> availableTiles = getAdjacents(lastTile);
+        List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
             if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
                 Deck deck = deckService.getDeckFromPlayer(player);
@@ -83,16 +97,31 @@ public class BoardService {
                     tileService.save(tile);
                     p.getOccupiedTiles().add(tile);
                     pathService.save(p);
-                    // StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
-                    // Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
-                    // statisticsGames.setMap(mapSet);
-                    // Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
-                    // statisticsGames.setPoint(pointNew);
-                    // Guardar los datos una vez actualizados
-                    // statisticsGamesService.save(statisticsGames);
                 } else {
                     throw new InvalidMoveException();
                 }
+                // StatisticsGames statisticsGames =
+                // statisticsGamesService.findStatisticsGamesByUserGames(player, game);
+                // Map<Card, Integer> mapSet = statisticsGamesService.userMap(card,
+                // statisticsGames.getMap());
+                // statisticsGames.setMap(mapSet);
+                // Integer pointNew = statisticsGames.getPoint() +
+                // card.getCardType().getIniciative();
+                // statisticsGames.setPoint(pointNew);
+                // Guardar los datos una vez actualizados
+                // statisticsGamesService.save(statisticsGames);
+                turnService.cardCounter(player, game, player.getEnergy().getPowers());
+                /*
+                 * if(player.getTurn().getRound().getId() == 1){
+                 * roundService.refreshRound(game, player);
+                 * }
+                 * else if (player.getTurn().getRound().getId() >= 2){
+                 * if(player.getTurn().getCardCounter() == 2){
+                 * roundService.refreshRound(game, player);
+                 * }
+                 * }
+                 */
+                gameService.save(game);
             } else {
                 // roundService.refreshRound(game, player, availableTiles);
                 // gameService.save(game);
@@ -164,9 +193,9 @@ public class BoardService {
             size = 13;
         } else if (numPlayers > 5) {
             size = 11;
-        }else if (numPlayers > 3){
+        } else if (numPlayers > 3) {
             size = 9;
-        }else{
+        } else {
             size = 7;
         }
 
@@ -244,16 +273,36 @@ public class BoardService {
         }
     }
 
-    public List<Tile> getAdjacents(Tile tile) {
+    public List<Tile> getAdjacents(Tile tile, Usuario user, Path p){
+        System.out.println(p.getOccupiedTiles().size());
+        if(user.getEnergy().getPowers().get(powerService.findById(3)).booleanValue() == true){
+            Tile tile2 = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2);
+            Card card = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2).getCard();
+            Map<Power, Boolean> map = user.getEnergy().getPowers();
+            Set<Power> powers = map.keySet();
+            for(Power po: powers){
+            map.put(po, false);
+            }
+            Energy ene = user.getEnergy();
+            ene.setPowers(map);
+            user.setEnergy(ene);
+            energyService.save(ene);
+            return card.getCardType().getDirections()
+            .stream().map(Enum::ordinal)
+            .map(x -> (x + tile2.getCard().getRotation().ordinal())%Direction.values().length)
+            .map(x -> Direction.values()[x])
+            .map(x -> tileService.creaTile(x, tile2, tile2.getBoard()))
+            .collect(Collectors.toList());
+        }
         return tile.getCard().getCardType().getDirections()
-                .stream().map(Enum::ordinal)
-                .map(x -> (x + tile.getCard().getRotation().ordinal()) % Direction.values().length)
-                .map(x -> Direction.values()[x])
-                .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
-                .collect(Collectors.toList());
+                    .stream().map(Enum::ordinal)
+                    .map(x -> (x + tile.getCard().getRotation().ordinal())%Direction.values().length)
+                    .map(x -> Direction.values()[x])
+                    .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
+                    .collect(Collectors.toList());
     }
 
-    public void delete(Board board){
+    public void delete(Board board) {
         boardRepository.delete(board);
     }
 }

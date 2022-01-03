@@ -1,5 +1,4 @@
-package org.springframework.samples.endofline.Achievements;
-
+package org.springframework.samples.endofline.achievements;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
