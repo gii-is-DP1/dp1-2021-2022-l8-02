@@ -5,6 +5,5 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class EnergyController {
     
-    private EnergyService energyService;
 
 }

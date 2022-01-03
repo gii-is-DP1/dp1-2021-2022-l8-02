@@ -175,8 +175,8 @@ public class UsuarioController {
 		model.addAttribute("usuario", getLoggedUser());
 		/*para ver el listado de juegos por usuario*/
 		model.addAttribute("games", gameService.getGameByPlayer(getLoggedUser()));
-		List<Game> allGameByPlayer = gameService.getGamesByPlayer(getLoggedUser());
-		model.addAttribute("games", allGameByPlayer);
+		/*List<Game> allGameByPlayer = gameService.getGamesByPlayer(getLoggedUser());
+		model.addAttribute("games", allGameByPlayer);*/
         
 		return PROFILE;
 	}

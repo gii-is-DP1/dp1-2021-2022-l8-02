@@ -20,6 +20,7 @@ import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
+import org.springframework.samples.endofline.board.exceptions.TimeOutException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
@@ -49,7 +50,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
 
 @Controller
 @RequestMapping("/games")
@@ -60,6 +60,7 @@ public class GameController {
     public static final String GAME_CREATION = "games/gameCreationForm";
     public static final String GAME_LOBBY = "games/gameLobby";
     public static final String GAME_STATICPOSTGAME = "games/staticPostGame";
+    public static final String GAME_LOST = "games/gameLost";
 
 
     private GameService gameService;
@@ -69,7 +70,6 @@ public class GameController {
     private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
-    private TurnService turnService;
    
     private HandService handService;
 
@@ -84,7 +84,6 @@ public class GameController {
         this.powerService = powerService;
         this.energyService = energyService; 
         this.handService = handService;
-        this.turnService = turnService;
 
     }
 
@@ -114,9 +113,17 @@ public class GameController {
         if(game == null) {
             return GAME_LIST;
         }
-        
+        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
+        model.addAttribute("statistiscPostGame",statisticsGames);
         model.addAttribute("game", game);
         
+        if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+
+        if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
+            model.addAttribute("userLost", getLoggedUser().getGameEnded());
+            return GAME_LOST;
+        }
+
         if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
             model.addAttribute("message", session.getAttribute("errorMessage"));
             session.removeAttribute("errorMessage");
@@ -149,9 +156,9 @@ public class GameController {
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
         
-
-        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
-        model.addAttribute("statistiscPostGame",statisticsGames);
+        /*AQUI VOY A METER EL ACTUALIZAR MANO POR RONDA*/
+        
+        
         return GAME_VIEW;
     }
 
@@ -172,8 +179,8 @@ public class GameController {
 
     @PostMapping("/newCards")
     public String getNewCards(){
-        Deck deck= boardService.deckFromPlayers(getLoggedUser());
-        handService.generateDefaultHand(deck);
+        /*Deck deck= boardService.deckFromPlayers(getLoggedUser());
+        handService.generateDefaultHand(deck);*/
         return  "redirect:/games/currentGame";
     }
     
@@ -200,6 +207,8 @@ public class GameController {
             model.addAttribute("message", "No puedes realizar esa acción");
         } catch (NotUrTurnException n){
             model.addAttribute("message", "No es tu turno");
+        } catch(TimeOutException t){
+            model.addAttribute("message", "Se acabo el tiempo para realizar el turno");
         }
         //return getGame(model, response);
         return "redirect:/games/currentGame";
@@ -277,6 +286,12 @@ public class GameController {
        
         return "redirect:/games/currentGame";
     }
+
+    // @GetMapping("/{gameId}/end")
+    // public String endGame(@PathVariable("gameId") Game game, Model model){
+
+    //     return "redirect:/principal";
+    // }
 
     @GetMapping("/listGames/{gameState}")
     public String listGamesByState(@PathVariable("gameState") String gameState, Model model){

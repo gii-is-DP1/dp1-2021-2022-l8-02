@@ -28,16 +28,12 @@
 
 
     <form:form method="POST" modelAttribute="hand" action="/games/newHand">
-        <div class="row">
+        <div class="row" id = "Hand">
             <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">New Hand</button>
         </div>
     </form:form>
 
-    <form:form method="POST" modelAttribute="hand" action="/games/newCards">
-        <div class="row">
-            <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">New Cards</button>
-        </div>
-    </form:form>
+    
 
     <!-- <div class="row">
         <a href="/statisticsGame/${game.id}/${user.username}"><button>Statistics</button></a>
@@ -48,4 +44,25 @@
         <p>Puntos:    ${statistiscPostGame.point}</p>
         <p>Inciativa de la carta mas usada:     ${statistiscPostGame.maxCard.cardType.iniciative}</p>
     </div> 
+
+    <script>
+
+        function deleteHand(){
+            const boton = document.getElementById("Hand");
+            const round= ${game.round.number};
+            if(round>1){
+                boton.style.display = "none";
+            }
+    
+    
+        }
+        window.addEventListener("load", deleteHand);
+    
+    
+    </script>
+
+
+
 </eol:layoutEOL>
+
+
