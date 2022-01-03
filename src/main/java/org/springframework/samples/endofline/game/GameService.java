@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Board;
 import org.springframework.samples.endofline.board.BoardService;
+import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.TileService;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
@@ -18,7 +19,7 @@ import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.usuario.Usuario;
-
+import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +33,10 @@ public class GameService {
     private CardService cardService;
     private HandService handService;
     private RoundService roundService;
+    private UsuarioService userService;
 
     @Autowired
-    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService) {
+    public GameService(GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService) {
 
         this.gameRepository = gameRepository;
         this.boardService = boardService;
@@ -43,6 +45,7 @@ public class GameService {
         this.cardService = cardService;
         this.handService = handService;
         this.roundService = roundService;
+        this.userService = userService;
     }
 
     public Collection<Game> getGames() {
@@ -119,6 +122,8 @@ public class GameService {
             handService.generateDefaultHand(deck);
         }
 
+        userService.setStatFalse(game.getPlayers());
+
         Round round = new Round();
         round.setGame(game);
         round.setPlayers(new ArrayList<>(game.getPlayers()));
@@ -132,31 +137,30 @@ public class GameService {
         cardService.save(sPrueba);
 
         if(game.getGameMode() == GameMode.VERSUS){
-            int numplayers = game.getPlayers().size();
-            List<Card> cardList = new ArrayList<>(cardService.autoColorAssignInitCards(numplayers));
-            if(numplayers < 2){
+            List<Usuario> numplayers = new ArrayList<>(game.getPlayers());
+            List<Card> cardList = new ArrayList<>(cardService.autoColorAssignInitCards(numplayers.size()));
+            if(numplayers.size() < 2){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardForLess3Players(board, cardList.get(0), sPrueba);
-            }else if(numplayers == 2){
+            }else if(numplayers.size() == 2){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardForLess3Players(board, cardList.get(0), cardList.get(1));
-            }else if(numplayers == 3){
+            }else if(numplayers.size() == 3){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor3Players(board, cardList.get(0), cardList.get(1), cardList.get(2));
-            }else if(numplayers == 4){
+            }else if(numplayers.size() == 4){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor4Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3));
-            }else if(numplayers == 5){
+            }else if(numplayers.size()== 5){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor5Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4));
-
-            }else if(numplayers == 6){
+            }else if(numplayers.size() == 6){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor6Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5));
-            }else if(numplayers == 7){
+            }else if(numplayers.size() == 7){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor7Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6));
-            }else if(numplayers == 8){
+            }else if(numplayers.size()== 8){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor8Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6), cardList.get(7));
             }
@@ -166,12 +170,37 @@ public class GameService {
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
     }
-    
-    // public void userLost(Game game){
-    //     List<Usuario> players = new ArrayList<>(game.getPlayers());
-    //     (Usuario player : game.getPlayers()){
-    //         if()
-    //     }
-    // }
+
+    public List<Usuario> checkLostVS(Game game, List<Tile> availableTiles){
+        List<Usuario> out = new ArrayList<>();
+        List<Usuario> players = new ArrayList<>(game.getPlayers());
+        for(Usuario p : players){
+            if(deckService.getDeckFromPlayer(p).getCards().size() == 0 || availableTiles.size() == 0){
+                out.add(p);
+            }
+        }
+        return out;
+    }
+
+    public Boolean checkDrawVS(Game game, List<Tile> availableTiles){
+        Boolean out = true;
+        List<Usuario> restPlayers = new ArrayList<>(game.getPlayers());
+        for(int i = 0; i < restPlayers.size(); i++){
+            if(availableTiles.size() == 0){
+                out = true & out; 
+            }else{
+                out = false;
+            }
+        }
+        return out;
+    }
+
+    @Transactional
+    public void endGame(Game game){
+        game.setGameState(GameState.ENDED);
+        boardService.delete(game.getBoard());
+        gameRepository.save(game);
+    }
+
 
 }

@@ -50,4 +50,10 @@ public class UsuarioService {
       return emails;
     }
 
+    public void setStatFalse(List<Usuario> users){
+      for(Usuario u : users){
+        u.setGameEnded(false);
+      }
+    }
+
 }

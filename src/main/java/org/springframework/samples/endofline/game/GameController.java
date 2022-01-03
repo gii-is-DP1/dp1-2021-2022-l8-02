@@ -54,6 +54,7 @@ public class GameController {
     public static final String GAME_CREATION = "games/gameCreationForm";
     public static final String GAME_LOBBY = "games/gameLobby";
     public static final String GAME_STATICPOSTGAME = "games/staticPostGame";
+    public static final String GAME_LOST = "games/gameLost";
 
 
     private GameService gameService;
@@ -104,6 +105,10 @@ public class GameController {
         model.addAttribute("game", game);
         
         if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
+            model.addAttribute("userLost", getLoggedUser().getGameEnded());
+            return GAME_LOST;
+        }
         response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
@@ -114,6 +119,7 @@ public class GameController {
         model.addAttribute("user", getLoggedUser());
         StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
         model.addAttribute("statistiscPostGame",statisticsGames);
+        
         return GAME_VIEW;
     }
 
@@ -215,6 +221,12 @@ public class GameController {
         if(game.getPlayers().get(0).equals(getLoggedUser())) 
             gameService.startGame(game);
         return "redirect:/games/currentGame";
+    }
+
+    @GetMapping("/{gameId}/end")
+    public String endGame(@PathVariable("gameId") Game game, Model model){
+
+        return "redirect:/principal";
     }
 
 }

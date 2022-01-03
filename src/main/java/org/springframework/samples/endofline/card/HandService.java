@@ -8,8 +8,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
-import org.springframework.samples.endofline.game.Round;
-import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.stereotype.Service;
 

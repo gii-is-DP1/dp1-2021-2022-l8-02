@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
+import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,10 @@ public class RoundService {
     UsuarioService usuarioService;
 
     @Autowired
-    BoardService boardSercive;
+    BoardService boardService;
+
+    @Autowired
+    GameService gameService;
 
     public Collection<Round> getRounds(){
         return roundRepository.findAll();
@@ -41,37 +45,56 @@ public class RoundService {
     }
 
     @Transactional
-    public void copyRound(Round round1, Round round2){
-        round2.setGame(round1.getGame());
-        round2.setPlayers(round1.getPlayers());
-        save(round2);
-    }
-
-    @Transactional
-    public void generateTurnsByPlayers(Round round, int numPlayers){
+    public void generateTurnsByPlayers(Round round, List<Usuario> numPlayers){
         List<Turn> turns = new ArrayList<>();
-        for(int i = 0; i < numPlayers; i++){
-            Turn turn = new Turn();
-            turn.setRound(round);
-            turn.setUsuario(round.getPlayers().get(i));
-            turnService.save(turn);
-            turns.add(turn);
-            round.getPlayers().get(i).setTurn(turn);
-            usuarioService.save(round.getPlayers().get(i));
+        for(int i = 0; i < numPlayers.size(); i++){
+            if(!numPlayers.get(i).getGameEnded()){
+                Turn turn = new Turn();
+                turn.setRound(round);
+                turn.setUsuario(round.getPlayers().get(i));
+                turnService.save(turn);
+                turns.add(turn);
+                round.getPlayers().get(i).setTurn(turn);
+            }
         }
-        turns.get(0).setStartTime(boardSercive.hourToInteger());
-        turnService.save(turns.get(0));
-        round.setTurns(turns);
-        save(round);
+        if(turns.size() > 0){
+            turns.get(0).setStartTime(boardService.hourToInteger());
+            turnService.save(turns.get(0));
+            round.setTurns(turns);
+            save(round);
+        }
     }
 
     @Transactional
-    public void refreshRound(Game game, Usuario player){
+    public void refreshRound(Game game, Usuario player, List<Tile> availableTiles){
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
         List<Usuario> players = new ArrayList<>(game.getPlayers());
+        if(players.size() == 2){
+            if(gameService.checkDrawVS(game, availableTiles)){
+                gameService.endGame(game);
+            }else{
+                if(gameService.checkLostVS(game, availableTiles).size() > 0){
+                    gameService.checkLostVS(game, availableTiles).get(0).setGameEnded(true); //poner aqui fin de partida con pantalla de jugador x
+                    usuarioService.save(gameService.checkLostVS(game, availableTiles).get(0));
+                    players.remove(gameService.checkLostVS(game, availableTiles).get(0));
+                    //poner aqui que el otro jugador ha ganado
+                }
+            }
+        }else if(players.size() > 2){
+            if(gameService.checkLostVS(game, availableTiles).size() > 0){
+                for(int i = 0; i < gameService.checkLostVS(game, availableTiles).size(); i++){
+                    gameService.checkLostVS(game, availableTiles).get(i).setGameEnded(true);
+                    usuarioService.save(gameService.checkLostVS(game, availableTiles).get(i));
+                    players.remove(gameService.checkLostVS(game, availableTiles).get(i));
+                    System.out.println("se acabo el game para jugador x"); //poner aqui el fin de partida con pantalla de jugador x ha perdido (todo para cada jugador que pierde)
+                }
+            }
+        }
         turns.remove(turnService.getByUsername(player.getUsername()));
-        turns.get(0).setStartTime(boardSercive.hourToInteger());
-        turnService.save(turns.get(0));
+        if(turns.size() > 0){
+            turns.get(0).setStartTime(boardService.hourToInteger());
+            turnService.save(turns.get(0));
+        }
         turnService.delete(turnService.getByUsername(player.getUsername()));
         game.getRound().setTurns(turns);
         if(game.getRound().getTurns().size() == 0){
@@ -80,7 +103,7 @@ public class RoundService {
             round.setGame(game);
             round.setPlayers(players);
             save(round);
-            generateTurnsByPlayers(round, game.getPlayers().size());
+            generateTurnsByPlayers(round, game.getPlayers());
             save(round);
             game.setRound(round);
         }
