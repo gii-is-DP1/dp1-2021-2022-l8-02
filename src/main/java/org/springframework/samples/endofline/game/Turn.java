@@ -29,6 +29,8 @@ public class Turn extends BaseEntity{
     @NotNull
     private Round round;
 
+    private Integer startTime;
+    
     private Integer CardCounter = 0;
 
 }

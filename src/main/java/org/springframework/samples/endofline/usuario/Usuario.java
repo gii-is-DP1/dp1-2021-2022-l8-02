@@ -48,6 +48,9 @@ public class Usuario{
     @OneToOne(mappedBy = "usuario")
     private Turn turn;
 
+    @Column(name = "estado_partida")
+    private Boolean gameEnded;
+    
     @OneToOne
     private Energy energy;
 

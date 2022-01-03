@@ -1,17 +1,12 @@
 package org.springframework.samples.endofline.energies;
 
-
-
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -30,6 +25,7 @@ import lombok.Setter;
 @Setter
 @Table(name="energies")
 public class Energy extends BaseEntity{
+
     @NotNull
     Integer counter;
 
@@ -42,8 +38,6 @@ public class Energy extends BaseEntity{
     @ElementCollection
     @MapKeyColumn(name="powerMap")
     Map<Power, Boolean> powers;
-
-
 
     private Integer LastRound;
 }

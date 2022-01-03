@@ -1,7 +1,7 @@
 package org.springframework.samples.endofline.board;
 
+import java.time.LocalTime;
 import java.util.List;
-
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -9,14 +9,13 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
+import org.springframework.samples.endofline.board.exceptions.TimeOutException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
-
 import org.springframework.samples.endofline.card.CardType;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
@@ -26,17 +25,14 @@ import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
-
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
-import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
-import org.springframework.samples.endofline.game.Round;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,9 +52,6 @@ public class BoardService {
 
     @Autowired
     private HandService handService;
-
-    @Autowired
-    private StatisticsGamesService statisticsGamesService;
 
     @Autowired
     private GameService gameService;
@@ -81,55 +74,90 @@ public class BoardService {
     @Autowired
     private EnergyService energyService;
 
-
     @Transactional
-    public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException{
+    // TODO: No podemos tener un metodo tan largo, hay que hacer minimetodos y luego
+    // llamarlos, como en gameStart
+    public void playCard(Usuario player, Card card, Tile tile) throws InvalidMoveException, NotUrTurnException, TimeOutException {
         Game game = gameService.getGameByPlayer(player);
-        Path p = game.getBoard().getPaths().get(card.getColor().ordinal()); //Returns the path(tiles played)followed by a player
-        List<Tile> occupiedTiles = p.getOccupiedTiles();                    //Returns the list with the occupied tiles
-        Tile lastTile = occupiedTiles.get(occupiedTiles.size()-1);          //Returns the lastTile of the previous mentioned list
-        List<Tile> availableTiles = getAdjacents(lastTile, player, p);                 //Returns a list of the available tiles respect to the lastTile given                                    
+        Path p = game.getBoard().getPaths().get(card.getColor().ordinal());
+        List<Tile> occupiedTiles = p.getOccupiedTiles();
+        Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+        List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
-            Deck deck = deckService.getDeckFromPlayer(player);
-            Hand hand = handService.findHandByDeck(deck);
-            if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
-                card.setRotation(cardService.calculateRotation(tile,lastTile));
-                cardService.save(card);
-                hand.getCards().remove(card);
-                handService.save(hand);
-                tile.setCard(card);
-                tileService.save(tile);
-                p.getOccupiedTiles().add(tile);                             //Adds the new tile thats been occupied by the player to his path
-                pathService.save(p);
-            }else {
-                throw new InvalidMoveException();
-            }
-
-           /* StatisticsGames statisticsGames = statisticsGamesService.findStatisticsGamesByUserGames(player, game);
-            Map<Card, Integer> mapSet = statisticsGamesService.userMap(card, statisticsGames.getMap());
-            statisticsGames.setMap(mapSet);
-            Integer pointNew = statisticsGames.getPoint() + card.getCardType().getIniciative();
-            statisticsGames.setPoint(pointNew);
-            // Guardar los datos una vez actualizados
-            statisticsGamesService.save(statisticsGames);*/
-            turnService.cardCounter(player, game, player.getEnergy().getPowers());
-            /*if(player.getTurn().getRound().getId() == 1){
-                roundService.refreshRound(game, player);
-            }
-            else if (player.getTurn().getRound().getId() >= 2){
-                if(player.getTurn().getCardCounter() == 2){
-                    roundService.refreshRound(game, player);
+            // if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
+                Deck deck = deckService.getDeckFromPlayer(player);
+                Hand hand = handService.findHandByDeck(deck);
+                if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
+                    // TODO: Logica de validacion de una jugada aqui?
+                    card.setRotation(cardService.calculateRotation(tile, lastTile));
+                    cardService.save(card);
+                    hand.getCards().remove(card);
+                    handService.save(hand);
+                    tile.setCard(card);
+                    tileService.save(tile);
+                    p.getOccupiedTiles().add(tile);
+                    pathService.save(p);
+                } else {
+                    throw new InvalidMoveException();
                 }
-            }*/
-
-            
-            gameService.save(game);
-        }else{
+                // StatisticsGames statisticsGames =
+                // statisticsGamesService.findStatisticsGamesByUserGames(player, game);
+                // Map<Card, Integer> mapSet = statisticsGamesService.userMap(card,
+                // statisticsGames.getMap());
+                // statisticsGames.setMap(mapSet);
+                // Integer pointNew = statisticsGames.getPoint() +
+                // card.getCardType().getIniciative();
+                // statisticsGames.setPoint(pointNew);
+                // Guardar los datos una vez actualizados
+                // statisticsGamesService.save(statisticsGames);
+                // turnService.cardCounter(player, game, player.getEnergy().getPowers());
+                /*
+                 * if(player.getTurn().getRound().getId() == 1){
+                 * roundService.refreshRound(game, player);
+                 * }
+                 * else if (player.getTurn().getRound().getId() >= 2){
+                 * if(player.getTurn().getCardCounter() == 2){
+                 * roundService.refreshRound(game, player);
+                 * }
+                 * }
+                 */
+                gameService.save(game);
+            // } else {
+            //     // roundService.refreshRound(game, player, availableTiles);
+            //     // gameService.save(game);
+            //     throw new TimeOutException();
+            // }
+        } else {
             throw new NotUrTurnException();
         }
+        roundService.refreshRound(game, player, card);
+        gameService.save(game);
     }
-    
 
+    // Segundos en un día: 86399 (23:59:59)
+    public Boolean compareHour(Integer startTime) {
+        Integer hourNow = hourToInteger();
+        if (hourNow > startTime) {
+            Integer substract = hourNow - startTime;
+            if (substract < 30) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            Integer substract = startTime - hourNow;
+            if (substract < 86370) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public Integer hourToInteger() {
+        LocalTime start = java.time.LocalTime.now();
+        return start.toSecondOfDay();
+    }
 
     public Deck deckFromPlayers(Usuario player) {
         Deck deck = deckService.getDeckFromPlayer(player);
@@ -165,9 +193,9 @@ public class BoardService {
             size = 13;
         } else if (numPlayers > 5) {
             size = 11;
-        }else if (numPlayers > 3){
+        } else if (numPlayers > 3) {
             size = 9;
-        }else{
+        } else {
             size = 7;
         }
 
@@ -193,8 +221,7 @@ public class BoardService {
 
         int maxImplementedPuzzles = 60;
 
-        List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles-1)+1);
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + tiles);
+        List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles - 1) + 1);
 
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -202,8 +229,8 @@ public class BoardService {
                 tile.setX(x);
                 tile.setY(y);
                 tile.setTileState(TileState.FREE);
-                for(PuzzleTile pt: tiles) {
-                    if(pt.getX() == x && pt.getY() == y) {
+                for (PuzzleTile pt : tiles) {
+                    if (pt.getX() == x && pt.getY() == y) {
                         Card card = new Card();
                         card.setColor(CardColor.RED);
                         card.setCardType(pt.getCardType());
@@ -272,5 +299,9 @@ public class BoardService {
                     .map(x -> Direction.values()[x])
                     .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
                     .collect(Collectors.toList());
+    }
+
+    public void delete(Board board) {
+        boardRepository.delete(board);
     }
 }
