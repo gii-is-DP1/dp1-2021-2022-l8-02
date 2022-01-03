@@ -84,7 +84,7 @@ public class BoardService {
         Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
-            if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
+            // if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
                 Deck deck = deckService.getDeckFromPlayer(player);
                 Hand hand = handService.findHandByDeck(deck);
                 if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
@@ -110,7 +110,7 @@ public class BoardService {
                 // statisticsGames.setPoint(pointNew);
                 // Guardar los datos una vez actualizados
                 // statisticsGamesService.save(statisticsGames);
-                turnService.cardCounter(player, game, player.getEnergy().getPowers());
+                // turnService.cardCounter(player, game, player.getEnergy().getPowers());
                 /*
                  * if(player.getTurn().getRound().getId() == 1){
                  * roundService.refreshRound(game, player);
@@ -122,15 +122,15 @@ public class BoardService {
                  * }
                  */
                 gameService.save(game);
-            } else {
-                // roundService.refreshRound(game, player, availableTiles);
-                // gameService.save(game);
-                throw new TimeOutException();
-            }
+            // } else {
+            //     // roundService.refreshRound(game, player, availableTiles);
+            //     // gameService.save(game);
+            //     throw new TimeOutException();
+            // }
         } else {
             throw new NotUrTurnException();
         }
-        roundService.refreshRound(game, player, availableTiles);
+        roundService.refreshRound(game, player, card);
         gameService.save(game);
     }
 
@@ -222,7 +222,6 @@ public class BoardService {
         int maxImplementedPuzzles = 60;
 
         List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles - 1) + 1);
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + tiles);
 
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {

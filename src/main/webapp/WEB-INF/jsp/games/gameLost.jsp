@@ -6,7 +6,14 @@
 
 <eol:layoutEOL pageName="gameLost">
     <div class="row" style="text-align: center!important;">
-        <p style="font-size:50px; font-style: italic; font-weight: bold;">DERROTA...</p>
+        <c:choose>
+            <c:when test = "${userLost}">
+                <p style="font-size:50px; font-style: italic; font-weight: bold;">DERROTA...</p>
+            </c:when>
+            <c:otherwise>
+                <p style="font-size:50px; font-style: italic; font-weight: bold;">&iexcl;&iexcl;VICTORIA!!</p>
+            </c:otherwise>
+        </c:choose>
     </div>
     <div class="container text-center" >
         <div > 
@@ -20,5 +27,6 @@
                     </c:forEach> -->
             </tr>
         </table>
+        <a href="/lobby">VOLVER</a>
     </div>
 </eol:layoutEOL>

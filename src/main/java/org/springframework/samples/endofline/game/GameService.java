@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Board;
 import org.springframework.samples.endofline.board.BoardService;
+import org.springframework.samples.endofline.board.Path;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.TileService;
 import org.springframework.samples.endofline.card.Card;
@@ -192,22 +193,30 @@ public class GameService {
         return gameRepository.getGameByGameState(state);
     }
 
-    public List<Usuario> checkLostVS(Game game, List<Tile> availableTiles){
+    public List<Usuario> checkLostVS(Game game){
         List<Usuario> out = new ArrayList<>();
         List<Usuario> players = new ArrayList<>(game.getPlayers());
         for(Usuario p : players){
-            if(deckService.getDeckFromPlayer(p).getCards().size() == 0 || availableTiles.size() == 0){
+            Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(p).getCards().get(0).getColor().ordinal());
+            List<Tile> occupiedTiles = path.getOccupiedTiles();
+            Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+            List<Tile> availableTiles = boardService.getAdjacents(lastTile, p, path);
+            if(deckService.getDeckFromPlayer(p).getCards().size() == 0 || availableTiles.stream().allMatch(x -> tileService.findTileByCoordsAndBoard(game.getBoard(), x.getX(), x.getY()).getCard() != null)){
                 out.add(p);
             }
         }
         return out;
     }
 
-    public Boolean checkDrawVS(Game game, List<Tile> availableTiles){
+    public Boolean checkDrawVS(Game game){
         Boolean out = true;
         List<Usuario> restPlayers = new ArrayList<>(game.getPlayers());
         for(int i = 0; i < restPlayers.size(); i++){
-            if(availableTiles.size() == 0){
+            Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(restPlayers.get(i)).getCards().get(0).getColor().ordinal());
+            List<Tile> occupiedTiles = path.getOccupiedTiles();
+            Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+            List<Tile> availableTiles = boardService.getAdjacents(lastTile, restPlayers.get(i), path);
+            if(availableTiles.stream().allMatch(x -> tileService.findTileByCoordsAndBoard(game.getBoard(), x.getX(), x.getY()).getCard() != null)){
                 out = true & out; 
             }else{
                 out = false;
@@ -219,7 +228,6 @@ public class GameService {
     @Transactional
     public void endGame(Game game){
         game.setGameState(GameState.ENDED);
-        boardService.delete(game.getBoard());
         gameRepository.save(game);
     }
 
