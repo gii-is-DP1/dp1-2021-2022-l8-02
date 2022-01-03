@@ -12,8 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.game.Game;
-import org.springframework.samples.petclinic.model.BaseEntity;
-
+import org.springframework.samples.endofline.model.BaseEntity;
 import org.springframework.samples.endofline.usuario.Usuario;
 
 
