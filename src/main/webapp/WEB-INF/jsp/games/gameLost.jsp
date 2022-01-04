@@ -19,14 +19,20 @@
         <div > 
         <table style="width: 100%;" >
             <tr>
-                <th ><h2 class="text-center neon-text">Estadisticas:</h2></th>
+                
                 <th >
                     <!-- <c:forEach items="${game.players}" var="player">
                             <p class="text-center">${player.username}</p>
                         
                     </c:forEach> -->
+                    <div class="row text-center">
+                        <p>Jugador:   ${statistiscPostGame.user.username}</p>
+                        <p>Partida:   ${statistiscPostGame.game.name}</p>
+                        <p>Puntos:    ${statistiscPostGame.point}</p>
+                        <p>Inciativa de la carta mas usada:     ${statistiscPostGame.maxCard.cardType.iniciative}</p>
+                    </div> 
             </tr>
         </table>
-        <a href="/lobby">VOLVER</a>
+        <a href="/lobby" class="neon-button" style="font-size: 20px;margin-top: 10%; margin-left: 15%;">Volver al inicio</a>
     </div>
 </eol:layoutEOL>
