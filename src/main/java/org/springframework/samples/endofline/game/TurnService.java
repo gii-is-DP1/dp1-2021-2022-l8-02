@@ -49,6 +49,8 @@ public class TurnService {
         return turnRepository.getTurnByUsername(username);
     }
 
+    
+
     // public void cardCounter(Usuario player, Game game, Map<Power, Boolean> powers) {
     //     Integer count = getByUsername(player.getUsername()).getCardCounter();
     //     count += 1;
