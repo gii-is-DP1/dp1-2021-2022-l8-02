@@ -25,10 +25,7 @@ import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
-<<<<<<< HEAD
-=======
 import org.springframework.samples.endofline.usuario.UsuarioService;
->>>>>>> origin/josconsan1
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
