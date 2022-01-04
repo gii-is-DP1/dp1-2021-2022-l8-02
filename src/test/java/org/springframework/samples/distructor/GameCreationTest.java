@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -57,7 +56,6 @@ public class GameCreationTest {
     }
 
     @Test
-    @Disabled
     @Transactional
     void invalidGameMode() {
         Game game = new Game();
@@ -156,7 +154,6 @@ public class GameCreationTest {
         }
 
         @Test
-        @Disabled
         @Transactional
         void joinPuzzle() {
             Game puzzleGame = gameService.findGame(puzzleGameId);

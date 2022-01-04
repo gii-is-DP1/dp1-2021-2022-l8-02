@@ -274,7 +274,7 @@ public class RoundService {
             List<Usuario> listUser= generateOrderByPlayer(round.getPlayers());
             round.setPlayers(listUser);
             save(round);
-        }    
+        }
         for(int i = 0; i < numPlayers.size(); i++){
             if(!numPlayers.get(i).getGameEnded()){
                 Turn turn = new Turn();
