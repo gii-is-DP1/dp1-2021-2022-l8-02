@@ -159,7 +159,7 @@ public class GameController {
         model.addAttribute("energy", getLoggedUser().getEnergy());
         
         /*para ver quien tiene turno*/
-        model.addAttribute("miTurn");
+        model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
         
         
         return GAME_VIEW;
