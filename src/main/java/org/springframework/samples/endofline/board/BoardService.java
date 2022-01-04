@@ -25,6 +25,10 @@ import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
+<<<<<<< HEAD
+=======
+import org.springframework.samples.endofline.usuario.UsuarioService;
+>>>>>>> origin/josconsan1
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
@@ -70,6 +74,10 @@ public class BoardService {
     @Autowired
     private EnergyService energyService;
 
+
+    @Autowired
+    private UsuarioService usuarioService;
+
     @Transactional
     // TODO: No podemos tener un metodo tan largo, hay que hacer minimetodos y luego
     // llamarlos, como en gameStart
@@ -80,6 +88,7 @@ public class BoardService {
         Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
+
             // if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
                 Deck deck = deckService.getDeckFromPlayer(player);
                 Hand hand = handService.findHandByDeck(deck);
@@ -87,6 +96,8 @@ public class BoardService {
                     // TODO: Logica de validacion de una jugada aqui?
                     card.setRotation(cardService.calculateRotation(tile, lastTile));
                     cardService.save(card);
+                    player.getInicialListCardsByPlayer().add(card.getCardType().getIniciative());
+                    usuarioService.save(player);
                     hand.getCards().remove(card);
                     handService.save(hand);
                     tile.setCard(card);
@@ -95,6 +106,7 @@ public class BoardService {
                     pathService.save(p);
                 } else {
                     throw new InvalidMoveException();
+
                 }
                 // StatisticsGames statisticsGames =
                 // statisticsGamesService.findStatisticsGamesByUserGames(player, game);

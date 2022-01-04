@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -53,5 +54,8 @@ public class Usuario{
     
     @OneToOne
     private Energy energy;
+
+    @ElementCollection
+    List<Integer> inicialListCardsByPlayer;
 
 }

@@ -52,7 +52,7 @@ public class Game extends BaseEntity {
 
     @OneToOne
     private Round round;
-
+    
     /*
     private List<Power> power;*/
 
