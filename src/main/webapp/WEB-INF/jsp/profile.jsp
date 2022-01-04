@@ -13,6 +13,8 @@
             <div class=" align-items-center" style="text-align: center!important; font-size: 20px; margin-bottom: 20px;">
                 <div class="col-sm"><p> ${usuario.username}</p></p></div>
                 <div class="col-sm"><p> ${usuario.email}</p></p></div>
+                <th style="width: 20%;" ><a href="/profile/${usuario.username}/edit"style="font-size: 17px"  class="neon-button">Editar perfil</a></th>
+
             </div>
             <table style=" margin-bottom: 10px; min-width:1000px; max-width: 70%; ">
                 <th style="width:30% ;">
@@ -40,7 +42,7 @@
                 <th style="width:30% ;">
                 <div class="scroll" style="border: solid; border-radius: 20px; border-spacing: 10px; height: 500px;
                 max-height: 600px;">
-                    <p style="font-size:25px;  text-decoration:underline; "> Logros</p>
+                    <p style="font-size:25px;  text-decoration:underline; "> L&oacute;gros</p>
                     <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
                     <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
                     <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>

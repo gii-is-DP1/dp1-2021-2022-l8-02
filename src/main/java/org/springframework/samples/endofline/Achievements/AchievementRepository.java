@@ -1,4 +1,4 @@
-package org.springframework.samples.endofline.Achievements;
+package org.springframework.samples.endofline.achievements;
 
 import java.util.Collection;
 

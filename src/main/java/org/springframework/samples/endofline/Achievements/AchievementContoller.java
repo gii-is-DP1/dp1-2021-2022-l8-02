@@ -1,4 +1,4 @@
-package org.springframework.samples.endofline.Achievements;
+package org.springframework.samples.endofline.achievements;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.usuario.UsuarioService;
