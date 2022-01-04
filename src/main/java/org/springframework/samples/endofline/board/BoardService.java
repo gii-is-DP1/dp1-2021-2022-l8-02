@@ -26,7 +26,6 @@ import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.game.Game;
-import org.springframework.samples.endofline.game.GameMode;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.power.Power;
