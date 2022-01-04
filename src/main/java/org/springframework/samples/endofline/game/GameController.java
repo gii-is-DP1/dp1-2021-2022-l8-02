@@ -117,7 +117,12 @@ public class GameController {
         model.addAttribute("statistiscPostGame",statisticsGames);
         model.addAttribute("game", game);
         
-        if(game.getGameState() == GameState.LOBBY)  return GAME_LOBBY;
+        if(game.getGameState() == GameState.LOBBY){
+            response.addHeader("Refresh", "5");
+            model.addAttribute("logged", getLoggedUser().getUsername());
+            model.addAttribute("creator", game.getPlayers().get(0).getUsername());
+          return GAME_LOBBY;
+        }
 
         if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
             model.addAttribute("userLost", getLoggedUser().getGameEnded());
@@ -129,10 +134,7 @@ public class GameController {
             session.removeAttribute("errorMessage");
         }
 
-        if(game.getGameState() == GameState.LOBBY){
-            response.addHeader("Refresh", "5");
-            return GAME_LOBBY;
-        }
+    
 
         response.addHeader("Refresh", "5");
         
@@ -156,7 +158,6 @@ public class GameController {
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
         
-        /*AQUI VOY A METER EL ACTUALIZAR MANO POR RONDA*/
         
         
         return GAME_VIEW;
@@ -177,12 +178,12 @@ public class GameController {
         return "redirect:/games/currentGame";
     }
 
-    @PostMapping("/newCards")
+ /*   @PostMapping("/newCards")
     public String getNewCards(){
         /*Deck deck= boardService.deckFromPlayers(getLoggedUser());
-        handService.generateDefaultHand(deck);*/
+        handService.generateDefaultHand(deck);
         return  "redirect:/games/currentGame";
-    }
+    }*/
     
     @PostMapping("/usePower")
     public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response){

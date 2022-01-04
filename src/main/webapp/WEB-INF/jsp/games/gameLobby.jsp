@@ -33,6 +33,7 @@
             <th>
                     <p class="text-center">Nombre:    ${game.name}</p>                
                     <p class="text-center">Modo:     ${game.gameMode}</p>
+                    
                 
             </th>
         
@@ -44,8 +45,10 @@
                <th style="width: 20%; margin-right: 20%;">
                     <a href="/games/leave" class="neon-button" style="font-size: 25px;">Abandonar partida</a>
                </th>
-               <th style="width: 20%; margin-right: 20%;">
+               <th style="width: 20%; margin-right: 20%;" id = "start">
+               
                     <a href="/games/${game.id}/start" class="neon-button" style="font-size: 25px;">Comenzar partida</a>                
+        
                 </th>
                 <th style="width: 20%; margin-right: 20%;">
                     <a href="#" class="neon-button" style="font-size: 25px;">Invitar jugadores</a>
@@ -55,4 +58,21 @@
     </div>
 
     </div>
+
+    <script>
+
+        function deleteButtom(){
+            const boton = document.getElementById("start");
+            const logged = "${logged}";
+            const creator = "${creator}"; 
+            if(!(logged.toUpperCase() === creator.toUpperCase())){
+                boton.style.display = "none";
+            }
+    
+    
+        }
+        window.addEventListener("load", deleteButtom);
+    
+    
+    </script>
 </eol:layoutEOL>
