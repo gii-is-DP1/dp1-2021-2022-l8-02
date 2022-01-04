@@ -9,10 +9,10 @@
 
 <eol:layoutEOL pageName="${game.name}">
     <h2>${game.name}</h2>
+    <h2>Es el turno de: ${miTurn}</h2>
     <h2>Energ&iacutea: ${energy.counter} </h2>
     <form:form method="POST" modelAttribute="power" class="form-horizontal" action="/games/usePower">
-    <eol:input label="Poderes" name="name">
-            
+        <eol:input label="Poderes" name="name">
             <form:select path="name">
                 <form:options items="${powers}"/>
             </form:select>
@@ -38,12 +38,12 @@
     <!-- <div class="row">
         <a href="/statisticsGame/${game.id}/${user.username}"><button>Statistics</button></a>
     </div> -->
-    <div class="row text-center">
+    <!--<div class="row text-center">
         <p>Jugador:   ${statistiscPostGame.user.username}</p>
         <p>Partida:   ${statistiscPostGame.game.name}</p>
         <p>Puntos:    ${statistiscPostGame.point}</p>
         <p>Inciativa de la carta mas usada:     ${statistiscPostGame.maxCard.cardType.iniciative}</p>
-    </div> 
+    </div>--> 
 
     <script>
 
