@@ -9,6 +9,7 @@
 
 <eol:layoutEOL pageName="${game.name}">
     <h2>${game.name}</h2>
+    <h2>Es el turno de: ${miTurn}</h2>
     <h2>Energ&iacutea: ${energy.counter} </h2>
     <form:form method="POST" modelAttribute="power" class="form-horizontal" action="/games/usePower">
     <eol:input label="Poderes" name="name">

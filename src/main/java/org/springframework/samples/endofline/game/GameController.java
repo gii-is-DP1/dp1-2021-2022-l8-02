@@ -157,9 +157,9 @@ public class GameController {
 
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
-        
-        
-        
+        if(game.getRound().getTurns().size()>0){
+        model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
+        }
         return GAME_VIEW;
     }
 
