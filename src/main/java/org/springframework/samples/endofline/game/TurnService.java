@@ -1,19 +1,13 @@
 package org.springframework.samples.endofline.game;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.Path;
-import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.card.DeckService;
-import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
-import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service
