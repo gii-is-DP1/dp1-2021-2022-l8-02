@@ -2,8 +2,13 @@ package org.springframework.samples.endofline.game;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Random;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Board;
 import org.springframework.samples.endofline.board.BoardService;
@@ -38,10 +43,12 @@ public class GameService {
     private RoundService roundService;
     private EnergyService energyService;
     private PowerService powerService;
+
     private UsuarioService userService;
 
     @Autowired
     public GameService(PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService) {
+
 
         this.gameRepository = gameRepository;
         this.boardService = boardService;
@@ -53,6 +60,7 @@ public class GameService {
         this.energyService = energyService;
         this.powerService = powerService;
         this.userService = userService;
+
     }
 
     public Collection<Game> getGames() {
@@ -107,6 +115,27 @@ public class GameService {
         }
     }
 
+    // public Map<Usuario,List<Integer>> diccConteinsAll(Map<Usuario,List<Integer>> dicc){
+
+    // }
+    // public Map<Usuario,List<Integer>> turnsForPlayer(List<Usuario>players){
+    //     Map<Usuario,List<Integer>> dicc= new HashMap<>();
+
+    // }
+
+    // public List<Integer> getFirstRoundInitiatives(Map<Usuario, List<Integer> m){
+    //     List<Integer> res = new ArrayList<>();
+    //     for(List<Integer> ls:m.values()){
+    //         if(ls.size() == 0){
+    //             res.add(ls.get(0));
+    //         }
+    //         else{
+    //             res.add(ls.get(ls.size()-1));
+    //         }
+    //     }Collections.sort(res);
+    //     return res;
+    // }
+
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
         Board board = new Board();
@@ -140,7 +169,32 @@ public class GameService {
 
         Round round = new Round();
         round.setGame(game);
-        round.setPlayers(new ArrayList<>(game.getPlayers()));
+
+        //Metodo para decidir a inicio que usuarios, juegan.(Crear un diccionario donde se guarde jugador y iniciativa, si la iniciativa 
+        //es igual entonces )
+        
+
+        
+        for(Usuario u: game.getPlayers()){
+            u.setInicialListCardsByPlayer(new ArrayList<>());
+            userService.save(u);
+        }
+
+        List<Usuario> usersList = new ArrayList<>();
+        List<Integer> firstRoundInitiatives = roundService.generateInicialOrderByPlayer(game.getPlayers());
+            for(Integer e: firstRoundInitiatives){
+                List<Usuario> auxLs = new ArrayList<>();
+                for(Usuario u: game.getPlayers()){
+                    //Sacariamos del dicc la lista correspondiente a cada usuario, le hariamos un size y lo sustituiriamos por 0.
+                    if(u.getInicialListCardsByPlayer().get(0)==e){
+                        auxLs.add(u);
+                    }
+                }
+            Collections.shuffle(auxLs);
+            usersList.addAll(auxLs);
+        }
+        round.setPlayers(new ArrayList<>());
+        round.getPlayers().addAll(usersList);
         roundService.save(round);
         
 

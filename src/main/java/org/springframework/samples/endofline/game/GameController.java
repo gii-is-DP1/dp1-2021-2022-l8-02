@@ -157,9 +157,16 @@ public class GameController {
 
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
-        if(game.getRound().getTurns().size()>0){
-        model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
+
+        
+        /*para ver quien tiene turno*/
+        if(game.getRound().getTurns().size() > 0) {
+            model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
+        } else {
+            model.addAttribute("miTurn", getLoggedUser().getUsername());
         }
+        
+  
         return GAME_VIEW;
     }
 

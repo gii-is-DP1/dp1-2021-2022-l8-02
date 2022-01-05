@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -42,7 +43,8 @@ public class Usuario{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
 	private Set<Authorities> authorities;
 
-   @OneToMany(cascade = CascadeType.ALL)
+    @ElementCollection
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Achievement> achievements;
 
     @OneToOne(mappedBy = "usuario")
@@ -53,5 +55,8 @@ public class Usuario{
     
     @OneToOne
     private Energy energy;
+
+    @ElementCollection
+    List<Integer> inicialListCardsByPlayer;
 
 }

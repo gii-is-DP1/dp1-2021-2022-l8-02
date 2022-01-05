@@ -1,9 +1,12 @@
 package org.springframework.samples.endofline.card;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
@@ -26,6 +29,23 @@ public class DeckService {
     public List<CardType> AllCardTypes(){
         List<CardType> cardType=cardService.findAllCardTypes();
         return cardType;
+    }
+
+    public List<Integer> orderIniciatives(){
+        List<Integer> listInteger= new ArrayList<>();
+        Set<Integer> orderIniciatives= new HashSet<>(); 
+        for(CardType c: AllCardTypes()){
+            orderIniciatives.add(c.getIniciative());
+        }
+        
+        
+        for(Integer i: orderIniciatives){
+            if(i>=0){
+            listInteger.add(i);
+            }
+        }
+        Collections.sort(listInteger);
+        return listInteger;
     }
 
     public Deck getDeckFromPlayer(Usuario player) {
