@@ -378,19 +378,20 @@ public class RoundService {
                 player.setEnergy(ene);
                 energyService.save(ene);
                 return;
-            }else if(player.getTurn().getCardCounter() <= 2 && player.getEnergy().getPowers().get(powerService.findById(1)).booleanValue()){
-                if(player.getTurn().getCardCounter()<3){
-                    return;
-                }else if (player.getTurn().getCardCounter()==3){
+            }else if(player.getEnergy().getPowers().get(powerService.findById(1)).booleanValue()){
+                System.out.println(player.getTurn().getCardCounter());
+                if (player.getTurn().getCardCounter()==3){
                     Map<Power, Boolean> map = player.getEnergy().getPowers();
                     Set<Power> powers = map.keySet();
                     for(Power p: powers){
-                    map.put(p, false);
+                        map.put(p, false);
                     }
                     Energy ene = player.getEnergy();
                     ene.setPowers(map);
                     player.setEnergy(ene);
                     energyService.save(ene);
+                }else if(player.getTurn().getCardCounter()<3){
+                    return;
                 }
             }else if(player.getTurn().getCardCounter() < 2){
                 return;
