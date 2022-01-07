@@ -239,6 +239,7 @@ public class RoundService {
         return listUserOrder;
     }
 
+    
     @Transactional
     public List<Usuario> generateOrderByPlayer(List<Usuario> listUser){
         List<Usuario> list= new ArrayList<>();
