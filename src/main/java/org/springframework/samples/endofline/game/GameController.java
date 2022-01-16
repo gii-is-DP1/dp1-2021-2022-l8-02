@@ -136,7 +136,7 @@ public class GameController {
         }
 
     
-
+        
         response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
@@ -155,7 +155,7 @@ public class GameController {
         model.addAttribute("powers", PowersName);
 
         model.addAttribute("power",new Power());
-
+        model.addAttribute("logged", getLoggedUser().getUsername());
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
 

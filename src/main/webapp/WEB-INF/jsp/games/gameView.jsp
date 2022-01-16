@@ -11,13 +11,15 @@
     <h2>${game.name}</h2>
     <h2>Es el turno de: ${miTurn}</h2>
     <h2>Energ&iacutea: ${energy.counter} </h2>
-    <form:form method="POST" modelAttribute="power" class="form-horizontal" action="/games/usePower">
+    <form:form method="POST" modelAttribute="power" id="poder" class="form-horizontal" action="/games/usePower">
         <eol:input label="Poderes" name="name">
             <form:select path="name">
                 <form:options items="${powers}"/>
             </form:select>
         </eol:input>
-        <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">Usar Poder</button>
+        <div >
+        <button  class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">Usar Poder</button>
+        </div>
     </form:form>
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
@@ -50,6 +52,7 @@
         function deleteHand(){
             const boton = document.getElementById("Hand");
             const round= ${game.round.number};
+          
             if(round>1){
                 boton.style.display = "none";
             }
@@ -57,10 +60,18 @@
     
         }
         window.addEventListener("load", deleteHand);
-    
+        function deletePower(){
+            const boton = document.getElementById("poder");
+            const usuario= "${logged}";
+            const u= "${miTurn}";
+            if(u!=usuario){
+                boton.style.display = "none";
+            }
+
+        }
+        window.addEventListener("load", deletePower);
     
     </script>
-
 
 
 </eol:layoutEOL>
