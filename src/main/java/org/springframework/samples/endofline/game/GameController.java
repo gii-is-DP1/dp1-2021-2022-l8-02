@@ -70,7 +70,7 @@ public class GameController {
     private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
-   
+    private TurnService turnService;
     private HandService handService;
 
     
@@ -84,6 +84,7 @@ public class GameController {
         this.powerService = powerService;
         this.energyService = energyService; 
         this.handService = handService;
+        this.turnService = turnService;
 
     }
 
@@ -194,8 +195,12 @@ public class GameController {
     
     @PostMapping("/usePower")
     public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response){
+        Game game = gameService.getGameByPlayer(getLoggedUser());
         try{
+            if(getLoggedUser().equals(game.getRound().getTurns().get(0).getUsuario()) && 
+            turnService.getByUsername(getLoggedUser().getUsername()).getCardCounter() == 0){
             energyService.usePower(getLoggedUser(), powerService.findByName(powerName).getId());
+            }
         }catch(DontUsePowerInTheSameRound v){
             model.addAttribute("message", "No puedes usar mas de un punto de energía en la misma ronda");
         }
