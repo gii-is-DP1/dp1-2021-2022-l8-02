@@ -10,6 +10,8 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 
     Collection<Game> findAll();
 
+    List<Game> findByGameMode(GameMode gameMode);
+
     @Query("SELECT game FROM Game game JOIN game.players player WHERE player.username = ?1")
     Game getGameByPlayerUsername(String username);
 

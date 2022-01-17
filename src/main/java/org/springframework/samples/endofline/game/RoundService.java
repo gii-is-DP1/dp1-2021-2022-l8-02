@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
 
@@ -421,7 +419,7 @@ public class RoundService {
                 }else if(player.getTurn().getCardCounter()<3){
                     return;
                 }
-            }else if(player.getTurn().getCardCounter() < 2){
+            }else if(gameService.getGameByPlayer(player).getGameMode()==GameMode.VERSUS && player.getTurn().getCardCounter() < 2){
                 return;
             }
         
