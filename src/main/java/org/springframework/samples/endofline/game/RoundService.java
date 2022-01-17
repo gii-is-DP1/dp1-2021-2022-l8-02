@@ -23,7 +23,6 @@ import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
-import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +116,6 @@ public class RoundService {
     Map<Integer,List<List<Usuario>>> diccForRound= new HashMap<>();
     List<List<Usuario>> listUserOrder= new ArrayList<>();
     Integer val= 1; 
-    List<Integer> positionNoList= new ArrayList<>();
     for(Integer creationList=0; creationList<listIniciativeOrdered.get(listIniciativeOrdered.size()-1); creationList++){
         List<Usuario> playerListOrdered= new ArrayList<>();
         listUserOrder.add(playerListOrdered);
@@ -144,7 +142,6 @@ public class RoundService {
                 }
                 else{
                     diccNoUser.put(ord, playerList);
-//                    positionNoList.add();
                 }
                 ord+=1;
             }
