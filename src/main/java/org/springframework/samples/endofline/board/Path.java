@@ -7,6 +7,7 @@ import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.model.BaseEntity;
 import javax.persistence.Table;
 import java.util.List;
+
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -21,8 +22,8 @@ public class Path extends BaseEntity{
     
     private CardColor color;
 
-    @ElementCollection
     @OneToMany
+    @ElementCollection
     private List<Tile> occupiedTiles;
 
     @NotNull
