@@ -27,6 +27,7 @@ import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.samples.endofline.game.Game;
+import org.springframework.samples.endofline.game.GameMode;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.power.Power;
@@ -84,7 +85,7 @@ public class BoardService {
         List<Tile> occupiedTiles = p.getOccupiedTiles();
         Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);
-        if (game.getRound().getTurns().get(0).getUsuario().equals(player)) {
+        if (!game.getGameMode().equals(GameMode.VERSUS) || game.getRound().getTurns().get(0).getUsuario().equals(player)) {
 
             // if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
                 Deck deck = deckService.getDeckFromPlayer(player);
@@ -221,6 +222,8 @@ public class BoardService {
     @Transactional
     public void generatePuzzleBoard(Board board) {
 
+
+        
         int size = 5;
 
         Random random = new Random();
@@ -229,7 +232,7 @@ public class BoardService {
 
         List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles - 1) + 1);
 
-        for (int x = 0; x < size; x++) {
+        /*for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 Tile tile = new Tile();
                 tile.setX(x);
@@ -244,6 +247,39 @@ public class BoardService {
                         tile.setTileState(TileState.TAKEN);
                         tile.setCard(card);
                         break;
+                    }
+                }
+                tile.setBoard(board);
+                tileService.save(tile);
+            }
+        }*/
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                Tile tile = new Tile();
+                tile.setX(x);
+                tile.setY(y);
+                tile.setTileState(TileState.FREE);
+                if (x == 2 && y == 2) {
+                    Card card = new Card();
+                    card.setColor(CardColor.RED);
+                    card.setCardType(cardService.findCardTypeByIniciative(-1));
+                    card.setRotation(Direction.NORTH);
+                    System.out.println(card.getCardType().getIniciative());
+                    cardService.save(card);
+                    tile.setCard(card);
+                    tile.setTileState(TileState.TAKEN);
+                    pathService.initPath(board,card.getColor(), tile);
+                }else{
+                    for(PuzzleTile pt: tiles) {
+                        if(pt.getX() == x && pt.getY() == y) {
+                            Card card = new Card();
+                            card.setColor(CardColor.RED);
+                            card.setCardType(pt.getCardType());
+                            cardService.save(card);
+                            tile.setTileState(TileState.TAKEN);
+                            tile.setCard(card);
+                            break;
+                        }
                     }
                 }
                 tile.setBoard(board);
@@ -265,14 +301,17 @@ public class BoardService {
                 tile.setY(y);
                 tile.setTileState(TileState.FREE);
                 tile.setBoard(board);
-                if (x == 2 && y == 3) {
+                if (x == 2 && y == 2) {
                     Card card = new Card();
                     card.setColor(CardColor.RED);
                     card.setCardType(cardService.findCardTypeByIniciative(-1));
                     System.out.println(card.getCardType().getIniciative());
                     cardService.save(card);
                     tile.setCard(card);
+                    tile.setTileState(TileState.TAKEN);
+                    pathService.initPath(board,card.getColor(), tile);
                 }
+                tile.setBoard(board);
                 tileService.save(tile);
             }
         }
@@ -304,6 +343,7 @@ public class BoardService {
                     .map(x -> (x + tile.getCard().getRotation().ordinal())%Direction.values().length)
                     .map(x -> Direction.values()[x])
                     .map(x -> tileService.creaTile(x, tile, tile.getBoard()))
+                    .filter(x->!x.getTileState().equals(TileState.TAKEN))
                     .collect(Collectors.toList());
     }
 

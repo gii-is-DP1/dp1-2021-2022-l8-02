@@ -293,7 +293,7 @@ public class TileService {
             case 3:
                 tile = findTileByCoordsAndBoard(board, (t.getX()-1 + mod)%mod, t.getY());
                 break;
-        }tile.setTileState(TileState.AVAILABLE);
+        }if(!tile.getTileState().equals(TileState.TAKEN)) tile.setTileState(TileState.AVAILABLE);
         return tile;
     }
 

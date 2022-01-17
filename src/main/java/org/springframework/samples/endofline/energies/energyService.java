@@ -70,7 +70,7 @@ public class EnergyService {
         System.out.println(powers);
         Energy newEnergy = getEnergyFromPlayer(user);
         newEnergy.setCounter(energy);
-        newEnergy.setLastRound(user.getTurn().getRound().getId());
+        newEnergy.setLastRound(user.getTurn().getRound().getNumber());
         newEnergy.setPowers(powers);
         user.setEnergy(newEnergy);
         save(newEnergy);
