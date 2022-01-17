@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import org.springframework.data.domain.Page;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,13 @@ public class UsuarioController {
 	@GetMapping("/usuarios")
 	public String listUsuarios(ModelMap model, @RequestParam(defaultValue = "0", name = "page") Integer page) {
 		Pageable pageable = PageRequest.of(page, 3);
+		Page<Usuario> pages = usuarioService.findAll(pageable);
 		model.addAttribute("usuarios", usuarioService.findAll(pageable).toList());
+		model.addAttribute("number", pages.getNumber());
+		model.addAttribute("totalPages", pages.getTotalPages());
+        model.addAttribute("totalElements", pages.getTotalElements());
+        model.addAttribute("size", pages.getSize());
+       
 		return USUARIOS_LISTING;
 	}
 
