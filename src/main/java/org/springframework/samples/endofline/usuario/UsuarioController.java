@@ -165,7 +165,8 @@ public class UsuarioController {
     }
 	
 	@GetMapping("/lobby")
-	public String PagLobby() {
+	public String PagLobby(ModelMap model) {
+		model.addAttribute("autorities", usuarioService.authorities(getLoggedUser()));
 		return LOBBY;
 	}
 
