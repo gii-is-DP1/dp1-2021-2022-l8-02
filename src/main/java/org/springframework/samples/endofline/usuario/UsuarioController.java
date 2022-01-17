@@ -153,7 +153,8 @@ public class UsuarioController {
 			binding.rejectValue("email", "emailx2", "Ya existe un usuario con este email");
 			return REGISTER_USER;
 		}else if (!(usuario.getPassword().equals(usuario.getPasswordRepeat()))){
-		 	binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
+		 	binding.rejectValue("password", "passwordx2", "Las contraseñas deben coincidir");
+			binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
 		 	return REGISTER_USER;
 		}
 		 else {
