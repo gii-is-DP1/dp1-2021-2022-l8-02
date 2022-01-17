@@ -196,11 +196,19 @@ public class UsuarioController {
 	public String editProfile(@PathVariable("username") String username, ModelMap model) {
 		Optional<Usuario> usuario = usuarioService.findByUsername(username);
 		if (usuario.isPresent()) {
-			model.addAttribute("usuario", usuario.get());
-			return USUARIOS_FORM;
-		} else {
-			model.addAttribute("message", "We cannot find the user you tried to edit!");
-			return PROFILE;
+			if (getLoggedUser().getUsername().equals(username)) {
+				model.addAttribute("usuario", usuario.get());
+				return USUARIOS_FORM;
+			} else if (usuarioService.authorities(getLoggedUser()).contains("admin")){
+				model.addAttribute("usuario", usuario.get());
+				return USUARIOS_FORM;
+			} else{
+				model.addAttribute("message", "No tienes permisos para acceder");
+				return "redirect:/profile";
+			}
+		}else{
+			model.addAttribute("message", "Este usuario no existe");
+			return "redirect:/profile";
 		}
 	}
 
