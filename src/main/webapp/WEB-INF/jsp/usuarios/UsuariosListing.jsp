@@ -5,8 +5,8 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="usuarios">
-    <h2>Usuarios
+<petclinic:layout pageName="Usuarios">
+    <h2>
         <td>
             <a href="/usuarios/new">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true" style="margin-left: 90%;"></span>
@@ -47,6 +47,19 @@
                     </td>
                 </tr>
             </c:forEach>
+           
         </tbody>
     </table>
+    
+        <div class="row text-center">
+            <h4>P&aacutegina ${number+1} de ${totalPages}</h4> 
+            <ul class="pagination">
+                <c:forEach begin="0" end="${totalPages-1}" var="page">
+                    <li class="page-item">
+                        <a href="usuarios?page=${page}" class="page-link">${page+1}</a>
+                    </li>
+                </c:forEach>
+            </ul>
+        </div>
+
 </petclinic:layout>
