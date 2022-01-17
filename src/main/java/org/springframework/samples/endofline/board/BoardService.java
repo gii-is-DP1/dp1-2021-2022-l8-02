@@ -35,7 +35,6 @@ import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
 import org.springframework.stereotype.Service;
-
 @Service
 public class BoardService {
 
@@ -117,16 +116,6 @@ public class BoardService {
                 // Guardar los datos una vez actualizados
                 // statisticsGamesService.save(statisticsGames);
                 // turnService.cardCounter(player, game, player.getEnergy().getPowers());
-                /*
-                 * if(player.getTurn().getRound().getId() == 1){
-                 * roundService.refreshRound(game, player);
-                 * }
-                 * else if (player.getTurn().getRound().getId() >= 2){
-                 * if(player.getTurn().getCardCounter() == 2){
-                 * roundService.refreshRound(game, player);
-                 * }
-                 * }
-                 */
                 gameService.save(game);
             // } else {
             //     // roundService.refreshRound(game, player, availableTiles);

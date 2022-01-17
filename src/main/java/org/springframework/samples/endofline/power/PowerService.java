@@ -26,10 +26,5 @@ public class PowerService {
     public List<Power> findAll(){
         return powerRepo.findAll();
     }
-
-
     
-
-
-
 }
