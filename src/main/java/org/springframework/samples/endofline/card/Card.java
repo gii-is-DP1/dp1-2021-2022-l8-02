@@ -18,6 +18,7 @@ import lombok.Setter;
 @Table(name = "cards")
 public class Card extends BaseEntity {
 
+    @NotNull
     @OneToOne
     private CardType cardType;
 
