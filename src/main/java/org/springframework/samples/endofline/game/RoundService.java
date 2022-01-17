@@ -23,7 +23,6 @@ import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
-import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.stereotype.Service;
 
@@ -117,7 +116,6 @@ public class RoundService {
     Map<Integer,List<List<Usuario>>> diccForRound= new HashMap<>();
     List<List<Usuario>> listUserOrder= new ArrayList<>();
     Integer val= 1; 
-    List<Integer> positionNoList= new ArrayList<>();
     for(Integer creationList=0; creationList<listIniciativeOrdered.get(listIniciativeOrdered.size()-1); creationList++){
         List<Usuario> playerListOrdered= new ArrayList<>();
         listUserOrder.add(playerListOrdered);
@@ -156,7 +154,6 @@ public class RoundService {
                 }
                 else{
                     diccNoUser.put(ord, playerList);
-//                    positionNoList.add();
                 }
                 ord+=1;
             }
@@ -254,6 +251,7 @@ public class RoundService {
         return listUserOrder;
     }
 
+    
     @Transactional
     public List<Usuario> generateOrderByPlayer(List<Usuario> listUser){
         List<Usuario> list= new ArrayList<>();
@@ -337,7 +335,7 @@ public class RoundService {
     }
 
     @Transactional
-    public void refreshRound(Game game, Usuario player, Card card){
+    public void refreshRound(Game game, Usuario player){
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
         List<Usuario> players = new ArrayList<>(game.getPlayers());
         if(players.size() == 2){
@@ -393,19 +391,20 @@ public class RoundService {
                 player.setEnergy(ene);
                 energyService.save(ene);
                 return;
-            }else if(player.getTurn().getCardCounter() <= 2 && player.getEnergy().getPowers().get(powerService.findById(1)).booleanValue()){
-                if(player.getTurn().getCardCounter()<3){
-                    return;
-                }else if (player.getTurn().getCardCounter()==3){
+            }else if(player.getEnergy().getPowers().get(powerService.findById(1)).booleanValue()){
+                System.out.println(player.getTurn().getCardCounter());
+                if (player.getTurn().getCardCounter()==3){
                     Map<Power, Boolean> map = player.getEnergy().getPowers();
                     Set<Power> powers = map.keySet();
                     for(Power p: powers){
-                    map.put(p, false);
+                        map.put(p, false);
                     }
                     Energy ene = player.getEnergy();
                     ene.setPowers(map);
                     player.setEnergy(ene);
                     energyService.save(ene);
+                }else if(player.getTurn().getCardCounter()<3){
+                    return;
                 }
             }else if(player.getTurn().getCardCounter() < 2){
                 return;

@@ -158,7 +158,6 @@ public class GameCreationTest {
         void joinPuzzle() {
             Game puzzleGame = gameService.findGame(puzzleGameId);
             Usuario player = userService.findByUsername("chemaccs").get();
-            //TODO: Si nadie puede unirse tiene sentido que se muestre en la lista un juego de puzzle?
             assertThrows(Exception.class, () -> gameService.joinGame(puzzleGame, player));
         }
 

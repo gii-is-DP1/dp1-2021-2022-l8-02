@@ -70,7 +70,7 @@ public class GameController {
     private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
-   
+    private TurnService turnService;
     private HandService handService;
 
     
@@ -84,6 +84,7 @@ public class GameController {
         this.powerService = powerService;
         this.energyService = energyService; 
         this.handService = handService;
+        this.turnService = turnService;
 
     }
 
@@ -135,7 +136,7 @@ public class GameController {
         }
 
     
-
+        
         response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
@@ -154,9 +155,10 @@ public class GameController {
         model.addAttribute("powers", PowersName);
 
         model.addAttribute("power",new Power());
-
+        model.addAttribute("logged", getLoggedUser().getUsername());
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
+
         
         /*para ver quien tiene turno*/
         if(game.getRound().getTurns().size() > 0) {
@@ -165,7 +167,7 @@ public class GameController {
             model.addAttribute("miTurn", getLoggedUser().getUsername());
         }
         
-        
+  
         return GAME_VIEW;
     }
 
@@ -193,8 +195,12 @@ public class GameController {
     
     @PostMapping("/usePower")
     public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response){
+        Game game = gameService.getGameByPlayer(getLoggedUser());
         try{
+            if(getLoggedUser().equals(game.getRound().getTurns().get(0).getUsuario()) && 
+            turnService.getByUsername(getLoggedUser().getUsername()).getCardCounter() == 0){
             energyService.usePower(getLoggedUser(), powerService.findByName(powerName).getId());
+            }
         }catch(DontUsePowerInTheSameRound v){
             model.addAttribute("message", "No puedes usar mas de un punto de energía en la misma ronda");
         }
@@ -206,7 +212,7 @@ public class GameController {
 
     @PostMapping("/currentGame")
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
-
+        System.out.println(gameService.getGameByPlayer(getLoggedUser()).getBoard().getTiles());
         try {
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
             boardService.playCard(getLoggedUser(),card, tile);
