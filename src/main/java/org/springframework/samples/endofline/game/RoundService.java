@@ -320,7 +320,7 @@ public class RoundService {
     }
 
     @Transactional
-    public void refreshRound(Game game, Usuario player, Card card){
+    public void refreshRound(Game game, Usuario player){
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
         List<Usuario> players = new ArrayList<>(game.getPlayers());
         if(players.size() == 2){
