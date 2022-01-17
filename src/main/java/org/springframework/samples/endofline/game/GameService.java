@@ -194,7 +194,7 @@ public class GameService {
         round.getPlayers().addAll(usersList);
         roundService.save(round);
         
-
+       
         //Carta prueba partidas Versus con 1 persona 
         Card sPrueba = new Card();
         sPrueba.setCardType(cardService.findCardTypeByIniciative(-1));
@@ -233,7 +233,8 @@ public class GameService {
             
             
             
-            
+        }else{
+            roundService.generateTurnsByPlayers(round, game.getPlayers());
         }
         game.setRound(round);
         boardService.save(board);
