@@ -70,7 +70,6 @@ public class UsuarioService {
         result.add( a.getAuthority());
       }
       return result;
-      
     }
 
 }
