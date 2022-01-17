@@ -407,7 +407,7 @@ public class RoundService {
                 }else if(player.getTurn().getCardCounter()<3){
                     return;
                 }
-            }else if(player.getTurn().getCardCounter() < 2){
+            }else if(gameService.getGameByPlayer(player).getGameMode()==GameMode.VERSUS && player.getTurn().getCardCounter() < 2){
                 return;
             }
         

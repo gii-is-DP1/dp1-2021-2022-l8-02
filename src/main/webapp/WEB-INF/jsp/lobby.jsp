@@ -19,7 +19,7 @@
 
     <div class="row" style="text-align: center!important;" id = "admin" >
         <a href="/usuarios" class="neon-button-sin-sombra" style= "position:none!important; font-size:25px; width: 80%; height: 100px; margin-bottom: 30px;align-items: center!important;">
-            <p>Listado de usuarios </p></a>
+            <p style="margin-top: 10px;">Listado de usuarios </p></a>
     </div>
     <div class="row " style="text-align: center!important; " >
         <a href="/games" class="neon-button-sin-sombra" style=" font-size:25px; width: 80%; height: 100px; margin-bottom: 30px;align-items: center!important;">
