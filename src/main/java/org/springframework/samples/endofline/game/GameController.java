@@ -203,7 +203,7 @@ public class GameController {
 
     @PostMapping("/currentGame")
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
-
+        System.out.println(gameService.getGameByPlayer(getLoggedUser()).getBoard().getTiles());
         try {
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
             boardService.playCard(getLoggedUser(),card, tile);
