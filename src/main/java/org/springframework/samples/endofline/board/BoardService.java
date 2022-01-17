@@ -294,6 +294,7 @@ public class BoardService {
                     Card card = new Card();
                     card.setColor(CardColor.RED);
                     card.setCardType(cardService.findCardTypeByIniciative(-1));
+                    card.setRotation(Direction.NORTH);
                     System.out.println(card.getCardType().getIniciative());
                     cardService.save(card);
                     tile.setCard(card);
