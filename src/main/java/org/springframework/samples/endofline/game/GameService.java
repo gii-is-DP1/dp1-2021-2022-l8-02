@@ -63,6 +63,10 @@ public class GameService {
     public Collection<Game> getGames() {
         return gameRepository.findAll();
     }
+
+    public List<Game> getVersusGames() {
+        return gameRepository.findByGameMode(GameMode.VERSUS);
+    }
    
 
     @Transactional
@@ -94,6 +98,7 @@ public class GameService {
 
     @Transactional
     public void joinGame(Game game, Usuario player) {
+        if(game.getGameMode() != GameMode.VERSUS && game.getPlayers().size() >= 1)  return;
         leaveGame(player);
         game.getPlayers().add(player);
         gameRepository.save(game);

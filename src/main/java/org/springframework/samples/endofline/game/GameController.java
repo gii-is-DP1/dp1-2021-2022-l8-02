@@ -101,7 +101,7 @@ public class GameController {
 
     @GetMapping
     public String getGames(Model model, HttpServletResponse response) {
-        Collection<Game> games = gameService.getGames();
+        Collection<Game> games = gameService.getVersusGames();
         model.addAttribute("games", games);
         response.addHeader("Refresh", "5");
         return GAME_LIST;
@@ -112,7 +112,7 @@ public class GameController {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
-            return GAME_LIST;
+            return "redirect:/games";
         }
         StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
         model.addAttribute("statistiscPostGame",statisticsGames);

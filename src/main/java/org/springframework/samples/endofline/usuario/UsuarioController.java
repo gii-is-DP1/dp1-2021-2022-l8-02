@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UsuarioController {
@@ -55,8 +58,9 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/usuarios")
-	public String listUsuarios(ModelMap model) {
-		model.addAttribute("usuarios", usuarioService.findAll());
+	public String listUsuarios(ModelMap model, @RequestParam(defaultValue = "0", name = "page") Integer page) {
+		Pageable pageable = PageRequest.of(page, 3);
+		model.addAttribute("usuarios", usuarioService.findAll(pageable).toList());
 		return USUARIOS_LISTING;
 	}
 
@@ -68,7 +72,7 @@ public class UsuarioController {
 			return USUARIOS_FORM;
 		} else {
 			model.addAttribute("message", "We cannot find the user you tried to edit!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		}
 	}
 
@@ -82,7 +86,7 @@ public class UsuarioController {
 			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
 			usuarioService.save(usuario.get());
 			model.addAttribute("message", "User updated succesfully!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		}
 	}
 
@@ -92,10 +96,10 @@ public class UsuarioController {
 		if (usuario.isPresent()) {
 			usuarioService.delete(usuario.get());
 			model.addAttribute("message", "The user was deleted successfully!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		} else {
 			model.addAttribute("message", "We cannot find the user you tried to delete!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		}
 	}
 
