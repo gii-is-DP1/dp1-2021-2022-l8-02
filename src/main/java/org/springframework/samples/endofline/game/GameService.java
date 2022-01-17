@@ -281,7 +281,7 @@ public class GameService {
             List<Tile> occupiedTiles = path.getOccupiedTiles();
             Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
             List<Tile> availableTiles = boardService.getAdjacents(lastTile, p, path);
-            Long contTileTaken= game.getBoard().getTiles().stream().filter(x->x.getTileState().equals(TileState.TAKEN)).count();
+            Long contTileTaken= game.getBoard().getTiles().stream().filter(x->x.getTileState() == TileState.TAKEN).count();
             if(contTileTaken == allTileTakenOfBoard){
                 out= false;
             }

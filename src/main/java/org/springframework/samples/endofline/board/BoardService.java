@@ -98,6 +98,7 @@ public class BoardService {
                     hand.getCards().remove(card);
                     handService.save(hand);
                     tile.setCard(card);
+                    tile.setTileState(TileState.TAKEN);
                     tileService.save(tile);
                     p.getOccupiedTiles().add(tile);
                     pathService.save(p);
