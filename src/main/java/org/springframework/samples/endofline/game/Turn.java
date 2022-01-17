@@ -31,6 +31,6 @@ public class Turn extends BaseEntity{
 
     private Integer startTime;
     
-    private Integer CardCounter = 0;
+    private Integer cardCounter = 0;
 
 }

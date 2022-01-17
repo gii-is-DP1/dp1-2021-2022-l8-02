@@ -10,6 +10,7 @@ import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -21,6 +22,7 @@ public class Path extends BaseEntity{
     private CardColor color;
 
     @ElementCollection
+    @OneToMany
     private List<Tile> occupiedTiles;
 
     @NotNull

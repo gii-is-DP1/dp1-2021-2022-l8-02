@@ -110,9 +110,9 @@ public class RoundService {
     public List<Usuario> generateListOrderedWithRepeateIniciative(List<Usuario> listPlayers, List<Integer>listIniciativeOrdered){
     //    Hacer un diccionario en el
     List<Usuario> listPlayerOrder= new ArrayList<>();
-    Map<Integer,List<Usuario>> diccNoUser= new HashMap<>();
+    Map<Integer,List<Usuario>> diccNoUser= new HashMap<>();  //DICCIONARIO DONDE EL NÚMERO INDICA LA INICIATIVA CON LOS USUARIOS QUE TIENEN LA INICIATIVA REPETIDA
     List<Usuario> deletePlayerList= new ArrayList<>();
-    deletePlayerList.addAll(listPlayers);
+    deletePlayerList.addAll(listPlayers);   //LISTA DE USUARIOS QUE TIENEN LA MISMA INICIATIVA 
     Map<Integer,List<List<Usuario>>> diccForRound= new HashMap<>();
     List<List<Usuario>> listUserOrder= new ArrayList<>();
     Integer val= 1; 
@@ -121,20 +121,32 @@ public class RoundService {
         listUserOrder.add(playerListOrdered);
     }
 
-    for(Integer position= 0; position<listIniciativeOrdered.get(listIniciativeOrdered.size()-1); position++){
+    for(Integer position= 0; position<listIniciativeOrdered.get(listIniciativeOrdered.size()-1); position++){ //INDICA EL ORDEN EN QUE SE VA A IR RECORRIENDO LAS ITERACIONES
         List<List<Usuario>> newListPlayers= new ArrayList<>();
         diccForRound.put(position,newListPlayers);
-        for(Integer creationList=0; creationList<listIniciativeOrdered.get(listIniciativeOrdered.size()-1); creationList++){
+        for(Integer creationList=0; creationList<listIniciativeOrdered.get(listIniciativeOrdered.size()-1); creationList++){ //CREO UNA LISTA DE USUARIOS QUE SE METERÁN A CON LA MISMA INICIATIVA 
             List<Usuario> playerList= new ArrayList<>();
             diccForRound.get(position).add(playerList);
         }
         if(deletePlayerList.size()!=0){
+            List<Usuario> listPlayerSizeMoreThanVal = new ArrayList<>();
             for(Usuario player:deletePlayerList){
-                diccForRound.get(position).get(player.getInicialListCardsByPlayer().get(player.getInicialListCardsByPlayer().size()-val)).add(player);
+                if(player.getInicialListCardsByPlayer().size()-val>=0){
+                diccForRound.get(position).get(player.getInicialListCardsByPlayer().get(player.getInicialListCardsByPlayer().size()-val)).add(player);//METO A LOS USUARIOS CON LA MISMA INICIATIVA EN EL DICCIONARIO
+                }
+                else{
+                    listPlayerSizeMoreThanVal.add(player);
+                    
+                }
+            }
+            if(listPlayerSizeMoreThanVal.size()>0){
+                listPlayerOrder.addAll(listPlayerSizeMoreThanVal);
+                deletePlayerList.removeAll(listPlayerSizeMoreThanVal);
             }
         }
+        
         Integer ord=0;
-        if(diccNoUser.size()==0){
+        if(diccNoUser.size()==0){  //CREO EL PRIMER DICCIONARIO CON LA INICIATIVA Y ASOCIANDOLOS A UNA LISTA DE USUARIOS REPETIDOS
             for(List<Usuario> playerList:diccForRound.get(position)){
                 if(playerList.size()==1){
                     listUserOrder.get(ord).add(playerList.get(0));
@@ -147,14 +159,15 @@ public class RoundService {
             }
         }
         else{
+            if(deletePlayerList.size()!=0){
             for(Integer i: diccNoUser.keySet()){
-                List<Usuario> lPlayerDicc=diccNoUser.get(i);
+                List<Usuario> lPlayerDicc=diccNoUser.get(i); //Usuarios con iniciativa
                 for(List<Usuario> playerList:diccForRound.get(position)){
                     //Caso en el que sean la misma iniciativa pero de rondas distintas;
-                    if(playerList.containsAll(lPlayerDicc)){
+                    if(playerList.containsAll(lPlayerDicc)){  
                         List<Usuario> checkList= new ArrayList<>();
                         checkList.addAll(playerList);
-                        for(Usuario player: playerList){
+                        for(Usuario player: playerList){ //Descubro si queda algún usuario algún usuario al que hay que borrar porque ya estaba en la lista de antes
                             checkList.remove(player);
                         }
                         if(checkList.size()==1){
@@ -162,8 +175,8 @@ public class RoundService {
                             deletePlayerList.remove(checkList.get(0));
                             diccNoUser.get(i).remove(checkList.get(0));
                         }
+                        
                     }
-                    
                     else{ 
                         if(playerList.size()==1){
                             listUserOrder.get(i).add(playerList.get(0));
@@ -180,7 +193,9 @@ public class RoundService {
                 }
             }
         }
-        val++;
+    }
+    
+    val++;
     }
     if(deletePlayerList.size()>0){
         for(Integer m:diccNoUser.keySet()){
@@ -243,7 +258,7 @@ public class RoundService {
         List<Integer> listInteger= new ArrayList<>();
         Set<Integer> setIniciative= new HashSet<>();
         for(Usuario u: listUser){
-            setIniciative.add(u.getInicialListCardsByPlayer().get(u.getInicialListCardsByPlayer().size()-1));
+            setIniciative.add(u.getInicialListCardsByPlayer().get(u.getInicialListCardsByPlayer().size()-1)); //Conjunto con las iniciativas de cada jugador
         }
         if(setIniciative.size()<listUser.size()){
             List<Usuario> orderList=generateOrderListByUser(listUser);

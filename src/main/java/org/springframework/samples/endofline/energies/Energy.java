@@ -39,5 +39,5 @@ public class Energy extends BaseEntity{
     @MapKeyColumn(name="powerMap")
     Map<Power, Boolean> powers;
 
-    private Integer LastRound;
+    private Integer lastRound;
 }
