@@ -7,10 +7,7 @@ import java.util.Random;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
-import org.springframework.samples.endofline.game.Round;
-import org.springframework.samples.endofline.game.Turn;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,8 @@ public class HandService {
     
     @Autowired
     PowerService powerService;
+
+    
     
     public Hand findHandByDeck(Deck deck){
         return handRepository.findHandByDeck(deck);
@@ -69,10 +68,10 @@ public class HandService {
     }
 
     public Hand generateDefaultHand(Deck deck){
-        Hand hand= findHandByDeck(deck);
-        Random random= new Random();
+        Hand hand = findHandByDeck(deck);
+        Random random = new Random();
         if(hand == null){
-            hand= new Hand();
+            hand = new Hand();
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
         }
@@ -87,8 +86,8 @@ public class HandService {
         
         }else{
         while(hand.getCards().size()<5){
-                Integer rand= random.nextInt(deck.getCards().size());
-                Card card=deck.getCards().get(rand);
+                Integer rand = random.nextInt(deck.getCards().size());
+                Card card = deck.getCards().get(rand);
                 hand.getCards().add(card);
                 deck.getCards().remove(card);
                 deckService.save(deck); 

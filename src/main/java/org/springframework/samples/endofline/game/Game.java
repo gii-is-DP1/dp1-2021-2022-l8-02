@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.endofline.board.Board;
 import org.springframework.samples.endofline.model.BaseEntity;
-import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.usuario.Usuario;
 
 import lombok.Getter;
@@ -53,7 +52,7 @@ public class Game extends BaseEntity {
 
     @OneToOne
     private Round round;
-
+    
     /*
     private List<Power> power;*/
 

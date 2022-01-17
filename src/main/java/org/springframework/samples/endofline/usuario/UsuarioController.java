@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,6 +45,9 @@ public class UsuarioController {
 
 	@Autowired
 	StatisticsService statisticsService;
+
+	@Autowired
+	GameService gameService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -168,6 +172,11 @@ public class UsuarioController {
 	@GetMapping("/profile")
 	public String profileLoggedUser(ModelMap model){
 		model.addAttribute("usuario", getLoggedUser());
+		/*para ver el listado de juegos por usuario*/
+		model.addAttribute("games", gameService.getGameByPlayer(getLoggedUser()));
+		/*List<Game> allGameByPlayer = gameService.getGamesByPlayer(getLoggedUser());
+		model.addAttribute("games", allGameByPlayer);*/
+        
 		return PROFILE;
 	}
 
