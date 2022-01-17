@@ -186,13 +186,6 @@ public class GameController {
         return "redirect:/games/currentGame";
     }
 
- /*   @PostMapping("/newCards")
-    public String getNewCards(){
-        /*Deck deck= boardService.deckFromPlayers(getLoggedUser());
-        handService.generateDefaultHand(deck);
-        return  "redirect:/games/currentGame";
-    }*/
-    
     @PostMapping("/usePower")
     public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response){
         Game game = gameService.getGameByPlayer(getLoggedUser());
@@ -207,8 +200,6 @@ public class GameController {
 
         return  "redirect:/games/currentGame";
     }
-
-
 
     @PostMapping("/currentGame")
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
@@ -299,12 +290,6 @@ public class GameController {
        
         return "redirect:/games/currentGame";
     }
-
-    // @GetMapping("/{gameId}/end")
-    // public String endGame(@PathVariable("gameId") Game game, Model model){
-
-    //     return "redirect:/principal";
-    // }
 
     @GetMapping("/listGames/{gameState}")
     public String listGamesByState(@PathVariable("gameState") String gameState, Model model){

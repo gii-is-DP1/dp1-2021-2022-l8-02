@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
 import org.springframework.samples.endofline.board.Tile;
@@ -130,7 +133,14 @@ public class RoundService {
         }
         if(deletePlayerList.size()!=0){
             for(Usuario player:deletePlayerList){
-                diccForRound.get(position).get(player.getInicialListCardsByPlayer().get(player.getInicialListCardsByPlayer().size()-val)).add(player);
+                Logger.getLogger(RoundService.class.getName()).log(Level.SEVERE, String.format("Inicial List Cards. %s\nTamaño: %d\nval: %d", player.getInicialListCardsByPlayer(), player.getInicialListCardsByPlayer().size(), val));
+                if(player.getInicialListCardsByPlayer().size() < val) {
+                    diccForRound.get(position).get(player.getInicialListCardsByPlayer().get(player.getInicialListCardsByPlayer().size()-val)).add(player);
+                } else {
+                    listPlayerOrder.add(player);
+                    deletePlayerList.remove(player);
+                }
+                    
             }
         }
         Integer ord=0;
