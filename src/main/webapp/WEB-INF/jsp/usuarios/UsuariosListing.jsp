@@ -13,8 +13,8 @@
             </a>
         </td>
     </h2>
-    <table id="usuariosTable" class="table table-striped">
-        <thead>
+    <table id="usuariosTable" class="table" >
+        <thead style="border: solid;">
             <tr>
                 <th style="width: 25%;">Username</th>
                 <th style="width: 25%;">Password</th>

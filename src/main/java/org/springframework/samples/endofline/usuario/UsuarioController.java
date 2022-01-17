@@ -152,10 +152,11 @@ public class UsuarioController {
 		} else if (usuarioService.getallEmails().contains(usuario.getEmail())) {
 			binding.rejectValue("email", "emailx2", "Ya existe un usuario con este email");
 			return REGISTER_USER;
-		} //else if (binding.getFieldValue("password") != binding.getFieldValue("passwordRepeat")){
-		// 	binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
-		// 	return REGISTER_USER;
-		// }
+		}else if (!(usuario.getPassword().equals(usuario.getPasswordRepeat()))){
+		 	binding.rejectValue("password", "passwordx2", "Las contraseñas deben coincidir");
+			binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
+		 	return REGISTER_USER;
+		}
 		 else {
 			this.usuarioService.save(usuario);
 			this.authoritiesSer.saveAuthorities(usuario.getUsername(), "jugador");
