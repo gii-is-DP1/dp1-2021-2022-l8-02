@@ -8,7 +8,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
+import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.Round;
+import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
@@ -22,6 +24,11 @@ public class EnergyService {
     private EnergyRepository energyRepo;
     @Autowired
     private PowerService powerService;
+
+    
+
+    @Autowired
+   RoundService roundService;
 
     public Energy getEnergyFromPlayer(Usuario user){
         return energyRepo.findEnergyByPlayerUsername(user.getUsername());
@@ -47,6 +54,7 @@ public class EnergyService {
     }
 
     public void usePower(Usuario user, Integer powerId) throws DontUsePowerInTheSameRound{
+        
         Integer energy = getEnergyFromPlayer(user).getCounter();
         Map<Power, Boolean> powers = user.getEnergy().getPowers();
         System.out.println(powers);
@@ -74,6 +82,9 @@ public class EnergyService {
         newEnergy.setPowers(powers);
         user.setEnergy(newEnergy);
         save(newEnergy);
+        if( powerId == 4){
+        roundService.refreshRound(user.getTurn().getRound().getGame(), user);
+        }
     }
  
   

@@ -78,32 +78,29 @@ public class HandService {
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
         }
+        Integer count = 0;
         if(gameService.getGameByPlayer(deck.getUser()).getGameMode() == GameMode.SOLITAIRE){
-            
-                Integer rand = random.nextInt(deck.getCards().size());
-                Card card = deck.getCards().get(rand);
-                hand.getCards().add(card);
-                deck.getCards().remove(card);
-                deckService.save(deck); 
+                if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue()){
+                    count=2;
+                }else{
+                    count=1;
+                }
            
         }else if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
-            while(hand.getCards().size()<6){
-                Integer rand= random.nextInt(deck.getCards().size());
-                Card card=deck.getCards().get(rand);
-                hand.getCards().add(card);
-                deck.getCards().remove(card);
-                deckService.save(deck); 
-            }
+            count=6;
         
         }else{
-        while(hand.getCards().size()<5){
-                Integer rand = random.nextInt(deck.getCards().size());
-                Card card = deck.getCards().get(rand);
-                hand.getCards().add(card);
-                deck.getCards().remove(card);
-                deckService.save(deck); 
-            }
+            count=5;
+        
         }    
+        while(hand.getCards().size()<count){
+            
+            Integer rand = random.nextInt(deck.getCards().size());
+            Card card = deck.getCards().get(rand);
+            hand.getCards().add(card);
+            deck.getCards().remove(card);
+            deckService.save(deck); 
+        }
         save(hand);
         return hand;
     }

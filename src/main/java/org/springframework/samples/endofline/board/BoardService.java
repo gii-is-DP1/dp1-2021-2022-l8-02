@@ -85,8 +85,9 @@ public class BoardService {
         Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (!game.getGameMode().equals(GameMode.VERSUS) || game.getRound().getTurns().get(0).getUsuario().equals(player)) {
-
+            System.out.println(game.getRound().getTurns().get(0).getStartTime());
             if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
+                
                 Deck deck = deckService.getDeckFromPlayer(player);
                 Hand hand = handService.findHandByDeck(deck);
                 if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
@@ -125,14 +126,14 @@ public class BoardService {
         Integer hourNow = hourToInteger();
         if (hourNow > startTime) {
             Integer substract = hourNow - startTime;
-            if (substract < 30) {
+            if (substract < 300) {
                 return true;
             } else {
                 return false;
             }
         } else {
             Integer substract = startTime - hourNow;
-            if (substract < 86370) {
+            if (substract < 86100) {
                 return false;
             } else {
                 return true;
