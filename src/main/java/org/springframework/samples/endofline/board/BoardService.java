@@ -98,6 +98,7 @@ public class BoardService {
                     hand.getCards().remove(card);
                     handService.save(hand);
                     tile.setCard(card);
+                    tile.setTileState(TileState.TAKEN);
                     tileService.save(tile);
                     p.getOccupiedTiles().add(tile);
                     pathService.save(p);
@@ -105,17 +106,6 @@ public class BoardService {
                     throw new InvalidMoveException();
 
                 }
-                // StatisticsGames statisticsGames =
-                // statisticsGamesService.findStatisticsGamesByUserGames(player, game);
-                // Map<Card, Integer> mapSet = statisticsGamesService.userMap(card,
-                // statisticsGames.getMap());
-                // statisticsGames.setMap(mapSet);
-                // Integer pointNew = statisticsGames.getPoint() +
-                // card.getCardType().getIniciative();
-                // statisticsGames.setPoint(pointNew);
-                // Guardar los datos una vez actualizados
-                // statisticsGamesService.save(statisticsGames);
-                // turnService.cardCounter(player, game, player.getEnergy().getPowers());
                 gameService.save(game);
             } else {
                 roundService.refreshRound(game, player);
@@ -220,28 +210,6 @@ public class BoardService {
         int maxImplementedPuzzles = 60;
 
         List<PuzzleTile> tiles = puzzleTileService.findAllByPuzzleId(random.nextInt(maxImplementedPuzzles - 1) + 1);
-
-        /*for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                Tile tile = new Tile();
-                tile.setX(x);
-                tile.setY(y);
-                tile.setTileState(TileState.FREE);
-                for (PuzzleTile pt : tiles) {
-                    if (pt.getX() == x && pt.getY() == y) {
-                        Card card = new Card();
-                        card.setColor(CardColor.RED);
-                        card.setCardType(pt.getCardType());
-                        cardService.save(card);
-                        tile.setTileState(TileState.TAKEN);
-                        tile.setCard(card);
-                        break;
-                    }
-                }
-                tile.setBoard(board);
-                tileService.save(tile);
-            }
-        }*/
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 Tile tile = new Tile();
@@ -295,7 +263,6 @@ public class BoardService {
                     card.setColor(CardColor.RED);
                     card.setCardType(cardService.findCardTypeByIniciative(-1));
                     card.setRotation(Direction.NORTH);
-                    System.out.println(card.getCardType().getIniciative());
                     cardService.save(card);
                     tile.setCard(card);
                     tile.setTileState(TileState.TAKEN);

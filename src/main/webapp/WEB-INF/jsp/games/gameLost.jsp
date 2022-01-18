@@ -33,6 +33,6 @@
                     </div> 
             </tr>
         </table>
-        <a href="/lobby" class="neon-button" style="font-size: 20px;margin-top: 10%; margin-left: 15%;">Volver al inicio</a>
+        <a href="/games/leave" class="neon-button" style="font-size: 20px;margin-top: 10%; margin-left: 15%;">Volver al inicio</a>
     </div>
 </eol:layoutEOL>

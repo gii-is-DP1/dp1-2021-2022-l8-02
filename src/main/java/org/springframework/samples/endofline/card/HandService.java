@@ -8,6 +8,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
+import org.springframework.samples.endofline.game.GameMode;
+import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,8 @@ public class HandService {
     @Autowired
     PowerService powerService;
 
-    
+    @Autowired
+    GameService gameService;
     
     public Hand findHandByDeck(Deck deck){
         return handRepository.findHandByDeck(deck);
@@ -75,7 +78,15 @@ public class HandService {
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
         }
-        if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
+        if(gameService.getGameByPlayer(deck.getUser()).getGameMode() == GameMode.SOLITAIRE){
+            
+                Integer rand = random.nextInt(deck.getCards().size());
+                Card card = deck.getCards().get(rand);
+                hand.getCards().add(card);
+                deck.getCards().remove(card);
+                deckService.save(deck); 
+           
+        }else if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
             while(hand.getCards().size()<6){
                 Integer rand= random.nextInt(deck.getCards().size());
                 Card card=deck.getCards().get(rand);
@@ -95,6 +106,11 @@ public class HandService {
         }    
         save(hand);
         return hand;
+    }
+
+    @Transactional
+    public void delete(Hand hand) {
+        handRepository.delete(hand);
     }
     
 }

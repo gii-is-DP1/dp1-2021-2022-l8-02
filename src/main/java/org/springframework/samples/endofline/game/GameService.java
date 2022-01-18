@@ -12,6 +12,7 @@ import org.springframework.samples.endofline.board.BoardService;
 import org.springframework.samples.endofline.board.Path;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.TileService;
+import org.springframework.samples.endofline.board.TileState;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
@@ -102,6 +103,11 @@ public class GameService {
         leaveGame(player);
         game.getPlayers().add(player);
         gameRepository.save(game);
+
+        // Inizializacion de datos para poder jugar la partida de forma correcta
+        player.setInicialListCardsByPlayer(new ArrayList<>());
+        player.setGameEnded(false);
+        userService.save(player);
     }
 
     @Transactional
@@ -116,27 +122,6 @@ public class GameService {
             }
         }
     }
-
-    // public Map<Usuario,List<Integer>> diccConteinsAll(Map<Usuario,List<Integer>> dicc){
-
-    // }
-    // public Map<Usuario,List<Integer>> turnsForPlayer(List<Usuario>players){
-    //     Map<Usuario,List<Integer>> dicc= new HashMap<>();
-
-    // }
-
-    // public List<Integer> getFirstRoundInitiatives(Map<Usuario, List<Integer> m){
-    //     List<Integer> res = new ArrayList<>();
-    //     for(List<Integer> ls:m.values()){
-    //         if(ls.size() == 0){
-    //             res.add(ls.get(0));
-    //         }
-    //         else{
-    //             res.add(ls.get(ls.size()-1));
-    //         }
-    //     }Collections.sort(res);
-    //     return res;
-    // }
 
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
@@ -264,6 +249,26 @@ public class GameService {
             List<Tile> availableTiles = boardService.getAdjacents(lastTile, p, path);
             if(deckService.getDeckFromPlayer(p).getCards().size() == 0 || availableTiles.stream().allMatch(x -> tileService.findTileByCoordsAndBoard(game.getBoard(), x.getX(), x.getY()).getCard() != null)){
                 out.add(p);
+            }
+        }
+        return out;
+    }
+
+    public Boolean checkLostPuzzle(Game game){
+        Boolean out = null;   //O hacer un string donde indique, si ha ganado a perdido o ni a ganado ni a perdido;
+        List<Usuario> players = new ArrayList<>(game.getPlayers());
+        Long allTileTakenOfBoard= 25L;
+        for(Usuario p : players){
+            Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(p).getCards().get(0).getColor().ordinal());
+            List<Tile> occupiedTiles = path.getOccupiedTiles();
+            Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+            List<Tile> availableTiles = boardService.getAdjacents(lastTile, p, path);
+            Long contTileTaken= game.getBoard().getTiles().stream().filter(x->x.getTileState() == TileState.TAKEN).count();
+            if(contTileTaken == allTileTakenOfBoard){
+                out= false;
+            }
+            else if(availableTiles.stream().allMatch(x -> tileService.findTileByCoordsAndBoard(game.getBoard(), x.getX(), x.getY()).getCard() != null)){
+                out= true;
             }
         }
         return out;

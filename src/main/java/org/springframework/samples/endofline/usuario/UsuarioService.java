@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -60,6 +61,15 @@ public class UsuarioService {
       for(Usuario u : users){
         u.setGameEnded(false);
       }
+    }
+
+    public List<String> authorities(Usuario user){
+      Set<Authorities> autorities = user.getAuthorities();
+      List<String> result = new ArrayList<>();
+      for (Authorities a: autorities){
+        result.add( a.getAuthority());
+      }
+      return result;
     }
 
 }

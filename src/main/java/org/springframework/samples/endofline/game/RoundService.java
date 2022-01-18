@@ -339,6 +339,18 @@ public class RoundService {
     public void refreshRound(Game game, Usuario player){
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
         List<Usuario> players = new ArrayList<>(game.getPlayers());
+        //Con poner que el temañando de usuarios es igual a 1 ya podemos comporvar como funciona endGame con otros modos
+        if(players.size() == 1 && gameService.checkLostPuzzle(game) != null){
+            if(gameService.checkLostPuzzle(game)){
+                players.get(0).setGameEnded(true);
+                usuarioService.save(player);
+                gameService.endGame(game);
+            }
+            else if(!gameService.checkLostPuzzle(game)){
+                gameService.endGame(game);
+            }
+        }
+
         if(players.size() == 2){
             if(gameService.checkDrawVS(game)){
                 gameService.checkLostVS(game).get(0).setGameEnded(true);
@@ -407,7 +419,7 @@ public class RoundService {
                 }else if(player.getTurn().getCardCounter()<3){
                     return;
                 }
-            }else if(player.getTurn().getCardCounter() < 2){
+            }else if(gameService.getGameByPlayer(player).getGameMode()==GameMode.VERSUS && player.getTurn().getCardCounter() < 2){
                 return;
             }
         
