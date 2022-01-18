@@ -107,5 +107,10 @@ public class HandService {
         save(hand);
         return hand;
     }
+
+    @Transactional
+    public void delete(Hand hand) {
+        handRepository.delete(hand);
+    }
     
 }

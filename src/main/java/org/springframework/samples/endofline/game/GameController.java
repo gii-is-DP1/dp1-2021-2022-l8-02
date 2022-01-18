@@ -15,8 +15,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.StatisticsGamesService;
-import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
@@ -66,7 +64,6 @@ public class GameController {
     private GameService gameService;
     private UsuarioService userService;
     private BoardService boardService;
-    private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
@@ -75,11 +72,10 @@ public class GameController {
 
     
     @Autowired
-    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService, HandService handService){
+    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsService statisticsService, HandService handService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
-        this.statisticsGamesService = statisticsGamesService;
         this.statisticsService = statisticsService;
         this.powerService = powerService;
         this.energyService = energyService; 
@@ -114,8 +110,6 @@ public class GameController {
         if(game == null) {
             return "redirect:/games";
         }
-        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
-        model.addAttribute("statistiscPostGame",statisticsGames);
         model.addAttribute("game", game);
         
         if(game.getGameState() == GameState.LOBBY){
@@ -273,8 +267,6 @@ public class GameController {
         if(game.getPlayers().get(0).equals(getLoggedUser())) {
             try{
                 gameService.startGame(game);
-
-                statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
                 Statistics s = statisticsService.findByUser(getLoggedUser());
                 s.setNumGames(s.getNumGames()+1);

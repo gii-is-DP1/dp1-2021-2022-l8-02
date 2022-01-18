@@ -23,8 +23,8 @@ import lombok.Setter;
 @Table(name = "rounds")
 public class Round extends BaseEntity{
 
-    @OneToMany
     @ElementCollection
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Turn> turns = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "round")

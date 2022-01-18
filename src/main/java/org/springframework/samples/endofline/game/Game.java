@@ -50,7 +50,7 @@ public class Game extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private GameState gameState;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Round round;
     
     /*

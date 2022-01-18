@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Board;
@@ -105,6 +103,11 @@ public class GameService {
         leaveGame(player);
         game.getPlayers().add(player);
         gameRepository.save(game);
+
+        // Inizializacion de datos para poder jugar la partida de forma correcta
+        player.setInicialListCardsByPlayer(new ArrayList<>());
+        player.setGameEnded(false);
+        userService.save(player);
     }
 
     @Transactional
@@ -119,27 +122,6 @@ public class GameService {
             }
         }
     }
-
-    // public Map<Usuario,List<Integer>> diccConteinsAll(Map<Usuario,List<Integer>> dicc){
-
-    // }
-    // public Map<Usuario,List<Integer>> turnsForPlayer(List<Usuario>players){
-    //     Map<Usuario,List<Integer>> dicc= new HashMap<>();
-
-    // }
-
-    // public List<Integer> getFirstRoundInitiatives(Map<Usuario, List<Integer> m){
-    //     List<Integer> res = new ArrayList<>();
-    //     for(List<Integer> ls:m.values()){
-    //         if(ls.size() == 0){
-    //             res.add(ls.get(0));
-    //         }
-    //         else{
-    //             res.add(ls.get(ls.size()-1));
-    //         }
-    //     }Collections.sort(res);
-    //     return res;
-    // }
 
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
