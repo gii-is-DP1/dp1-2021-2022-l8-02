@@ -26,10 +26,7 @@
                         
                     </c:forEach> -->
                     <div class="row text-center">
-                        <p>Jugador:   ${statistiscPostGame.user.username}</p>
-                        <p>Partida:   ${statistiscPostGame.game.name}</p>
-                        <p>Puntos:    ${statistiscPostGame.point}</p>
-                        <p>Inciativa de la carta mas usada:     ${statistiscPostGame.maxCard.cardType.iniciative}</p>
+                        <p>Puntos:    ${score}</p>
                     </div> 
             </tr>
         </table>

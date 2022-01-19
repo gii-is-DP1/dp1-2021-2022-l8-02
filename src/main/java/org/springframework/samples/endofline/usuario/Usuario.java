@@ -70,6 +70,8 @@ public class Usuario{
     List<Integer> inicialListCardsByPlayer;
     
 
+    //Integer score;
+
     // Auditing
     @CreatedDate
     private LocalDateTime createdDate;
