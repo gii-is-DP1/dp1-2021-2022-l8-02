@@ -15,11 +15,10 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.StatisticsGamesService;
-import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
+import org.springframework.samples.endofline.board.exceptions.TimeOutException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
@@ -49,7 +48,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
 
 @Controller
 @RequestMapping("/games")
@@ -60,26 +58,24 @@ public class GameController {
     public static final String GAME_CREATION = "games/gameCreationForm";
     public static final String GAME_LOBBY = "games/gameLobby";
     public static final String GAME_STATICPOSTGAME = "games/staticPostGame";
+    public static final String GAME_LOST = "games/gameLost";
 
 
     private GameService gameService;
     private UsuarioService userService;
     private BoardService boardService;
-    private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
     private TurnService turnService;
-   
     private HandService handService;
 
     
     @Autowired
-    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService, HandService handService){
+    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsService statisticsService, HandService handService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
-        this.statisticsGamesService = statisticsGamesService;
         this.statisticsService = statisticsService;
         this.powerService = powerService;
         this.energyService = energyService; 
@@ -101,7 +97,7 @@ public class GameController {
 
     @GetMapping
     public String getGames(Model model, HttpServletResponse response) {
-        Collection<Game> games = gameService.getGames();
+        Collection<Game> games = gameService.getVersusGames();
         model.addAttribute("games", games);
         response.addHeader("Refresh", "5");
         return GAME_LIST;
@@ -112,21 +108,34 @@ public class GameController {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
-            return GAME_LIST;
+            return "redirect:/games";
         }
-        
         model.addAttribute("game", game);
         
+        if(game.getGameState() == GameState.LOBBY){
+            response.addHeader("Refresh", "5");
+            model.addAttribute("logged", getLoggedUser().getUsername());
+            model.addAttribute("creator", game.getPlayers().get(0).getUsername());
+          return GAME_LOBBY;
+        }
+
+        if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
+            if(game.getGameMode()!= GameMode.VERSUS){
+            Integer score = gameService.getScore(game.getPlayers().get(0));
+            model.addAttribute("score", score);
+            }
+
+            model.addAttribute("userLost", getLoggedUser().getGameEnded());
+            return GAME_LOST;
+        }
+
         if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
             model.addAttribute("message", session.getAttribute("errorMessage"));
             session.removeAttribute("errorMessage");
         }
 
-        if(game.getGameState() == GameState.LOBBY){
-            response.addHeader("Refresh", "5");
-            return GAME_LOBBY;
-        }
-
+    
+        
         response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
@@ -145,13 +154,19 @@ public class GameController {
         model.addAttribute("powers", PowersName);
 
         model.addAttribute("power",new Power());
-
+        model.addAttribute("logged", getLoggedUser().getUsername());
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
-        
 
-        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
-        model.addAttribute("statistiscPostGame",statisticsGames);
+        
+        /*para ver quien tiene turno*/
+        if(game.getRound().getTurns().size() > 0) {
+            model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
+        } else {
+            model.addAttribute("miTurn", getLoggedUser().getUsername());
+        }
+        
+  
         return GAME_VIEW;
     }
 
@@ -170,17 +185,14 @@ public class GameController {
         return "redirect:/games/currentGame";
     }
 
-    @PostMapping("/newCards")
-    public String getNewCards(){
-        Deck deck= boardService.deckFromPlayers(getLoggedUser());
-        handService.generateDefaultHand(deck);
-        return  "redirect:/games/currentGame";
-    }
-    
     @PostMapping("/usePower")
     public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response){
+        Game game = gameService.getGameByPlayer(getLoggedUser());
         try{
+            if(getLoggedUser().equals(game.getRound().getTurns().get(0).getUsuario()) && 
+            turnService.getByUsername(getLoggedUser().getUsername()).getCardCounter() == 0){
             energyService.usePower(getLoggedUser(), powerService.findByName(powerName).getId());
+            }
         }catch(DontUsePowerInTheSameRound v){
             model.addAttribute("message", "No puedes usar mas de un punto de energía en la misma ronda");
         }
@@ -188,11 +200,9 @@ public class GameController {
         return  "redirect:/games/currentGame";
     }
 
-
-
     @PostMapping("/currentGame")
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
-
+        System.out.println(gameService.getGameByPlayer(getLoggedUser()).getBoard().getTiles());
         try {
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
             boardService.playCard(getLoggedUser(),card, tile);
@@ -200,6 +210,8 @@ public class GameController {
             model.addAttribute("message", "No puedes realizar esa acción");
         } catch (NotUrTurnException n){
             model.addAttribute("message", "No es tu turno");
+        } catch(TimeOutException t){
+            model.addAttribute("message", "Se acabo el tiempo para realizar el turno");
         }
         //return getGame(model, response);
         return "redirect:/games/currentGame";
@@ -259,8 +271,6 @@ public class GameController {
         if(game.getPlayers().get(0).equals(getLoggedUser())) {
             try{
                 gameService.startGame(game);
-
-                statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
                 Statistics s = statisticsService.findByUser(getLoggedUser());
                 s.setNumGames(s.getNumGames()+1);

@@ -20,8 +20,8 @@ import lombok.Setter;
 @Table(name = "turns")
 public class Turn extends BaseEntity{
 
-    @OneToOne(cascade = CascadeType.ALL)
     @NotNull
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "usuario_username", referencedColumnName = "username")
     private Usuario usuario;
 
@@ -29,6 +29,8 @@ public class Turn extends BaseEntity{
     @NotNull
     private Round round;
 
-    private Integer CardCounter = 0;
+    private Integer startTime;
+    
+    private Integer cardCounter = 0;
 
 }

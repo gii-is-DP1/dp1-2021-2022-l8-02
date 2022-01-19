@@ -17,9 +17,6 @@ public class TileService {
     private TileRepository tileRepository;
 
     @Autowired
-    private PathRepository pathRepository;
-
-    @Autowired
     public PathService pathService;
 
     public Tile findTileByCoordsAndBoard(Board board, Integer x, Integer y) {

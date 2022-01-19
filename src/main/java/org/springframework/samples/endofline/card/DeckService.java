@@ -1,9 +1,12 @@
 package org.springframework.samples.endofline.card;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.transaction.Transactional;
@@ -22,10 +25,30 @@ public class DeckService {
     @Autowired
     private CardService cardService;
 
+    @Autowired
+    private HandService handService;
+
 
     public List<CardType> AllCardTypes(){
         List<CardType> cardType=cardService.findAllCardTypes();
         return cardType;
+    }
+
+    public List<Integer> orderIniciatives(){
+        List<Integer> listInteger= new ArrayList<>();
+        Set<Integer> orderIniciatives= new HashSet<>(); 
+        for(CardType c: AllCardTypes()){
+            orderIniciatives.add(c.getIniciative());
+        }
+        
+        
+        for(Integer i: orderIniciatives){
+            if(i>=0){
+            listInteger.add(i);
+            }
+        }
+        Collections.sort(listInteger);
+        return listInteger;
     }
 
     public Deck getDeckFromPlayer(Usuario player) {
@@ -47,11 +70,14 @@ public class DeckService {
     @Transactional
     public Deck generateDefaultDeck(Usuario player, CardColor color) {
         Deck deck = getDeckFromPlayer(player);
-        if(deck == null) {
-            deck = new Deck();
-            deck.setUser(player);
-            deck.setCards(new ArrayList<>());
+        if (deck != null) {
+            Hand hand = handService.findHandByDeck(deck);
+            if(hand != null)    handService.delete(hand);
+            delete(deck);
         }
+        deck = new Deck();
+        deck.setUser(player);
+        deck.setCards(new ArrayList<>());
 
         for(Entry<String, Integer> integer : configuration().entrySet()){
             String a=integer.getKey();
@@ -71,6 +97,11 @@ public class DeckService {
     @Transactional
     public void save(Deck deck) {
         deckRepository.save(deck);
+    }
+
+    @Transactional
+    public void delete(Deck deck) {
+        deckRepository.delete(deck);
     }
     
 }

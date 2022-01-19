@@ -21,11 +21,19 @@
             <div class=" align-items-center scroll" style="text-align: center!important; ">
                 <div class="scroll" style="border: solid; border-radius: 20px; height: 500px;
                 max-height: 600px;">
-                    <p style="font-size:25px;  text-decoration:underline; ">Lista de amigos</p>
-                    <p>sdkjaskd</p>
-                    <p>sdkjaskd</p>
-                    <p>sdkjaskd</p>
-                    <p>sdkjaskd</p>
+                    <p style="font-size:25px;  text-decoration:underline; ">Lista de partidas</p>
+                    <c:forEach items="${games}" var="game">
+                    <table style="border: solid; border-radius: 10px; margin-bottom: 10px; min-width:300px; max-width: 70%; margin-left: 22px;">
+                        <tr>
+                            <th style="width: 20%;"><img style="max-width: 150px; max-height: 150px;" src="\resources\images\descarga.jpg"></th>
+                            <th style="width: 40%;"><p>${game.name} </p>
+                                <p>${game.gameMode}</p>
+                                <p>${game.getPlayers().size()}</p></th>
+                        </tr>
+                       
+                        
+                    </table>
+                    </c:forEach>
 
                 </div>
             </th>

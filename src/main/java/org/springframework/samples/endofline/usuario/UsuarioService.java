@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +22,10 @@ public class UsuarioService {
 
     public Collection<Usuario> findAll(){
         return usuarioRepo.findAll();
+    }
+
+    public Page<Usuario> findAll(Pageable pageable) {
+      return usuarioRepo.findAll(pageable);
     }
 
     public void delete(Usuario usuario) {
@@ -48,6 +55,21 @@ public class UsuarioService {
         emails.add(user.getEmail());
       }
       return emails;
+    }
+
+    public void setStatFalse(List<Usuario> users){
+      for(Usuario u : users){
+        u.setGameEnded(false);
+      }
+    }
+
+    public List<String> authorities(Usuario user){
+      Set<Authorities> autorities = user.getAuthorities();
+      List<String> result = new ArrayList<>();
+      for (Authorities a: autorities){
+        result.add( a.getAuthority());
+      }
+      return result;
     }
 
 }
