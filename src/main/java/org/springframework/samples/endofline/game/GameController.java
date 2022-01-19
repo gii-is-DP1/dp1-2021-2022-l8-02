@@ -27,6 +27,7 @@ import org.springframework.samples.endofline.energies.exception.DontUsePowerInTh
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -231,7 +232,7 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public String createGame(@ModelAttribute("game") @Valid Game game, BindingResult result, Model model) {
+    public String createGame(@ModelAttribute("game") @Valid Game game, BindingResult result, Model model) throws GameIsFullException {
         if(result.hasErrors()) {
             return GAME_CREATION;
         }
@@ -253,9 +254,15 @@ public class GameController {
 
 
     @GetMapping("/join/{gameId}")
-    public String joinGame(@PathVariable("gameId") Game game) {
-        gameService.joinGame(game, getLoggedUser());
-        return "redirect:/games/currentGame";
+    public String joinGame(@PathVariable("gameId") Game game, HttpSession session) {
+        try {
+            gameService.joinGame(game, getLoggedUser());
+            return "redirect:/games/currentGame";
+        }catch (GameIsFullException e){
+            session.setAttribute("errorMessage", "La partida a la que intenta unirse está llena");
+            return "redirect:/games";
+        }
+        
     }
     
 
