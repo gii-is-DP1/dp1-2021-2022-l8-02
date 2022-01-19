@@ -249,7 +249,7 @@ public class GameService {
 
     public List<Usuario> checkLostVS(Game game){
         List<Usuario> out = new ArrayList<>();
-        List<Usuario> players = new ArrayList<>(game.getPlayers());
+        List<Usuario> players = new ArrayList<>(NotEndedPlayers(game.getPlayers()));
         for(Usuario p : players){
             Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(p).getCards().get(0).getColor().ordinal());
             List<Tile> occupiedTiles = path.getOccupiedTiles();
@@ -285,7 +285,7 @@ public class GameService {
 
     public Boolean checkDrawVS(Game game){
         Boolean out = true;
-        List<Usuario> restPlayers = new ArrayList<>(game.getPlayers());
+        List<Usuario> restPlayers = new ArrayList<>(NotEndedPlayers(game.getPlayers()));
         for(int i = 0; i < restPlayers.size(); i++){
             Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(restPlayers.get(i)).getCards().get(0).getColor().ordinal());
             List<Tile> occupiedTiles = path.getOccupiedTiles();
@@ -321,6 +321,16 @@ public class GameService {
         /*player.setScore(score);
         userService.save(player);*/
         return score;
+    }
+
+    public List<Usuario> NotEndedPlayers(List<Usuario> allPlayers){
+        List<Usuario> players= new ArrayList<>();
+        for(Usuario u: allPlayers){
+            if(!u.getGameEnded()){
+                players.add(u);
+            }
+        }
+        return players;
     }
 
 }

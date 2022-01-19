@@ -89,7 +89,9 @@ public class CardService {
         if(oppositeX || oppositeY ){
             Integer auxi = (res.ordinal()+2)%4;
             res = Direction.values()[auxi];
-        }return res;
+        }
+        System.out.println(res);
+        return res;
 
     }
 
