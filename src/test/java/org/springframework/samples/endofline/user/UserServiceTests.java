@@ -75,4 +75,19 @@ public class UserServiceTests {
         Optional<Usuario> user = userService.findByUsername("Juangr4");
         assertNotNull(user.get());
     }
+
+    @Test
+    void shouldEditUser() {
+        Usuario user1 = new Usuario();
+        user1.setEmail("aaa@gmail.com");
+        user1.setUsername("mariano23");
+        user1.setPassword("complexpassword123");
+        String newEmail = "a@gmail.com";
+        this.userService.save(user1);
+        user1.setEmail(newEmail);
+        this.userService.save(user1);
+        assertThat(user1.getEmail()==newEmail);
+
+
+    }
 }

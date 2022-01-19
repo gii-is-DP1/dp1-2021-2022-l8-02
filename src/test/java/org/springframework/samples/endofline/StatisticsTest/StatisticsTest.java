@@ -1,7 +1,9 @@
 package org.springframework.samples.endofline.StatisticsTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -57,6 +59,12 @@ public class StatisticsTest {
 
         Statistics stat = statsService.findByUser(userService.findByUsername("player").get());
         assertNotNull(stat);
+    }
+
+    @Test
+    void shouldFindAllStat(){
+        Collection<Statistics> st = this.statsService.findAll();
+        assertThat(st.size()!=0);
     }
 
 }
