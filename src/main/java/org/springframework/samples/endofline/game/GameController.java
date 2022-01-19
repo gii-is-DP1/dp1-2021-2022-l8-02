@@ -125,6 +125,8 @@ public class GameController {
         }
 
         response.addHeader("Refresh", "5");
+
+
         
         if(game.getGameState() == GameState.LOBBY){
             model.addAttribute("logged", getLoggedUser().getUsername());
