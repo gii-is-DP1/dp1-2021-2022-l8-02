@@ -284,7 +284,7 @@ public class RoundService {
     public void generateTurnsByPlayers(Round round, List<Usuario> numPlayers){
         List<Turn> turns = new ArrayList<>();
         if(round.getNumber()>1){
-            List<Usuario> listUser= generateOrderByPlayer(round.getPlayers());
+            List<Usuario> listUser= generateOrderByPlayer(numPlayers);
             round.setPlayers(listUser);
             save(round);
         }
@@ -292,11 +292,11 @@ public class RoundService {
             if(!numPlayers.get(i).getGameEnded()){
                 Turn turn = new Turn();
                 turn.setRound(round);
-                turn.setUsuario(round.getPlayers().get(i));
+                turn.setUsuario(numPlayers.get(i));
                 turnService.save(turn);
                 turns.add(turn);
-                round.getPlayers().get(i).setTurn(turn);
-                usuarioService.save(round.getPlayers().get(i));
+                numPlayers.get(i).setTurn(turn);
+                usuarioService.save(numPlayers.get(i));
             }
         }
         if(turns.size() > 0){
@@ -319,11 +319,11 @@ public class RoundService {
             for(Integer e:ls){
                 Turn turn = new Turn();
                 turn.setRound(round);
-                turn.setUsuario(round.getPlayers().get(e));
+                turn.setUsuario(gameService.NotEndedPlayers(round.getPlayers()).get(e));
                 turnService.save(turn);
                 turns.add(turn);
-                round.getPlayers().get(e).setTurn(turn);
-                usuarioService.save(round.getPlayers().get(e));
+                gameService.NotEndedPlayers(round.getPlayers()).get(e).setTurn(turn);
+                usuarioService.save(gameService.NotEndedPlayers(round.getPlayers()).get(e));
             }
         }else{
             for(int i = 0;i < numPlayers;i++){
@@ -337,14 +337,8 @@ public class RoundService {
     @Transactional
     public void refreshRound(Game game, Usuario player){
         List<Turn> turns = new ArrayList<>(game.getRound().getTurns());
-        List<Usuario> allPlayers = new ArrayList<>(game.getPlayers());
-        List<Usuario> players = new ArrayList<>();
-        for(Usuario u: allPlayers){
-            if(!u.getGameEnded()){
-                players.add(u);
-            }
-        }
-        //Con poner que el temañando de usuarios es igual a 1 ya podemos comporvar como funciona endGame con otros modos
+        List<Usuario> players = gameService.NotEndedPlayers(game.getPlayers());
+        
         if(players.size() == 1 && gameService.checkLostPuzzle(game) != null){
             if(gameService.checkLostPuzzle(game)){
                 players.get(0).setGameEnded(true);
@@ -358,16 +352,19 @@ public class RoundService {
 
         if(players.size() == 2){
             if(gameService.checkDrawVS(game)){
-                gameService.checkLostVS(game).get(0).setGameEnded(true);
-                gameService.checkLostVS(game).get(1).setGameEnded(true);
-                usuarioService.save(gameService.checkLostVS(game).get(0));
-                usuarioService.save(gameService.checkLostVS(game).get(1));
+                Usuario p1 = gameService.checkLostVS(game).get(0);
+                p1.setGameEnded(true);
+                Usuario p2 = gameService.checkLostVS(game).get(1);
+                p2.setGameEnded(true);
+                usuarioService.save(p1);
+                usuarioService.save(p2);
                 gameService.endGame(game);
             }else{
                 if(gameService.checkLostVS(game).size() > 0){
-                    gameService.checkLostVS(game).get(0).setGameEnded(true); 
-                    usuarioService.save(gameService.checkLostVS(game).get(0));
-                    players.remove(gameService.checkLostVS(game).get(0));
+                    Usuario p = gameService.checkLostVS(game).get(0);
+                    p.setGameEnded(true); 
+                    usuarioService.save(p);
+                    players.remove(p);
                     gameService.endGame(game);
                 }
             }
@@ -378,7 +375,7 @@ public class RoundService {
                 usuarioService.save(user);
                 players.remove(user);
             }
-            game.getRound().setTurns(turns);
+            
         }
         Integer count = turnService.getByUsername(player.getUsername()).getCardCounter();
         count += 1;
