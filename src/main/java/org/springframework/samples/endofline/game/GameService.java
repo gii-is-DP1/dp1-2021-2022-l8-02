@@ -139,16 +139,16 @@ public class GameService {
 
         switch(game.getGameMode()) {
             case PUZZLE:
-                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generatePuzzleBoard(board);
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 break;
             case SOLITAIRE:
-
+                boardService.generateSolitaireBoard(board);
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
-                boardService.generatePuzzleBoard(board); //On purpose, generateSolitaire does not work
+                break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
 
