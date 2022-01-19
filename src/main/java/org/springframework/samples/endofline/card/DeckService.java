@@ -25,6 +25,9 @@ public class DeckService {
     @Autowired
     private CardService cardService;
 
+    @Autowired
+    private HandService handService;
+
 
     public List<CardType> AllCardTypes(){
         List<CardType> cardType=cardService.findAllCardTypes();
@@ -67,11 +70,14 @@ public class DeckService {
     @Transactional
     public Deck generateDefaultDeck(Usuario player, CardColor color) {
         Deck deck = getDeckFromPlayer(player);
-        if(deck == null) {
-            deck = new Deck();
-            deck.setUser(player);
-            deck.setCards(new ArrayList<>());
+        if (deck != null) {
+            Hand hand = handService.findHandByDeck(deck);
+            if(hand != null)    handService.delete(hand);
+            delete(deck);
         }
+        deck = new Deck();
+        deck.setUser(player);
+        deck.setCards(new ArrayList<>());
 
         for(Entry<String, Integer> integer : configuration().entrySet()){
             String a=integer.getKey();
@@ -91,6 +97,11 @@ public class DeckService {
     @Transactional
     public void save(Deck deck) {
         deckRepository.save(deck);
+    }
+
+    @Transactional
+    public void delete(Deck deck) {
+        deckRepository.delete(deck);
     }
     
 }

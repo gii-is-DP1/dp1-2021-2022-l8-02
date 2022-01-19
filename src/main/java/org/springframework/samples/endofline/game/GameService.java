@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.Board;
@@ -20,6 +18,7 @@ import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
@@ -106,6 +105,11 @@ public class GameService {
         leaveGame(player);
         game.getPlayers().add(player);
         gameRepository.save(game);
+
+        // Inizializacion de datos para poder jugar la partida de forma correcta
+        player.setInicialListCardsByPlayer(new ArrayList<>());
+        player.setGameEnded(false);
+        userService.save(player);
     }
 
     @Transactional
@@ -120,27 +124,6 @@ public class GameService {
             }
         }
     }
-
-    // public Map<Usuario,List<Integer>> diccConteinsAll(Map<Usuario,List<Integer>> dicc){
-
-    // }
-    // public Map<Usuario,List<Integer>> turnsForPlayer(List<Usuario>players){
-    //     Map<Usuario,List<Integer>> dicc= new HashMap<>();
-
-    // }
-
-    // public List<Integer> getFirstRoundInitiatives(Map<Usuario, List<Integer> m){
-    //     List<Integer> res = new ArrayList<>();
-    //     for(List<Integer> ls:m.values()){
-    //         if(ls.size() == 0){
-    //             res.add(ls.get(0));
-    //         }
-    //         else{
-    //             res.add(ls.get(ls.size()-1));
-    //         }
-    //     }Collections.sort(res);
-    //     return res;
-    // }
 
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
@@ -285,7 +268,7 @@ public class GameService {
             List<Tile> occupiedTiles = path.getOccupiedTiles();
             Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
             List<Tile> availableTiles = boardService.getAdjacents(lastTile, p, path);
-            Long contTileTaken= game.getBoard().getTiles().stream().filter(x->x.getTileState().equals(TileState.TAKEN)).count();
+            Long contTileTaken= game.getBoard().getTiles().stream().filter(x->x.getTileState() == TileState.TAKEN).count();
             if(contTileTaken == allTileTakenOfBoard){
                 out= false;
             }
@@ -293,6 +276,7 @@ public class GameService {
                 out= true;
             }
         }
+        
         return out;
     }
 
@@ -319,5 +303,21 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    @Transactional
+    public Integer getScore(Usuario player){
+        Integer score = 0;
+        Deck deck = deckService.getDeckFromPlayer(player);
+        Hand hand = handService.findHandByDeck(deck);
+        for (Card card : deck.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        for(Card card: hand.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        score+=player.getEnergy().getCounter();
+        /*player.setScore(score);
+        userService.save(player);*/
+        return score;
+    }
 
 }

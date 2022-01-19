@@ -366,12 +366,10 @@ public class RoundService {
                 }
             }
         }else if(players.size() > 2){
-            if(gameService.checkLostVS(game).size() > 0){
-                for(int i = 0; i < gameService.checkLostVS(game).size(); i++){
-                    gameService.checkLostVS(game).get(i).setGameEnded(true);
-                    usuarioService.save(gameService.checkLostVS(game).get(i));
-                    players.remove(gameService.checkLostVS(game).get(i));
-                }
+            for(Usuario user: gameService.checkLostVS(game)){
+                user.setGameEnded(true);
+                usuarioService.save(user);
+                players.remove(user);
             }
         }
         Integer count = turnService.getByUsername(player.getUsername()).getCardCounter();
@@ -380,18 +378,7 @@ public class RoundService {
         t.setCardCounter(count);
         turnService.save(t);
         if(game.getRound().getNumber() >= 2){
-            if(player.getEnergy().getPowers().get(powerService.findById(2)).booleanValue()){
-                    Map<Power, Boolean> map = player.getEnergy().getPowers();
-                    Set<Power> powers = map.keySet();
-                    for(Power p: powers){
-                    map.put(p, false);
-                    }
-                    Energy ene = player.getEnergy();
-                    ene.setPowers(map);
-                    player.setEnergy(ene);
-                    energyService.save(ene);
-                
-            }else if(player.getEnergy().getPowers().get(powerService.findById(4)).booleanValue()){
+            if(player.getEnergy().getPowers().get(powerService.findById(4)).booleanValue()){
                 handService.generateDefaultHand(deckService.getDeckFromPlayer(player));
                 Map<Power, Boolean> map = player.getEnergy().getPowers();
                 Set<Power> powers = map.keySet();
@@ -402,7 +389,21 @@ public class RoundService {
                 ene.setPowers(map);
                 player.setEnergy(ene);
                 energyService.save(ene);
-                return;
+                count-=1;
+                t.setCardCounter(count);
+                turnService.save(t);
+                return;}
+            else if(player.getEnergy().getPowers().get(powerService.findById(2)).booleanValue()){
+                Map<Power, Boolean> map = player.getEnergy().getPowers();
+                Set<Power> powers = map.keySet();
+                for(Power p: powers){
+                    map.put(p, false);
+                }
+                Energy ene = player.getEnergy();
+                ene.setPowers(map);
+                player.setEnergy(ene);
+                energyService.save(ene);
+                 
             }else if(player.getEnergy().getPowers().get(powerService.findById(1)).booleanValue()){
                 System.out.println(player.getTurn().getCardCounter());
                 if (player.getTurn().getCardCounter()==3){

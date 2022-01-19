@@ -15,8 +15,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.board.BoardService;
-import org.springframework.samples.endofline.board.StatisticsGamesService;
-import org.springframework.samples.endofline.board.StatisticsGames;
 import org.springframework.samples.endofline.board.Tile;
 import org.springframework.samples.endofline.board.exceptions.InvalidMoveException;
 import org.springframework.samples.endofline.board.exceptions.NotUrTurnException;
@@ -66,7 +64,6 @@ public class GameController {
     private GameService gameService;
     private UsuarioService userService;
     private BoardService boardService;
-    private StatisticsGamesService statisticsGamesService;
     private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
@@ -75,11 +72,10 @@ public class GameController {
 
     
     @Autowired
-    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsGamesService statisticsGamesService, StatisticsService statisticsService, HandService handService){
+    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsService statisticsService, HandService handService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
-        this.statisticsGamesService = statisticsGamesService;
         this.statisticsService = statisticsService;
         this.powerService = powerService;
         this.energyService = energyService; 
@@ -114,36 +110,40 @@ public class GameController {
         if(game == null) {
             return "redirect:/games";
         }
-        StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
-        model.addAttribute("statistiscPostGame",statisticsGames);
+        
         model.addAttribute("game", game);
         
-        if(game.getGameState() == GameState.LOBBY){
-            response.addHeader("Refresh", "5");
-            model.addAttribute("logged", getLoggedUser().getUsername());
-            model.addAttribute("creator", game.getPlayers().get(0).getUsername());
-          return GAME_LOBBY;
-        }
-
-        if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
-            model.addAttribute("userLost", getLoggedUser().getGameEnded());
-            return GAME_LOST;
-        }
-
         if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
             model.addAttribute("message", session.getAttribute("errorMessage"));
             session.removeAttribute("errorMessage");
         }
 
-    
-        
         response.addHeader("Refresh", "5");
         
+        if(game.getGameState() == GameState.LOBBY){
+            model.addAttribute("logged", getLoggedUser().getUsername());
+            model.addAttribute("creator", game.getPlayers().get(0).getUsername());
+            return GAME_LOBBY;
+        }
+
+        if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
+            if(game.getGameMode()!= GameMode.VERSUS){
+            Integer score = gameService.getScore(game.getPlayers().get(0));
+            model.addAttribute("score", score);
+            }
+
+            model.addAttribute("userLost", getLoggedUser().getGameEnded());
+            return GAME_LOST;
+        }
+        
         model.addAttribute("board", game.getBoard());
+
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
         model.addAttribute("hand", boardService.handByDeck(deck));
+
         model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
+        
         model.addAttribute("user", getLoggedUser());
 
         List<Power> allPowers = powerService.findAll();
@@ -159,15 +159,12 @@ public class GameController {
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
 
-        
-        /*para ver quien tiene turno*/
         if(game.getRound().getTurns().size() > 0) {
             model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
         } else {
             model.addAttribute("miTurn", getLoggedUser().getUsername());
         }
         
-  
         return GAME_VIEW;
     }
 
@@ -273,8 +270,6 @@ public class GameController {
         if(game.getPlayers().get(0).equals(getLoggedUser())) {
             try{
                 gameService.startGame(game);
-
-                statisticsGamesService.statisticsGamesInitialize(game.getPlayers(), game);
 
                 Statistics s = statisticsService.findByUser(getLoggedUser());
                 s.setNumGames(s.getNumGames()+1);

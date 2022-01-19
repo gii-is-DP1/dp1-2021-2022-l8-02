@@ -26,13 +26,10 @@
                         
                     </c:forEach> -->
                     <div class="row text-center">
-                        <p>Jugador:   ${statistiscPostGame.user.username}</p>
-                        <p>Partida:   ${statistiscPostGame.game.name}</p>
-                        <p>Puntos:    ${statistiscPostGame.point}</p>
-                        <p>Inciativa de la carta mas usada:     ${statistiscPostGame.maxCard.cardType.iniciative}</p>
+                        <p>Puntos:    ${score}</p>
                     </div> 
             </tr>
         </table>
-        <a href="/lobby" class="neon-button" style="font-size: 20px;margin-top: 10%; margin-left: 15%;">Volver al inicio</a>
+        <a href="/games/leave" class="neon-button" style="font-size: 20px;margin-top: 10%; margin-left: 15%;">Volver al inicio</a>
     </div>
 </eol:layoutEOL>
