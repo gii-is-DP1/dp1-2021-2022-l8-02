@@ -8,10 +8,13 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
+import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameMode;
 import org.springframework.samples.endofline.game.GameService;
+import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.power.PowerService;
+import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +34,10 @@ public class HandService {
 
     @Autowired
     GameService gameService;
-    
+
+    @Autowired
+    RoundService roundService;
+
     public Hand findHandByDeck(Deck deck){
         return handRepository.findHandByDeck(deck);
     }
@@ -77,6 +83,7 @@ public class HandService {
             hand = new Hand();
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
+            hand.setDismissCardsList(new ArrayList<>());
         }
         Integer count = 0;
         if(gameService.getGameByPlayer(deck.getUser()).getGameMode() == GameMode.SOLITAIRE){
@@ -110,4 +117,12 @@ public class HandService {
         handRepository.delete(hand);
     }
     
+    public void dismissCard(Hand hand){
+        hand.getDismissCardsList().addAll(hand.getCards());
+        hand.getCards().removeAll(hand.getCards());     
+        Usuario usuario=hand.getDeck().getUser();
+        Game game= gameService.getGameByPlayer(usuario);
+        save(hand);
+        roundService.refreshRound(game, usuario);
+    }
 }

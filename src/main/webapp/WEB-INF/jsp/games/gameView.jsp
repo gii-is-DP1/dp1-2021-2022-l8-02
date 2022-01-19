@@ -29,6 +29,9 @@
 <div class="row">
         <eol:hand cards="${hand.cards}"></eol:hand>
 </div>
+<div class="row">
+    <img id="${dismiss.id}" class="handCard" src="/resources/images/cards/${dismiss.getCardName()}.png">
+</div>
 
     <c:if test="${game.round.number == 1}">
         <form:form method="POST" modelAttribute="hand" action="/games/newHand">
@@ -37,6 +40,12 @@
             </div>
         </form:form>
     </c:if>
+
+    <form:form method="POST" modelAttribute="hand" action="/games/DismissCard">
+        <div class="row" id = "Hand">
+            <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">Dismiss</button>
+        </div>
+    </form:form>    
 
 
 </eol:layoutEOL>
