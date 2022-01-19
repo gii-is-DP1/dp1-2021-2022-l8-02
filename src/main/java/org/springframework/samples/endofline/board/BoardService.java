@@ -82,7 +82,12 @@ public class BoardService {
         Game game = gameService.getGameByPlayer(player);
         Path p = game.getBoard().getPaths().get(card.getColor().ordinal());
         List<Tile> occupiedTiles = p.getOccupiedTiles();
-        Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+        Tile lastTile = null;
+        if(player.getEnergy().getPowers().get(powerService.findById(3)).booleanValue()){
+            lastTile = occupiedTiles.get(occupiedTiles.size() - 2);
+        }else{
+            lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+        }
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (!game.getGameMode().equals(GameMode.VERSUS) || game.getRound().getTurns().get(0).getUsuario().equals(player)) {
             System.out.println(game.getRound().getTurns().get(0).getStartTime());
