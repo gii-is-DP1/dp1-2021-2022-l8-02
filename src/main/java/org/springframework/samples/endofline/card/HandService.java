@@ -9,13 +9,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.GameMode;
-<<<<<<< HEAD
 import org.springframework.samples.endofline.game.GameRepository;
-import org.springframework.samples.endofline.game.Round;
-import org.springframework.samples.endofline.game.Turn;
-=======
 import org.springframework.samples.endofline.game.GameService;
->>>>>>> master
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.stereotype.Service;
@@ -87,35 +82,6 @@ public class HandService {
             hand.setDeck(deck);
             hand.setCards(new ArrayList<>());
         }
-<<<<<<< HEAD
-        if(gameRepo.getGameByPlayerUsername(deck.getUser().getUsername()).getGameMode().equals(GameMode.VERSUS)){
-            if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue() ==  true){
-                while(hand.getCards().size()<6){
-                    Integer rand= random.nextInt(deck.getCards().size());
-                    Card card=deck.getCards().get(rand);
-                    hand.getCards().add(card);
-                    deck.getCards().remove(card);
-                    deckService.save(deck); 
-                }
-            
-            }else{
-                while(hand.getCards().size()<5){
-                    Integer rand= random.nextInt(deck.getCards().size());
-                    Card card=deck.getCards().get(rand);
-                    hand.getCards().add(card);
-                    deck.getCards().remove(card);
-                    deckService.save(deck); 
-                }
-            }  
-        }else{
-            while(hand.getCards().size()<5){
-                Integer rand= random.nextInt(deck.getCards().size());
-                Card card=deck.getCards().get(rand);
-                hand.getCards().add(card);
-                deck.getCards().remove(card);
-                deckService.save(deck); 
-            }
-=======
         Integer count = 0;
         if(gameService.getGameByPlayer(deck.getUser()).getGameMode() == GameMode.SOLITAIRE){
                 if(deck.getUser().getEnergy().getPowers().get(powerService.findById(4)).booleanValue()){
@@ -130,7 +96,6 @@ public class HandService {
         }else{
             count=5;
         
->>>>>>> master
         }    
         while(hand.getCards().size()<count){
             

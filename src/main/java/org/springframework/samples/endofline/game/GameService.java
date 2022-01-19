@@ -126,11 +126,7 @@ public class GameService {
 
     @Transactional
     public void startGame(Game game) throws TwoPlayersAtLeastException {
-<<<<<<< HEAD
-        if(game.getGameMode().equals(GameMode.VERSUS) && game.getPlayers().size()==1){
-=======
         if(game.getPlayers().size()==1 && game.getGameMode() == GameMode.VERSUS) {
->>>>>>> master
             throw new TwoPlayersAtLeastException();
         }
 
@@ -145,17 +141,11 @@ public class GameService {
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 break;
             case SOLITAIRE:
-<<<<<<< HEAD
+
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generatePuzzleBoard(board); //On purpose, generateSolitaire does not work
-=======
-                boardService.generateSolitaireBoard(board);
-                energyService.initEnergy(game.getPlayers(), powerService.findAll());
->>>>>>> master
-                break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
-                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
 
