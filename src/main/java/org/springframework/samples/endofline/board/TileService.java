@@ -1,5 +1,7 @@
 package org.springframework.samples.endofline.board;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;

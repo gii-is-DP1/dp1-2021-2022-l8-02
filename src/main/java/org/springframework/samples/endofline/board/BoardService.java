@@ -109,6 +109,7 @@ public class BoardService {
                 }
                 gameService.save(game);
             } else {
+
                 roundService.refreshRound(game, player);
                 gameService.save(game);
                 throw new TimeOutException();
@@ -200,7 +201,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void generatePuzzleBoard(Board board) {
+    public void generatePuzzleBoard(Board board) { //I THINK THIS CAN BE USED FOR SOLITAIRE AS WELL
 
 
         

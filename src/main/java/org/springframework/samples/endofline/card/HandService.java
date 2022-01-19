@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.GameMode;
+import org.springframework.samples.endofline.game.GameRepository;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.TurnService;
 import org.springframework.samples.endofline.power.PowerService;
@@ -19,6 +20,9 @@ public class HandService {
 
     @Autowired
     HandRepository handRepository;
+
+    @Autowired
+    GameRepository gameRepo;
 
     @Autowired
     DeckService deckService;

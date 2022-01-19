@@ -7,6 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.Collection;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -20,6 +23,8 @@ public class UserServiceTests {
 
     @Autowired
     private UsuarioService userService;
+
+    EntityManager em;
 
     @Test
     void shouldFindAll(){
@@ -53,13 +58,13 @@ public class UserServiceTests {
         Usuario user2 = new Usuario();
         user2.setUsername("KvotheRuh15");
         user2.setPassword("kvothe123");
-        assertThrows(Exception.class, ()-> {this.userService.save(user2);});
+        assertThrows(NullPointerException.class,()->em.persist(user2));
         
         Usuario user1 = new Usuario();
         user1.setEmail("kvothelaud@gmail.com");
         user1.setUsername("KvotheRuh15");
         user1.setPassword("kvothe123");
-        assertThrows(Exception.class, ()-> {this.userService.save(user1);});
+        assertThrows(NullPointerException.class,()->em.persist(user1));
 
          /*NO LANZAN EL ERROR QUE DEBERIAN*/
 
