@@ -97,10 +97,12 @@ public class GameController {
     }
 
     @GetMapping
-    public String getGames(Model model, HttpServletResponse response) {
+    public String getGames(Model model, HttpServletResponse response, HttpSession session) {
         Collection<Game> games = gameService.getVersusGames();
         model.addAttribute("games", games);
         response.addHeader("Refresh", "5");
+        model.addAttribute("message",session.getAttribute("errorMessage"));
+        session.removeAttribute("errorMessage");
         return GAME_LIST;
     }
     
@@ -119,11 +121,6 @@ public class GameController {
             session.removeAttribute("errorMessage");
         }
         
-        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
-            model.addAttribute("message", session.getAttribute("errorMessage"));
-            session.removeAttribute("errorMessage");
-        }
-
         response.addHeader("Refresh", "5");
         
         if(game.getGameState() == GameState.LOBBY){

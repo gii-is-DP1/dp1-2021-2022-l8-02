@@ -67,9 +67,17 @@ INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUE
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'c');
 INSERT INTO Statistics(duration, num_games, num_players, usuario_username) VALUES (0, 0, 0, 'd');
 
-
-
-
+/*
+INSERT INTO Games(id,game_mode,game_state,hidden,name) VALUES (1,'VERSUS','LOBBY',FALSE,'eightplayergame');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'kikovilapavon');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'miguegomgom');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'chemaccs');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'Juangr4');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'martarl11');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'mma12');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'd');
+INSERT INTO Games_players(game_id,players_username) VALUES (1, 'c');
+*/
 
 
 -- PUZZLES
