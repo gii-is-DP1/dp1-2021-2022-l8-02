@@ -18,6 +18,7 @@ import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
@@ -271,6 +272,7 @@ public class GameService {
                 out= true;
             }
         }
+        
         return out;
     }
 
@@ -297,5 +299,21 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    @Transactional
+    public Integer getScore(Usuario player){
+        Integer score = 0;
+        Deck deck = deckService.getDeckFromPlayer(player);
+        Hand hand = handService.findHandByDeck(deck);
+        for (Card card : deck.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        for(Card card: hand.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        score+=player.getEnergy().getCounter();
+        /*player.setScore(score);
+        userService.save(player);*/
+        return score;
+    }
 
 }

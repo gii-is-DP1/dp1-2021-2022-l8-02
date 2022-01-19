@@ -120,6 +120,11 @@ public class GameController {
         }
 
         if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
+            if(game.getGameMode()!= GameMode.VERSUS){
+            Integer score = gameService.getScore(game.getPlayers().get(0));
+            model.addAttribute("score", score);
+            }
+
             model.addAttribute("userLost", getLoggedUser().getGameEnded());
             return GAME_LOST;
         }
