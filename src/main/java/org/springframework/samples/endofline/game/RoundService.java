@@ -383,51 +383,27 @@ public class RoundService {
         if(game.getRound().getNumber() >= 2){
             if(player.getEnergy().getPowers().get(powerService.findById(4)).booleanValue()){
                 handService.generateDefaultHand(deckService.getDeckFromPlayer(player));
-                Map<Power, Boolean> map = player.getEnergy().getPowers();
-                Set<Power> powers = map.keySet();
-                for(Power p: powers){
-                map.put(p, false);
-                }
-                Energy ene = player.getEnergy();
-                ene.setPowers(map);
-                player.setEnergy(ene);
-                energyService.save(ene);
+                energyService.allFalse(player);
                 count-=1;
                 t.setCardCounter(count);
                 turnService.save(t);
-                return;}
-            else if(player.getEnergy().getPowers().get(powerService.findById(2)).booleanValue()){
-                Map<Power, Boolean> map = player.getEnergy().getPowers();
-                Set<Power> powers = map.keySet();
-                for(Power p: powers){
-                    map.put(p, false);
-                }
-                Energy ene = player.getEnergy();
-                ene.setPowers(map);
-                player.setEnergy(ene);
-                energyService.save(ene);
+                return;
+
+            }else if(player.getEnergy().getPowers().get(powerService.findById(2)).booleanValue()){
+                energyService.allFalse(player);
                  
             }else if(player.getEnergy().getPowers().get(powerService.findById(1)).booleanValue()){
-                System.out.println(player.getTurn().getCardCounter());
+                
                 if (player.getTurn().getCardCounter()==3){
-                    Map<Power, Boolean> map = player.getEnergy().getPowers();
-                    Set<Power> powers = map.keySet();
-                    for(Power p: powers){
-                        map.put(p, false);
-                    }
-                    Energy ene = player.getEnergy();
-                    ene.setPowers(map);
-                    player.setEnergy(ene);
-                    energyService.save(ene);
+                    energyService.allFalse(player);
                 }else if(player.getTurn().getCardCounter()<3){
                     return;
                 }
             }else if(gameService.getGameByPlayer(player).getGameMode()==GameMode.VERSUS && player.getTurn().getCardCounter() < 2){
                 return;
             }
-        
-
         }
+        
         turns.remove(turnService.getByUsername(player.getUsername()));
         if(turns.size() > 0){
             turns.get(0).setStartTime(boardService.hourToInteger());

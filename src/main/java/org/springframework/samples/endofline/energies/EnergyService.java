@@ -3,6 +3,7 @@ package org.springframework.samples.endofline.energies;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -86,7 +87,17 @@ public class EnergyService {
         roundService.refreshRound(user.getTurn().getRound().getGame(), user);
         }
     }
- 
+    public void allFalse(Usuario player){
+        Map<Power, Boolean> map = player.getEnergy().getPowers();
+        Set<Power> powers = map.keySet();
+        for(Power p: powers){
+            map.put(p, false);
+        }
+        Energy ene = player.getEnergy();
+        ene.setPowers(map);
+        player.setEnergy(ene);
+        save(ene);
+    }
   
 
     public void save(Energy energy) {
