@@ -204,26 +204,43 @@ public class UsuarioController {
 				model.addAttribute("usuario", usuario.get());
 				return USUARIOS_FORM;
 			} else{
-				model.addAttribute("message", "No tienes permisos para acceder");
 				return "redirect:/profile";
 			}
 		}else{
-			model.addAttribute("message", "Este usuario no existe");
 			return "redirect:/profile";
 		}
 	}
+
+	
 
 	@PostMapping("/profile/{username}/edit")
 	public String editProfile(@PathVariable("username") String username, @Valid Usuario modifiedUsuario,
 			BindingResult binding, ModelMap model) {
 		Optional<Usuario> usuario = usuarioService.findByUsername(username);
-		if (binding.hasErrors()) {
-			return USUARIOS_FORM;
-		} else {
-			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
-			usuarioService.save(usuario.get());
-			model.addAttribute("message", "User updated succesfully!");
-			return PROFILE;
+		if(usuario.isPresent()) {
+			if(getLoggedUser().getUsername().equals(username)) {
+				if(binding.hasErrors()) {
+					model.addAttribute("usuario", usuario.get());
+					return USUARIOS_FORM;
+				}else{
+					BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
+					usuarioService.save(usuario.get());
+					return "redirect:/profile";
+				}
+			}else if(usuarioService.authorities(getLoggedUser()).contains("admin")){
+				if (binding.hasErrors()) {
+					model.addAttribute("usuario", usuario.get());
+					return USUARIOS_FORM;
+				}else {
+					BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
+					usuarioService.save(usuario.get());
+					return "redirect:/profile";
+				}
+			}else{
+				return "redirect:/profile";
+			}
+		}else{
+			return"redirect:/profile";
 		}
 	}
 }
