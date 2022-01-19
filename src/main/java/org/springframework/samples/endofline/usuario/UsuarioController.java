@@ -6,9 +6,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import org.springframework.data.domain.Page;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UsuarioController {
@@ -55,8 +59,15 @@ public class UsuarioController {
 	}
 
 	@GetMapping("/usuarios")
-	public String listUsuarios(ModelMap model) {
-		model.addAttribute("usuarios", usuarioService.findAll());
+	public String listUsuarios(ModelMap model, @RequestParam(defaultValue = "0", name = "page") Integer page) {
+		Pageable pageable = PageRequest.of(page, 3);
+		Page<Usuario> pages = usuarioService.findAll(pageable);
+		model.addAttribute("usuarios", usuarioService.findAll(pageable).toList());
+		model.addAttribute("number", pages.getNumber());
+		model.addAttribute("totalPages", pages.getTotalPages());
+        model.addAttribute("totalElements", pages.getTotalElements());
+        model.addAttribute("size", pages.getSize());
+       
 		return USUARIOS_LISTING;
 	}
 
@@ -68,7 +79,7 @@ public class UsuarioController {
 			return USUARIOS_FORM;
 		} else {
 			model.addAttribute("message", "We cannot find the user you tried to edit!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		}
 	}
 
@@ -82,7 +93,7 @@ public class UsuarioController {
 			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
 			usuarioService.save(usuario.get());
 			model.addAttribute("message", "User updated succesfully!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		}
 	}
 
@@ -92,10 +103,10 @@ public class UsuarioController {
 		if (usuario.isPresent()) {
 			usuarioService.delete(usuario.get());
 			model.addAttribute("message", "The user was deleted successfully!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		} else {
 			model.addAttribute("message", "We cannot find the user you tried to delete!");
-			return listUsuarios(model);
+			return listUsuarios(model, 0);
 		}
 	}
 
@@ -141,10 +152,11 @@ public class UsuarioController {
 		} else if (usuarioService.getallEmails().contains(usuario.getEmail())) {
 			binding.rejectValue("email", "emailx2", "Ya existe un usuario con este email");
 			return REGISTER_USER;
-		} //else if (binding.getFieldValue("password") != binding.getFieldValue("passwordRepeat")){
-		// 	binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
-		// 	return REGISTER_USER;
-		// }
+		}else if (!(usuario.getPassword().equals(usuario.getPasswordRepeat()))){
+		 	binding.rejectValue("password", "passwordx2", "Las contraseñas deben coincidir");
+			binding.rejectValue("passwordRepeat", "passwordx2", "Las contraseñas deben coincidir");
+		 	return REGISTER_USER;
+		}
 		 else {
 			this.usuarioService.save(usuario);
 			this.authoritiesSer.saveAuthorities(usuario.getUsername(), "jugador");
@@ -165,7 +177,8 @@ public class UsuarioController {
     }
 	
 	@GetMapping("/lobby")
-	public String PagLobby() {
+	public String PagLobby(ModelMap model) {
+		model.addAttribute("autorities", usuarioService.authorities(getLoggedUser()));
 		return LOBBY;
 	}
 
@@ -184,11 +197,19 @@ public class UsuarioController {
 	public String editProfile(@PathVariable("username") String username, ModelMap model) {
 		Optional<Usuario> usuario = usuarioService.findByUsername(username);
 		if (usuario.isPresent()) {
-			model.addAttribute("usuario", usuario.get());
-			return USUARIOS_FORM;
-		} else {
-			model.addAttribute("message", "We cannot find the user you tried to edit!");
-			return PROFILE;
+			if (getLoggedUser().getUsername().equals(username)) {
+				model.addAttribute("usuario", usuario.get());
+				return USUARIOS_FORM;
+			} else if (usuarioService.authorities(getLoggedUser()).contains("admin")){
+				model.addAttribute("usuario", usuario.get());
+				return USUARIOS_FORM;
+			} else{
+				model.addAttribute("message", "No tienes permisos para acceder");
+				return "redirect:/profile";
+			}
+		}else{
+			model.addAttribute("message", "Este usuario no existe");
+			return "redirect:/profile";
 		}
 	}
 

@@ -86,7 +86,7 @@ public class BoardService {
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (!game.getGameMode().equals(GameMode.VERSUS) || game.getRound().getTurns().get(0).getUsuario().equals(player)) {
 
-            // if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
+            if (compareHour(game.getRound().getTurns().get(0).getStartTime())) {
                 Deck deck = deckService.getDeckFromPlayer(player);
                 Hand hand = handService.findHandByDeck(deck);
                 if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
@@ -117,15 +117,15 @@ public class BoardService {
                 // statisticsGamesService.save(statisticsGames);
                 // turnService.cardCounter(player, game, player.getEnergy().getPowers());
                 gameService.save(game);
-            // } else {
-            //     // roundService.refreshRound(game, player, availableTiles);
-            //     // gameService.save(game);
-            //     throw new TimeOutException();
-            // }
+            } else {
+                roundService.refreshRound(game, player);
+                gameService.save(game);
+                throw new TimeOutException();
+            }
         } else {
             throw new NotUrTurnException();
         }
-        roundService.refreshRound(game, player, card);
+        roundService.refreshRound(game, player);
         
         gameService.save(game);
     }
@@ -294,7 +294,7 @@ public class BoardService {
                     Card card = new Card();
                     card.setColor(CardColor.RED);
                     card.setCardType(cardService.findCardTypeByIniciative(-1));
-                    System.out.println(card.getCardType().getIniciative());
+                    card.setRotation(Direction.NORTH);
                     cardService.save(card);
                     tile.setCard(card);
                     tile.setTileState(TileState.TAKEN);

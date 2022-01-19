@@ -101,7 +101,7 @@ public class GameController {
 
     @GetMapping
     public String getGames(Model model, HttpServletResponse response) {
-        Collection<Game> games = gameService.getGames();
+        Collection<Game> games = gameService.getVersusGames();
         model.addAttribute("games", games);
         response.addHeader("Refresh", "5");
         return GAME_LIST;
@@ -112,7 +112,7 @@ public class GameController {
         Game game = gameService.getGameByPlayer(getLoggedUser());
 
         if(game == null) {
-            return GAME_LIST;
+            return "redirect:/games";
         }
         StatisticsGames statisticsGames= statisticsGamesService.findStatisticsGamesByUserGames(getLoggedUser(), gameService.findGame(game.getId()));
         model.addAttribute("statistiscPostGame",statisticsGames);
@@ -186,13 +186,6 @@ public class GameController {
         return "redirect:/games/currentGame";
     }
 
- /*   @PostMapping("/newCards")
-    public String getNewCards(){
-        /*Deck deck= boardService.deckFromPlayers(getLoggedUser());
-        handService.generateDefaultHand(deck);
-        return  "redirect:/games/currentGame";
-    }*/
-    
     @PostMapping("/usePower")
     public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response){
         Game game = gameService.getGameByPlayer(getLoggedUser());
@@ -207,8 +200,6 @@ public class GameController {
 
         return  "redirect:/games/currentGame";
     }
-
-
 
     @PostMapping("/currentGame")
     public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
