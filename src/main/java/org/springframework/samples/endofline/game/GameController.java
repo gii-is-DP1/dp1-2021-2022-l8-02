@@ -112,6 +112,14 @@ public class GameController {
         }
         model.addAttribute("game", game);
         
+        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
+            model.addAttribute("message", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage");
+        }
+
+        response.addHeader("Refresh", "5");
+
+
         if(game.getGameState() == GameState.LOBBY){
             response.addHeader("Refresh", "5");
             model.addAttribute("logged", getLoggedUser().getUsername());
@@ -129,14 +137,7 @@ public class GameController {
             return GAME_LOST;
         }
 
-        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
-            model.addAttribute("message", session.getAttribute("errorMessage"));
-            session.removeAttribute("errorMessage");
-        }
-
-    
         
-        response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
