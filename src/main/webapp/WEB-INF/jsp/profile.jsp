@@ -6,7 +6,7 @@
 
 
 <eol:layoutEOL pageName="Perfil">
-        
+            <div class="row"><a href="/lobby"style="font-size: 20px"  class="neon-button">Atras</a></div>
             <div class="" style="text-align: center!important;">
                 <p style="font-size:50px; font-style: italic; font-weight: bold;">MI PERFIL</p>
             </div>

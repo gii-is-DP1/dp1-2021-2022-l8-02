@@ -7,6 +7,7 @@
 
 <eol:layoutEOL pageName="Crear una partida">
 
+    <div class="row"><a href="/lobby"style="font-size: 20px"  class="neon-button">Atras</a></div>
     <div class="row" style="text-align: center!important;">
         <p style="font-size:50px; font-style: italic; font-weight: bold;">CREAR PARTIDA</p>
     </div>

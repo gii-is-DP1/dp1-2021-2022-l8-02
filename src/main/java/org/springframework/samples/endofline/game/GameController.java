@@ -112,6 +112,11 @@ public class GameController {
             return "redirect:/games";
         }
         model.addAttribute("game", game);
+
+        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
+            model.addAttribute("message", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage");
+        }
         
         if(game.getGameState() == GameState.LOBBY){
             response.addHeader("Refresh", "5");
@@ -130,10 +135,7 @@ public class GameController {
             return GAME_LOST;
         }
 
-        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
-            model.addAttribute("message", session.getAttribute("errorMessage"));
-            session.removeAttribute("errorMessage");
-        }
+
 
     
         
