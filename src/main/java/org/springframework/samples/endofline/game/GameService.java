@@ -66,6 +66,7 @@ public class GameService {
     public Collection<Game> getGames() {
         return gameRepository.findAll();
     }
+   
 
     public List<Game> getVersusGames() {
         return gameRepository.findByGameMode(GameMode.VERSUS);
@@ -148,6 +149,9 @@ public class GameService {
                 break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+            if(game.getPlayers().size()==1){
+                throw new TwoPlayersAtLeastException();
+            }
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
