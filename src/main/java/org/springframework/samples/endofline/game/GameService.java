@@ -22,6 +22,7 @@ import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.power.PowerService;
@@ -99,16 +100,18 @@ public class GameService {
     }
 
     @Transactional
-    public void joinGame(Game game, Usuario player) {
+    public void joinGame(Game game, Usuario player) throws GameIsFullException {
         if(game.getGameMode() != GameMode.VERSUS && game.getPlayers().size() >= 1)  return;
-        leaveGame(player);
-        game.getPlayers().add(player);
-        gameRepository.save(game);
-
-        // Inizializacion de datos para poder jugar la partida de forma correcta
-        player.setInicialListCardsByPlayer(new ArrayList<>());
-        player.setGameEnded(false);
-        userService.save(player);
+        if(game.getPlayers().size()==8) throw new GameIsFullException();
+            leaveGame(player);
+            game.getPlayers().add(player);
+            gameRepository.save(game);
+    
+            // Inizializacion de datos para poder jugar la partida de forma correcta
+            player.setInicialListCardsByPlayer(new ArrayList<>());
+            player.setGameEnded(false);
+            userService.save(player);
+        
     }
 
     @Transactional
@@ -136,16 +139,16 @@ public class GameService {
 
         switch(game.getGameMode()) {
             case PUZZLE:
+                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generatePuzzleBoard(board);
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 break;
             case SOLITAIRE:
-                boardService.generateSolitaireBoard(board);
+
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
-                break;
+                boardService.generatePuzzleBoard(board); //On purpose, generateSolitaire does not work
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
-                energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
 
