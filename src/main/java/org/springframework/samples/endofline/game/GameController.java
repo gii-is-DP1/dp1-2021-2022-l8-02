@@ -110,34 +110,35 @@ public class GameController {
         if(game == null) {
             return "redirect:/games";
         }
+        
         model.addAttribute("game", game);
         
+        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
+            model.addAttribute("message", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage");
+        }
+
+        response.addHeader("Refresh", "5");
+        
         if(game.getGameState() == GameState.LOBBY){
-            response.addHeader("Refresh", "5");
             model.addAttribute("logged", getLoggedUser().getUsername());
             model.addAttribute("creator", game.getPlayers().get(0).getUsername());
-          return GAME_LOBBY;
+            return GAME_LOBBY;
         }
 
         if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
             model.addAttribute("userLost", getLoggedUser().getGameEnded());
             return GAME_LOST;
         }
-
-        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
-            model.addAttribute("message", session.getAttribute("errorMessage"));
-            session.removeAttribute("errorMessage");
-        }
-
-    
-        
-        response.addHeader("Refresh", "5");
         
         model.addAttribute("board", game.getBoard());
+
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
         model.addAttribute("hand", boardService.handByDeck(deck));
+
         model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
+        
         model.addAttribute("user", getLoggedUser());
 
         List<Power> allPowers = powerService.findAll();
@@ -153,15 +154,12 @@ public class GameController {
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
 
-        
-        /*para ver quien tiene turno*/
         if(game.getRound().getTurns().size() > 0) {
             model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
         } else {
             model.addAttribute("miTurn", getLoggedUser().getUsername());
         }
         
-  
         return GAME_VIEW;
     }
 

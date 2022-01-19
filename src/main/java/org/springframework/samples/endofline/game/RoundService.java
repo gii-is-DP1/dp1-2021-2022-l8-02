@@ -367,12 +367,10 @@ public class RoundService {
                 }
             }
         }else if(players.size() > 2){
-            if(gameService.checkLostVS(game).size() > 0){
-                for(int i = 0; i < gameService.checkLostVS(game).size(); i++){
-                    gameService.checkLostVS(game).get(i).setGameEnded(true);
-                    usuarioService.save(gameService.checkLostVS(game).get(i));
-                    players.remove(gameService.checkLostVS(game).get(i));
-                }
+            for(Usuario user: gameService.checkLostVS(game)){
+                user.setGameEnded(true);
+                usuarioService.save(user);
+                players.remove(user);
             }
         }
         Integer count = turnService.getByUsername(player.getUsername()).getCardCounter();
