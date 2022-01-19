@@ -255,7 +255,6 @@ public class GameController {
 
     @GetMapping("/{gameId}/start")
     public String startGame(@PathVariable("gameId") Game game, Model model, HttpSession session) {
-        // Cambiar a POST puede ser una mejor opcion
         System.out.println(game.getPlayers().get(0).getUsername());
         if(game.getPlayers().get(0).equals(getLoggedUser())) {
             try{
