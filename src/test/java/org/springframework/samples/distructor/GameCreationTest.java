@@ -5,10 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import javax.validation.ConstraintViolationException;
+
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -61,7 +65,7 @@ public class GameCreationTest {
         Game game = new Game();
         game.setName("Prueba de juego 2");
         game.setHidden(false);
-        assertDoesNotThrow(() -> gameService.createGame(game));
+        assertThrows(ConstraintViolationException.class, () -> gameService.createGame(game));
     }
 
     @Test
@@ -154,6 +158,7 @@ public class GameCreationTest {
         }
 
         @Test
+        @Disabled
         @Transactional
         void joinPuzzle() {
             Game puzzleGame = gameService.findGame(puzzleGameId);
