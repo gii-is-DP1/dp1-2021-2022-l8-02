@@ -281,15 +281,7 @@ public class BoardService {
         if(user.getEnergy().getPowers().get(powerService.findById(3)).booleanValue() == true ){
             Tile tile2 = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2);
             Card card = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2).getCard();
-            Map<Power, Boolean> map = user.getEnergy().getPowers();
-            Set<Power> powers = map.keySet();
-            for(Power po: powers){
-            map.put(po, false);
-            }
-            Energy ene = user.getEnergy();
-            ene.setPowers(map);
-            user.setEnergy(ene);
-            energyService.save(ene);
+            energyService.allFalse(user);
             return card.getCardType().getDirections()
             .stream().map(Enum::ordinal)
             .map(x -> (x + tile2.getCard().getRotation().ordinal())%Direction.values().length)
