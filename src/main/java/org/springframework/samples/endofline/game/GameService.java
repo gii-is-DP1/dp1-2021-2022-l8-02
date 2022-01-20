@@ -248,11 +248,7 @@ public class GameService {
             }else if(numplayers.size()== 8){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor8Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6), cardList.get(7));
-            }
-
-            
-            
-            
+            }  
         }else{
             roundService.generateTurnsByPlayers(round, game.getPlayers());
         }
