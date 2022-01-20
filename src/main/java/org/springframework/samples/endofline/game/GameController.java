@@ -118,11 +118,7 @@ public class GameController {
             model.addAttribute("message", session.getAttribute("errorMessage"));
             session.removeAttribute("errorMessage");
         }
-        
-        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
-            model.addAttribute("message", session.getAttribute("errorMessage"));
-            session.removeAttribute("errorMessage");
-        }
+      
 
         response.addHeader("Refresh", "5");
 
