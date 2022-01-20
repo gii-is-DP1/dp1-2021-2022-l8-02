@@ -25,6 +25,8 @@ import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameE
 import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
+import org.springframework.samples.endofline.gameStorage.GameStorage;
+import org.springframework.samples.endofline.gameStorage.GameStorageService;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
@@ -43,11 +45,13 @@ public class GameService {
     private RoundService roundService;
     private EnergyService energyService;
     private PowerService powerService;
-
+    private TurnService turnService;
     private UsuarioService userService;
+    private GameStorageService gameStorageService;
+
 
     @Autowired
-    public GameService(PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService) {
+    public GameService(TurnService turnService, PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService, GameStorageService gameStorageService) {
 
 
         this.gameRepository = gameRepository;
@@ -60,6 +64,8 @@ public class GameService {
         this.energyService = energyService;
         this.powerService = powerService;
         this.userService = userService;
+        this.turnService = turnService;
+        this.gameStorageService = gameStorageService;
 
     }
 
@@ -119,6 +125,19 @@ public class GameService {
     public void leaveGame(Usuario player) {
         Game currentGame = gameRepository.getGameByPlayerUsername(player.getUsername());
         if(currentGame != null) {
+            if(currentGame.getGameState() != GameState.LOBBY) {
+                currentGame.getRound().getPlayers().remove(player);
+                currentGame.getRound().getTurns().remove(player.getTurn());
+                roundService.save(currentGame.getRound());
+                player.setGameEnded(true);
+                userService.save(player);
+                if(player.getTurn()!=null ){
+                    roundService.refreshRound(currentGame, player);
+                }
+                if(NotEndedPlayers(currentGame.getPlayers()).size()==1 && currentGame.getGameMode()== GameMode.VERSUS){
+                    endGame(currentGame);
+                }
+            }
             currentGame.getPlayers().remove(player);
             if(currentGame.getGameState() != GameState.LOBBY){
             
@@ -129,11 +148,31 @@ public class GameService {
             userService.save(player);
         }
             if(currentGame.getPlayers().size() == 0) {
+                //GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
+                //copyGameBoardToDb(currentGame, aux);
                 gameRepository.delete(currentGame);
             } else {
                 gameRepository.save(currentGame);
             }
         }
+    }
+
+    public void copyGameBoardToDb(Game currentGame, GameStorage g) {
+        g.setBoard(currentGame.getBoard());
+        gameStorageService.save(g);
+    }
+
+    public void copyGameToDb(Game currentGame) {
+        
+        GameStorage g = new GameStorage();
+        g.setName(currentGame.getName());
+        List<String> names = new ArrayList<>();
+        for(Usuario u :currentGame.getPlayers()){
+            names.add(u.getUsername());
+        }
+        g.setPlayers(names);
+        g.setGameMode(currentGame.getGameMode());
+        gameStorageService.save(g);
     }
 
     @Transactional
@@ -235,11 +274,7 @@ public class GameService {
             }else if(numplayers.size()== 8){
                 roundService.generateTurnsByPlayers(round, numplayers);
                 tileService.setFirstCardFor8Players(board, cardList.get(0), cardList.get(1), cardList.get(2), cardList.get(3), cardList.get(4), cardList.get(5), cardList.get(6), cardList.get(7));
-            }
-
-            
-            
-            
+            }  
         }else{
             roundService.generateTurnsByPlayers(round, game.getPlayers());
         }
@@ -248,7 +283,7 @@ public class GameService {
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
 
-
+        copyGameToDb(game);
     }
 
     public List<Game> getGameByState(GameState state) {

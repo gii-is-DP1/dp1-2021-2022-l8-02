@@ -120,11 +120,7 @@ public class GameController {
             model.addAttribute("message", session.getAttribute("errorMessage"));
             session.removeAttribute("errorMessage");
         }
-        
-        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
-            model.addAttribute("message", session.getAttribute("errorMessage"));
-            session.removeAttribute("errorMessage");
-        }
+      
 
         response.addHeader("Refresh", "5");
 
@@ -158,13 +154,7 @@ public class GameController {
         
         model.addAttribute("user", getLoggedUser());
 
-        List<Power> allPowers = powerService.findAll();
-        List<String> PowersName = new ArrayList<>();
-        for(Power p: allPowers){
-            String name = p.getName();
-            PowersName.add(name);
-        }
-        model.addAttribute("powers", PowersName);
+        model.addAttribute("powers", powerService.getPowerNames());
 
         model.addAttribute("power",new Power());
         model.addAttribute("logged", getLoggedUser().getUsername());
@@ -302,12 +292,6 @@ public class GameController {
        
         return "redirect:/games/currentGame";
     }
-
-    // @GetMapping("/{gameId}/end")
-    // public String endGame(@PathVariable("gameId") Game game, Model model){
-
-    //     return "redirect:/principal";
-    // }
 
     @GetMapping("/listGames/{gameState}")
     public String listGamesByState(@PathVariable("gameState") String gameState, Model model){

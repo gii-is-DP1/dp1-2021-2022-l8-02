@@ -2,11 +2,8 @@ package org.springframework.samples.endofline.board;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
-
 import javax.transaction.Transactional;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +19,6 @@ import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.card.Direction;
 import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
-import org.springframework.samples.endofline.energies.Energy;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
@@ -30,7 +26,6 @@ import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameMode;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.RoundService;
-import org.springframework.samples.endofline.power.Power;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.puzzle.PuzzleTile;
 import org.springframework.samples.endofline.puzzle.PuzzleTileService;
