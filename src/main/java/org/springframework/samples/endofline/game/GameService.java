@@ -138,8 +138,8 @@ public class GameService {
             }
             currentGame.getPlayers().remove(player);
             if(currentGame.getPlayers().size() == 0) {
-                GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
-                copyGameBoardToDb(currentGame, aux);
+                //GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
+                //copyGameBoardToDb(currentGame, aux);
                 gameRepository.delete(currentGame);
             } else {
                 gameRepository.save(currentGame);
@@ -147,7 +147,7 @@ public class GameService {
         }
     }
 
-    private void copyGameBoardToDb(Game currentGame, GameStorage g) {
+    public void copyGameBoardToDb(Game currentGame, GameStorage g) {
         g.setBoard(currentGame.getBoard());
         gameStorageService.save(g);
     }

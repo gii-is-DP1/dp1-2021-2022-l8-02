@@ -36,7 +36,7 @@ public class GameStorage extends BaseEntity {
     private List<Usuario> players;
 
     @NotEmpty
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "game")

@@ -372,6 +372,7 @@ public class RoundService {
                     players.remove(p);
                     GameStorage g = gameStorageService.getStorageByName(game.getName());
                     g.setWinner(players.get(0));
+                    gameService.copyGameBoardToDb(game, g);
                     gameStorageService.save(g);
                     gameService.endGame(game);
                 }
