@@ -1,6 +1,5 @@
 package org.springframework.samples.endofline.gameStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,7 +16,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.samples.endofline.board.Board;
-import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameMode;
 import org.springframework.samples.endofline.model.BaseEntity;
 import org.springframework.samples.endofline.usuario.Usuario;

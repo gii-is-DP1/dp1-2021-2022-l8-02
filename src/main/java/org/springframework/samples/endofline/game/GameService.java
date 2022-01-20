@@ -26,7 +26,6 @@ import org.springframework.samples.endofline.game.exceptions.GameIsFullException
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.gameStorage.GameStorage;
-import org.springframework.samples.endofline.gameStorage.GameStorageRepository;
 import org.springframework.samples.endofline.gameStorage.GameStorageService;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
