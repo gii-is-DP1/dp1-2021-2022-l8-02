@@ -284,7 +284,7 @@ public class RoundService {
     public void generateTurnsByPlayers(Round round, List<Usuario> numPlayers){
         List<Turn> turns = new ArrayList<>();
         if(round.getNumber()>1){
-            List<Usuario> listUser = generateOrderByPlayer(numPlayers);
+            List<Usuario> listUser = generateOrderByPlayer(round.getPlayers());
             round.setPlayers(listUser);
             save(round);
         }
@@ -292,11 +292,11 @@ public class RoundService {
             if(!numPlayers.get(i).getGameEnded()){
                 Turn turn = new Turn();
                 turn.setRound(round);
-                turn.setUsuario(numPlayers.get(i));
+                turn.setUsuario(round.getPlayers().get(i));
                 turnService.save(turn);
                 turns.add(turn);
-                numPlayers.get(i).setTurn(turn);
-                usuarioService.save(numPlayers.get(i));
+                round.getPlayers().get(i).setTurn(turn);
+                usuarioService.save(round.getPlayers().get(i));
             }
         }
         if(turns.size() > 0){
@@ -377,15 +377,11 @@ public class RoundService {
             }
             
         }
-        
-        
         Integer count = turnService.getByUsername(player.getUsername()).getCardCounter();
         count += 1;
         Turn t = player.getTurn();
         t.setCardCounter(count);
         turnService.save(t);
-               
-        
         if(game.getRound().getNumber() >= 2){
             if(player.getEnergy().getPowers().get(powerService.findById(4)).booleanValue()){
                 handService.generateDefaultHand(deckService.getDeckFromPlayer(player));
