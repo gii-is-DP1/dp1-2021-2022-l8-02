@@ -132,14 +132,17 @@ public class GameService {
                 roundService.save(currentGame.getRound());
                 player.setGameEnded(true);
                 userService.save(player);
-                if(player.getTurn()!=null){
+                if(player.getTurn()!=null ){
                     roundService.refreshRound(currentGame, player);
+                }
+                if(NotEndedPlayers(currentGame.getPlayers()).size()==1 && currentGame.getGameMode()== GameMode.VERSUS){
+                    endGame(currentGame);
                 }
             }
             currentGame.getPlayers().remove(player);
             if(currentGame.getPlayers().size() == 0) {
-                GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
-                copyGameBoardToDb(currentGame, aux);
+                //GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
+                //copyGameBoardToDb(currentGame, aux);
                 gameRepository.delete(currentGame);
             } else {
                 gameRepository.save(currentGame);
@@ -147,16 +150,20 @@ public class GameService {
         }
     }
 
-    private void copyGameBoardToDb(Game currentGame, GameStorage g) {
+    public void copyGameBoardToDb(Game currentGame, GameStorage g) {
         g.setBoard(currentGame.getBoard());
         gameStorageService.save(g);
     }
 
-    private void copyGameToDb(Game currentGame) {
+    public void copyGameToDb(Game currentGame) {
         
         GameStorage g = new GameStorage();
         g.setName(currentGame.getName());
-        g.setPlayers(new ArrayList<>(currentGame.getPlayers()));
+        List<String> names = new ArrayList<>();
+        for(Usuario u :currentGame.getPlayers()){
+            names.add(u.getUsername());
+        }
+        g.setPlayers(names);
         g.setGameMode(currentGame.getGameMode());
         gameStorageService.save(g);
     }
