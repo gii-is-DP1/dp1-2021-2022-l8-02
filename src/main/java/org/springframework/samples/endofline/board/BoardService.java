@@ -69,6 +69,7 @@ public class BoardService {
 
     @Autowired
     private UsuarioService usuarioService;
+    
 
     @Transactional
     // TODO: No podemos tener un metodo tan largo, hay que hacer minimetodos y luego
@@ -90,13 +91,14 @@ public class BoardService {
                 
                 Deck deck = deckService.getDeckFromPlayer(player);
                 Hand hand = handService.findHandByDeck(deck);
-                if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
+                if (hand != null && (hand.getCards().contains(card) || hand.getDismissCardsList().contains(card))&& availableTiles.contains(tile)) {
                     // TODO: Logica de validacion de una jugada aqui?
                     card.setRotation(cardService.calculateRotation(tile, lastTile));
                     cardService.save(card);
                     player.getInicialListCardsByPlayer().add(card.getCardType().getIniciative());
                     usuarioService.save(player);
                     hand.getCards().remove(card);
+                    hand.getDismissCardsList().remove(card);
                     handService.save(hand);
                     tile.setCard(card);
                     tile.setTileState(TileState.TAKEN);

@@ -37,18 +37,18 @@ public class DeckService {
     public List<Integer> orderIniciatives(){
         List<Integer> listInteger= new ArrayList<>();
         Set<Integer> orderIniciatives= new HashSet<>(); 
-        for(CardType c: AllCardTypes()){
-            orderIniciatives.add(c.getIniciative());
+        for(CardType c: AllCardTypes()){  //Todos los tipos de carta
+            orderIniciatives.add(c.getIniciative());   //Conjunto con todas las inicitavas
         }
         
         
-        for(Integer i: orderIniciatives){
+        for(Integer i: orderIniciatives){    //Iniciativas
             if(i>=0){
-            listInteger.add(i);
+            listInteger.add(i);   //Lista de iniciativas
             }
         }
-        Collections.sort(listInteger);
-        return listInteger;
+        Collections.sort(listInteger);   //Conjunto ordenado de menor a mayor
+        return listInteger;   //lista de inicitaivas ordenadas;
     }
 
     public Deck getDeckFromPlayer(Usuario player) {
