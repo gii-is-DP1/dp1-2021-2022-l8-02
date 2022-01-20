@@ -1,6 +1,6 @@
 package org.springframework.samples.endofline.game;
 
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +22,7 @@ import org.springframework.samples.endofline.board.exceptions.TimeOutException;
 import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
+import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.energies.exception.DontUsePowerBeforeThirdRound;
 import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
@@ -148,7 +149,9 @@ public class GameController {
 
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
         model.addAttribute("hand", boardService.handByDeck(deck));
-
+        if(boardService.handByDeck(deck).getDismissCardsList().size()>=1){
+            model.addAttribute("dismiss", boardService.handByDeck(deck).getDismissCardsList().get(boardService.handByDeck(deck).getDismissCardsList().size()-1));
+        }
         model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
         
@@ -313,6 +316,13 @@ public class GameController {
             }
         }
     return "games/listGames";
-    }    
+    }
 
+    @PostMapping("/DismissCard")
+    public String getActionDismiss(Model model, HttpServletResponse response) {
+            Deck deck= boardService.deckFromPlayers(getLoggedUser());
+            Hand hand= handService.findHandByDeck(deck);
+            handService.dismissCard(hand);
+        return "redirect:/games/currentGame";
+    }
 }

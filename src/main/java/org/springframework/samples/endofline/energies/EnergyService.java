@@ -41,7 +41,7 @@ public class EnergyService {
    @Transactional
     public void initEnergy(List<Usuario> users, List<Power> powers){
         Map<Power, Boolean> p= new HashMap<>();
-        for(Usuario u : users ){
+        for(Usuario u : users ){        
         Energy energy= new Energy();
         energy.setCounter(3);
         energy.setUser(u);
@@ -81,7 +81,7 @@ public class EnergyService {
             throw new DontUsePowerBeforeThirdRound();
         }
         System.out.println(powers);
-        Energy newEnergy = getEnergyFromPlayer(user);
+        Energy newEnergy = user.getEnergy();
         newEnergy.setCounter(energy);
         newEnergy.setLastRound(user.getTurn().getRound().getNumber());
         newEnergy.setPowers(powers);
@@ -102,7 +102,10 @@ public class EnergyService {
         player.setEnergy(ene);
         save(ene);
     }
-  
+
+    public void delete(Energy energy){
+        energyRepo.delete(energy);
+    }
 
     public void save(Energy energy) {
         energyRepo.save(energy);

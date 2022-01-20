@@ -27,4 +27,8 @@ public class Hand extends BaseEntity{
     @OneToMany
     @ElementCollection
     List<Card> cards;
+
+    @OneToMany
+    @ElementCollection
+    List<Card> dismissCardsList;
 }

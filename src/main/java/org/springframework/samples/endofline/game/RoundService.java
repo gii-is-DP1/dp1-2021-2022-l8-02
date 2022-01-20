@@ -221,14 +221,14 @@ public class RoundService {
 
     @Transactional
     public List<Usuario> generateOrderListByUser(List<Usuario> listUser){
-        Map<Integer,List<Usuario>> repeatingDiccUser= new HashMap<>();       
-        List<Usuario> listUserOrder= new ArrayList<>();
-        List<Integer> iniciatives= deckService.orderIniciatives();
-        Set<Integer> setIniciativesToUser= new HashSet<>();
-        for(Integer val: iniciatives){
-            for(Usuario user: listUser){
-                Integer p=user.getInicialListCardsByPlayer().get(user.getInicialListCardsByPlayer().size()-1);
-                if(val==p){
+        Map<Integer,List<Usuario>> repeatingDiccUser= new HashMap<>();    //Key:iniciativa, Entry:lista de los usuarios con esa iniciativa 
+        List<Usuario> listUserOrder= new ArrayList<>();  //Lista de usuario
+        List<Integer> iniciatives= deckService.orderIniciatives();  //todas las iniciativas de la partida
+        Set<Integer> setIniciativesToUser= new HashSet<>();    //Iniciativa de los usuarios
+        for(Integer val: iniciatives){    //recorro las iniciativas
+            for(Usuario user: listUser){    //Lista de usuarios que le pasamos
+                Integer p=user.getInicialListCardsByPlayer().get(user.getInicialListCardsByPlayer().size()-1);   //Última iniciativa de los usuarios
+                if(val==p){  //Comparamos las inicitavas de los usuarios
                     if(repeatingDiccUser.containsKey(val)){
                         repeatingDiccUser.get(val).add(user);
                     }
@@ -237,18 +237,18 @@ public class RoundService {
                         newListUsuarios.add(user);
                         repeatingDiccUser.put(val,newListUsuarios);
                     }
-                    setIniciativesToUser.add(val);
+                    setIniciativesToUser.add(val);   //Conjunto con la iniciativa de los usuarios;
 
                 }
             }
         }
-        for(Integer iniciative: setIniciativesToUser){           
-            if(repeatingDiccUser.get(iniciative).size()>1){
-                List<Usuario> listPlayer= generateListOrderedWithRepeateIniciative(repeatingDiccUser.get(iniciative), iniciatives);
+        for(Integer iniciative: setIniciativesToUser){       //Conjunto con la iniciativa
+            if(repeatingDiccUser.get(iniciative).size()>1){    //Saca los jugadores del diccionario
+                List<Usuario> listPlayer= generateListOrderedWithRepeateIniciative(repeatingDiccUser.get(iniciative), iniciatives);   //Lista de usuarios
                 listUserOrder.addAll(listPlayer);
             }
             else{
-                listUserOrder.addAll(repeatingDiccUser.get(iniciative));
+                listUserOrder.addAll(repeatingDiccUser.get(iniciative));   //Los usuarios ordenados una vez
             }
         }
         return listUserOrder;
@@ -257,24 +257,24 @@ public class RoundService {
     
     @Transactional
     public List<Usuario> generateOrderByPlayer(List<Usuario> listUser){
-        List<Usuario> list= new ArrayList<>();
-        List<Integer> listInteger= new ArrayList<>();
-        Set<Integer> setIniciative= new HashSet<>();
+        List<Usuario> list= new ArrayList<>();        // Lista de usuarios a ordenar
+        List<Integer> listInteger= new ArrayList<>();        //Lista de iniciativas
+        Set<Integer> setIniciative= new HashSet<>();        //conjunto de la primera iniciativa de cada jugador
         for(Usuario u: listUser){
             setIniciative.add(u.getInicialListCardsByPlayer().get(u.getInicialListCardsByPlayer().size()-1)); //Conjunto con las iniciativas de cada jugador
         }
-        if(setIniciative.size()<listUser.size()){
-            List<Usuario> orderList=generateOrderListByUser(listUser);
+        if(setIniciative.size()<listUser.size()){  //Si la primera iniciativa de los jugadores es menor que los jugadores, significa que hay jugadores que tiene la misma iniciativa
+            List<Usuario> orderList=generateOrderListByUser(listUser);  //Metodo para ordenar los jugadores que quedan
             list.addAll(orderList);
         }
-        else{
-            for(Integer i: setIniciative){
+        else{  //Esto se da en el caso en que los jugadores sean distintos 
+            for(Integer i: setIniciative){   //Lista de integer de los jugadores
                 listInteger.add(i);
             }
-            Collections.sort(listInteger);
-            for(Integer orderIniciative: listInteger){
-                for(Usuario player: listUser){
-                    if(player.getInicialListCardsByPlayer().get(player.getInicialListCardsByPlayer().size()-1)==orderIniciative){
+            Collections.sort(listInteger);  //ordenados de menor a mayor
+            for(Integer orderIniciative: listInteger){   //recorro las iniciativas
+                for(Usuario player: listUser){     // recorro los usuarios
+                    if(player.getInicialListCardsByPlayer().get(player.getInicialListCardsByPlayer().size()-1)==orderIniciative){  //si son iguales las inicaitivas entra dentro del bucle
                         list.add(player);
                     }
                 }
