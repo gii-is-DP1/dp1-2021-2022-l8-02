@@ -18,9 +18,11 @@ import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.power.PowerService;
@@ -64,6 +66,7 @@ public class GameService {
     public Collection<Game> getGames() {
         return gameRepository.findAll();
     }
+   
 
     public List<Game> getVersusGames() {
         return gameRepository.findByGameMode(GameMode.VERSUS);
@@ -98,16 +101,18 @@ public class GameService {
     }
 
     @Transactional
-    public void joinGame(Game game, Usuario player) {
+    public void joinGame(Game game, Usuario player) throws GameIsFullException {
         if(game.getGameMode() != GameMode.VERSUS && game.getPlayers().size() >= 1)  return;
-        leaveGame(player);
-        game.getPlayers().add(player);
-        gameRepository.save(game);
-
-        // Inizializacion de datos para poder jugar la partida de forma correcta
-        player.setInicialListCardsByPlayer(new ArrayList<>());
-        player.setGameEnded(false);
-        userService.save(player);
+        if(game.getPlayers().size()==8) throw new GameIsFullException();
+            leaveGame(player);
+            game.getPlayers().add(player);
+            gameRepository.save(game);
+    
+            // Inizializacion de datos para poder jugar la partida de forma correcta
+            player.setInicialListCardsByPlayer(new ArrayList<>());
+            player.setGameEnded(false);
+            userService.save(player);
+        
     }
 
     @Transactional
@@ -115,6 +120,14 @@ public class GameService {
         Game currentGame = gameRepository.getGameByPlayerUsername(player.getUsername());
         if(currentGame != null) {
             currentGame.getPlayers().remove(player);
+            if(currentGame.getGameState() != GameState.LOBBY){
+            
+            currentGame.getRound().getPlayers().remove(player);
+            currentGame.getRound().getTurns().remove(player.getTurn());
+            roundService.save(currentGame.getRound());
+            player.setTurn(null);
+            userService.save(player);
+        }
             if(currentGame.getPlayers().size() == 0) {
                 gameRepository.delete(currentGame);
             } else {
@@ -144,6 +157,9 @@ public class GameService {
                 break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+            if(game.getPlayers().size()==1){
+                throw new TwoPlayersAtLeastException();
+            }
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
@@ -241,7 +257,7 @@ public class GameService {
 
     public List<Usuario> checkLostVS(Game game){
         List<Usuario> out = new ArrayList<>();
-        List<Usuario> players = new ArrayList<>(game.getPlayers());
+        List<Usuario> players = new ArrayList<>(NotEndedPlayers(game.getPlayers()));
         for(Usuario p : players){
             Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(p).getCards().get(0).getColor().ordinal());
             List<Tile> occupiedTiles = path.getOccupiedTiles();
@@ -271,12 +287,13 @@ public class GameService {
                 out= true;
             }
         }
+        
         return out;
     }
 
     public Boolean checkDrawVS(Game game){
         Boolean out = true;
-        List<Usuario> restPlayers = new ArrayList<>(game.getPlayers());
+        List<Usuario> restPlayers = new ArrayList<>(NotEndedPlayers(game.getPlayers()));
         for(int i = 0; i < restPlayers.size(); i++){
             Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(restPlayers.get(i)).getCards().get(0).getColor().ordinal());
             List<Tile> occupiedTiles = path.getOccupiedTiles();
@@ -297,5 +314,31 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    @Transactional
+    public Integer getScore(Usuario player){
+        Integer score = 0;
+        Deck deck = deckService.getDeckFromPlayer(player);
+        Hand hand = handService.findHandByDeck(deck);
+        for (Card card : deck.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        for(Card card: hand.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        score+=player.getEnergy().getCounter();
+        /*player.setScore(score);
+        userService.save(player);*/
+        return score;
+    }
+
+    public List<Usuario> NotEndedPlayers(List<Usuario> allPlayers){
+        List<Usuario> players= new ArrayList<>();
+        for(Usuario u: allPlayers){
+            if(!u.getGameEnded()){
+                players.add(u);
+            }
+        }
+        return players;
+    }
 
 }

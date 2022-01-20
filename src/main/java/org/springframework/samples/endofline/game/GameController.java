@@ -29,6 +29,7 @@ import org.springframework.samples.endofline.energies.exception.DontUsePowerInTh
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
 import org.springframework.samples.endofline.statistics.Statistics;
 import org.springframework.samples.endofline.statistics.StatisticsService;
@@ -112,30 +113,41 @@ public class GameController {
         if(game == null) {
             return "redirect:/games";
         }
-        model.addAttribute("game", game);
         
-        if(game.getGameState() == GameState.LOBBY){
-            response.addHeader("Refresh", "5");
-            model.addAttribute("logged", getLoggedUser().getUsername());
-            model.addAttribute("creator", game.getPlayers().get(0).getUsername());
-          return GAME_LOBBY;
-        }
-
-        if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
-            model.addAttribute("userLost", getLoggedUser().getGameEnded());
-            return GAME_LOST;
-        }
+        model.addAttribute("game", game);
 
         if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
             model.addAttribute("message", session.getAttribute("errorMessage"));
             session.removeAttribute("errorMessage");
         }
-
-    
         
+        if(session.getAttribute("errorMessage") != null && !session.getAttribute("errorMessage").equals("")){
+            model.addAttribute("message", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage");
+        }
+
         response.addHeader("Refresh", "5");
+
+
+        
+        if(game.getGameState() == GameState.LOBBY){
+            model.addAttribute("logged", getLoggedUser().getUsername());
+            model.addAttribute("creator", game.getPlayers().get(0).getUsername());
+            return GAME_LOBBY;
+        }
+
+        if(getLoggedUser().getGameEnded() || game.getGameState() == GameState.ENDED){
+            if(game.getGameMode()!= GameMode.VERSUS){
+            Integer score = gameService.getScore(game.getPlayers().get(0));
+            model.addAttribute("score", score);
+            }
+
+            model.addAttribute("userLost", getLoggedUser().getGameEnded());
+            return GAME_LOST;
+        }
         
         model.addAttribute("board", game.getBoard());
+
         Deck deck=boardService.deckFromPlayers(getLoggedUser());
         model.addAttribute("hand", boardService.handByDeck(deck));
         if(boardService.handByDeck(deck).getDismissCardsList().size()>=1){
@@ -143,6 +155,7 @@ public class GameController {
         }
         model.addAttribute("cardTypes",boardService.getAllCardTypes());
         model.addAttribute("colors", Stream.of(CardColor.values()).map(Object::toString).map(String::toLowerCase).collect(Collectors.toList()));
+        
         model.addAttribute("user", getLoggedUser());
 
         List<Power> allPowers = powerService.findAll();
@@ -158,15 +171,12 @@ public class GameController {
        
         model.addAttribute("energy", getLoggedUser().getEnergy());
 
-        
-        /*para ver quien tiene turno*/
         if(game.getRound().getTurns().size() > 0) {
             model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
         } else {
             model.addAttribute("miTurn", getLoggedUser().getUsername());
         }
         
-  
         return GAME_VIEW;
     }
 
@@ -231,7 +241,7 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public String createGame(@ModelAttribute("game") @Valid Game game, BindingResult result, Model model) {
+    public String createGame(@ModelAttribute("game") @Valid Game game, BindingResult result, Model model) throws GameIsFullException {
         if(result.hasErrors()) {
             return GAME_CREATION;
         }
@@ -253,9 +263,15 @@ public class GameController {
 
 
     @GetMapping("/join/{gameId}")
-    public String joinGame(@PathVariable("gameId") Game game) {
-        gameService.joinGame(game, getLoggedUser());
-        return "redirect:/games/currentGame";
+    public String joinGame(@PathVariable("gameId") Game game, HttpSession session) {
+        try {
+            gameService.joinGame(game, getLoggedUser());
+            return "redirect:/games/currentGame";
+        }catch (GameIsFullException e){
+            session.setAttribute("errorMessage", "La partida a la que intenta unirse está llena");
+            return "redirect:/games";
+        }
+        
     }
     
 
@@ -267,7 +283,6 @@ public class GameController {
 
     @GetMapping("/{gameId}/start")
     public String startGame(@PathVariable("gameId") Game game, Model model, HttpSession session) {
-        // Cambiar a POST puede ser una mejor opcion
         System.out.println(game.getPlayers().get(0).getUsername());
         if(game.getPlayers().get(0).equals(getLoggedUser())) {
             try{
@@ -287,6 +302,12 @@ public class GameController {
        
         return "redirect:/games/currentGame";
     }
+
+    // @GetMapping("/{gameId}/end")
+    // public String endGame(@PathVariable("gameId") Game game, Model model){
+
+    //     return "redirect:/principal";
+    // }
 
     @GetMapping("/listGames/{gameState}")
     public String listGamesByState(@PathVariable("gameState") String gameState, Model model){

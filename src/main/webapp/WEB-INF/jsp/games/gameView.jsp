@@ -4,7 +4,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="eol" tagdir="/WEB-INF/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 
 <eol:layoutEOL pageName="${game.name}">
@@ -26,27 +25,32 @@
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
     </div>
-<div class="row">
+    <div class="row">
         <eol:hand cards="${hand.cards}"></eol:hand>
-</div>
-<div class="row">
-    <img id="${dismiss.id}" class="handCard" src="/resources/images/cards/${dismiss.getCardName()}.png">
-</div>
+    </div>
+
+    <c:if test="${game.gameMode == 'SOLITAIRE' && not empty dismiss }">
+        <h2>Descarte</h2>>
+        <div class="row">
+            <img id="${dismiss.id}" class="handCard" src="/resources/images/cards/${dismiss.getCardName()}.png">
+        </div>
+    </c:if>
 
     <c:if test="${game.round.number == 1}">
         <form:form method="POST" modelAttribute="hand" action="/games/newHand">
             <div class="row" id = "Hand">
-                <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">New Hand</button>
+                <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">Nueva mano</button>
             </div>
         </form:form>
     </c:if>
 
-    <form:form method="POST" modelAttribute="hand" action="/games/DismissCard">
-        <div class="row" id = "Hand">
-            <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">Dismiss</button>
-        </div>
-    </form:form>    
-
+    <c:if test="${game.gameMode == 'SOLITAIRE'}">
+        <form:form method="POST" modelAttribute="hand" action="/games/DismissCard">
+            <div class="row" id = "Hand">
+                <button class="neon-button" style="font-size: 20px; background-color: transparent;" type="submit">Descarte</button>
+            </div>
+        </form:form>
+    </c:if>
 
 </eol:layoutEOL>
 

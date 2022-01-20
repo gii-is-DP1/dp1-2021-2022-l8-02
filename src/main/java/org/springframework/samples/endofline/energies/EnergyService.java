@@ -3,6 +3,7 @@ package org.springframework.samples.endofline.energies;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -40,7 +41,11 @@ public class EnergyService {
    @Transactional
     public void initEnergy(List<Usuario> users, List<Power> powers){
         Map<Power, Boolean> p= new HashMap<>();
-        for(Usuario u : users ){
+        for(Usuario u : users ){        
+        Energy en= u.getEnergy();
+        if(en != null){
+            delete(en);
+        }
         Energy energy= new Energy();
         energy.setCounter(3);
         energy.setUser(u);
@@ -55,11 +60,11 @@ public class EnergyService {
 
     public void usePower(Usuario user, Integer powerId) throws DontUsePowerInTheSameRound{
         
-        Integer energy = getEnergyFromPlayer(user).getCounter();
+        Integer energy = user.getEnergy().getCounter();
         Map<Power, Boolean> powers = user.getEnergy().getPowers();
         System.out.println(powers);
         Round round = user.getTurn().getRound();
-        if(round.getNumber()>2 && getEnergyFromPlayer(user).getLastRound() != user.getTurn().getRound().getNumber()){
+        if(round.getNumber()>2 && user.getEnergy().getLastRound() != user.getTurn().getRound().getNumber()){
             if(energy <= 3 && energy >0){
                 if(powerId == 1){/*aceleron*/
                     powers.put(powerService.findById(1), true);
@@ -76,7 +81,7 @@ public class EnergyService {
             throw new DontUsePowerInTheSameRound();
         }
         System.out.println(powers);
-        Energy newEnergy = getEnergyFromPlayer(user);
+        Energy newEnergy = user.getEnergy();
         newEnergy.setCounter(energy);
         newEnergy.setLastRound(user.getTurn().getRound().getNumber());
         newEnergy.setPowers(powers);
@@ -86,8 +91,21 @@ public class EnergyService {
         roundService.refreshRound(user.getTurn().getRound().getGame(), user);
         }
     }
- 
-  
+    public void allFalse(Usuario player){
+        Map<Power, Boolean> map = player.getEnergy().getPowers();
+        Set<Power> powers = map.keySet();
+        for(Power p: powers){
+            map.put(p, false);
+        }
+        Energy ene = player.getEnergy();
+        ene.setPowers(map);
+        player.setEnergy(ene);
+        save(ene);
+    }
+
+    public void delete(Energy energy){
+        energyRepo.delete(energy);
+    }
 
     public void save(Energy energy) {
         energyRepo.save(energy);

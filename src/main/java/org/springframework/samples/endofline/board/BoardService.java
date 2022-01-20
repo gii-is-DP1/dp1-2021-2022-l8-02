@@ -74,6 +74,7 @@ public class BoardService {
 
     @Autowired
     private UsuarioService usuarioService;
+    
 
     @Transactional
     // TODO: No podemos tener un metodo tan largo, hay que hacer minimetodos y luego
@@ -82,7 +83,12 @@ public class BoardService {
         Game game = gameService.getGameByPlayer(player);
         Path p = game.getBoard().getPaths().get(card.getColor().ordinal());
         List<Tile> occupiedTiles = p.getOccupiedTiles();
-        Tile lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+        Tile lastTile = null;
+        if(player.getEnergy().getPowers().get(powerService.findById(3)).booleanValue()){
+            lastTile = occupiedTiles.get(occupiedTiles.size() - 2);
+        }else{
+            lastTile = occupiedTiles.get(occupiedTiles.size() - 1);
+        }
         List<Tile> availableTiles = getAdjacents(lastTile, player, p);
         if (!game.getGameMode().equals(GameMode.VERSUS) || game.getRound().getTurns().get(0).getUsuario().equals(player)) {
             System.out.println(game.getRound().getTurns().get(0).getStartTime());
@@ -90,13 +96,14 @@ public class BoardService {
                 
                 Deck deck = deckService.getDeckFromPlayer(player);
                 Hand hand = handService.findHandByDeck(deck);
-                if (hand != null && hand.getCards().contains(card) && availableTiles.contains(tile)) {
+                if (hand != null && (hand.getCards().contains(card) || hand.getDismissCardsList().contains(card))&& availableTiles.contains(tile)) {
                     // TODO: Logica de validacion de una jugada aqui?
                     card.setRotation(cardService.calculateRotation(tile, lastTile));
                     cardService.save(card);
                     player.getInicialListCardsByPlayer().add(card.getCardType().getIniciative());
                     usuarioService.save(player);
                     hand.getCards().remove(card);
+                    hand.getDismissCardsList().remove(card);
                     handService.save(hand);
                     tile.setCard(card);
                     tile.setTileState(TileState.TAKEN);
@@ -109,6 +116,7 @@ public class BoardService {
                 }
                 gameService.save(game);
             } else {
+
                 roundService.refreshRound(game, player);
                 gameService.save(game);
                 throw new TimeOutException();
@@ -200,7 +208,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void generatePuzzleBoard(Board board) {
+    public void generatePuzzleBoard(Board board) { //I THINK THIS CAN BE USED FOR SOLITAIRE AS WELL
 
 
         
@@ -280,15 +288,7 @@ public class BoardService {
         if(user.getEnergy().getPowers().get(powerService.findById(3)).booleanValue() == true ){
             Tile tile2 = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2);
             Card card = p.getOccupiedTiles().get(p.getOccupiedTiles().size()-2).getCard();
-            Map<Power, Boolean> map = user.getEnergy().getPowers();
-            Set<Power> powers = map.keySet();
-            for(Power po: powers){
-            map.put(po, false);
-            }
-            Energy ene = user.getEnergy();
-            ene.setPowers(map);
-            user.setEnergy(ene);
-            energyService.save(ene);
+            energyService.allFalse(user);
             return card.getCardType().getDirections()
             .stream().map(Enum::ordinal)
             .map(x -> (x + tile2.getCard().getRotation().ordinal())%Direction.values().length)
