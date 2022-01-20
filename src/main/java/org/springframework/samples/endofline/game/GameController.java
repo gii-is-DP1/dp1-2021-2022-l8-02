@@ -150,13 +150,7 @@ public class GameController {
         
         model.addAttribute("user", getLoggedUser());
 
-        List<Power> allPowers = powerService.findAll();
-        List<String> PowersName = new ArrayList<>();
-        for(Power p: allPowers){
-            String name = p.getName();
-            PowersName.add(name);
-        }
-        model.addAttribute("powers", PowersName);
+        model.addAttribute("powers", powerService.getPowerNames());
 
         model.addAttribute("power",new Power());
         model.addAttribute("logged", getLoggedUser().getUsername());
@@ -294,8 +288,6 @@ public class GameController {
        
         return "redirect:/games/currentGame";
     }
-
-    
 
     @GetMapping("/listGames/{gameState}")
     public String listGamesByState(@PathVariable("gameState") String gameState, Model model){

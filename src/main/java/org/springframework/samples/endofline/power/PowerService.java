@@ -1,5 +1,6 @@
 package org.springframework.samples.endofline.power;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -25,6 +26,15 @@ public class PowerService {
     @Transactional
     public List<Power> findAll(){
         return powerRepo.findAll();
+    }
+
+    public List<String> getPowerNames(){
+        List<String> out = new ArrayList<>();
+        for(Power p : findAll()){
+            p.getName();
+            out.add(p.getName());
+        }
+        return out;
     }
     
 }
