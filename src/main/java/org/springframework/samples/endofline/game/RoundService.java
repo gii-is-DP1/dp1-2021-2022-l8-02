@@ -18,6 +18,8 @@ import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
 import org.springframework.samples.endofline.energies.EnergyService;
+import org.springframework.samples.endofline.gameStorage.GameStorage;
+import org.springframework.samples.endofline.gameStorage.GameStorageService;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
@@ -54,6 +56,9 @@ public class RoundService {
 
     @Autowired
     private HandService handService;
+
+    @Autowired
+    GameStorageService gameStorageService;
 
 
     public Collection<Round> getRounds(){
@@ -363,6 +368,10 @@ public class RoundService {
                     p.setGameEnded(true); 
                     usuarioService.save(p);
                     players.remove(p);
+                    GameStorage g = gameStorageService.getStorageByName(game.getName());
+                    g.setWinner(players.get(0));
+                    gameService.copyGameBoardToDb(game, g);
+                    gameStorageService.save(g);
                     gameService.endGame(game);
                 }
             }

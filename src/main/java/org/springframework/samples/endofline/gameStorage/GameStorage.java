@@ -8,6 +8,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -29,12 +30,12 @@ import lombok.Setter;
 @Table(name = "storage")
 public class GameStorage extends BaseEntity {
     
-    @OneToMany
+    
     @ElementCollection
-    private List<Usuario> players;
+    private List<String> players;
 
     @NotEmpty
-    @Column(name = "name", unique = true)
+    @Column(name = "name")
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "game")
