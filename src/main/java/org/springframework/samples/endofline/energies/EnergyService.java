@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
+import org.springframework.samples.endofline.energies.exception.DontUsePowerBeforeThirdRound;
 import org.springframework.samples.endofline.game.Round;
 import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.power.Power;
@@ -41,10 +42,6 @@ public class EnergyService {
     public void initEnergy(List<Usuario> users, List<Power> powers){
         Map<Power, Boolean> p= new HashMap<>();
         for(Usuario u : users ){        
-        Energy en= u.getEnergy();
-        if(en != null){
-            delete(en);
-        }
         Energy energy= new Energy();
         energy.setCounter(3);
         energy.setUser(u);
@@ -57,27 +54,31 @@ public class EnergyService {
         }
     }
 
-    public void usePower(Usuario user, Integer powerId) throws DontUsePowerInTheSameRound{
-        
-        Integer energy = user.getEnergy().getCounter();
+    public void usePower(Usuario user, Integer powerId) throws DontUsePowerInTheSameRound, DontUsePowerBeforeThirdRound{
+        Integer energy = getEnergyFromPlayer(user).getCounter();
         Map<Power, Boolean> powers = user.getEnergy().getPowers();
         System.out.println(powers);
         Round round = user.getTurn().getRound();
-        if(round.getNumber()>2 && user.getEnergy().getLastRound() != user.getTurn().getRound().getNumber()){
-            if(energy <= 3 && energy >0){
-                if(powerId == 1){/*aceleron*/
-                    powers.put(powerService.findById(1), true);
-                }else if(powerId == 2){/*frenazo*/
-                    powers.put(powerService.findById(2), true);
-                }else if(powerId == 3){/*marcha atras*/
-                    powers.put(powerService.findById(3), true);
-                }else if(powerId == 4){ /*gas extra*/
-                    powers.put(powerService.findById(4), true);
+        if(round.getNumber()>2 ){
+            if(getEnergyFromPlayer(user).getLastRound() != user.getTurn().getRound().getNumber()){
+                if(energy <= 3 && energy >0){
+                    if(powerId == 1){/*aceleron*/
+                        powers.put(powerService.findById(1), true);
+                    }else if(powerId == 2){/*frenazo*/
+                        powers.put(powerService.findById(2), true);
+                    }else if(powerId == 3){/*marcha atras*/
+                        powers.put(powerService.findById(3), true);
+                    }else if(powerId == 4){ /*gas extra*/
+                        powers.put(powerService.findById(4), true);
+                    }
+                    energy-=1;
                 }
-                energy-=1;
-            }
-        }else{
+            }else{
             throw new DontUsePowerInTheSameRound();
+            }
+        }
+        else{
+            throw new DontUsePowerBeforeThirdRound();
         }
         System.out.println(powers);
         Energy newEnergy = user.getEnergy();

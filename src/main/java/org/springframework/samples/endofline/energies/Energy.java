@@ -29,7 +29,7 @@ public class Energy extends BaseEntity{
     @NotNull
     Integer counter;
 
-    @OneToOne(mappedBy = "energy")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "energy")
     @NotNull
     @JoinColumn(name = "usuario")
     private Usuario user;

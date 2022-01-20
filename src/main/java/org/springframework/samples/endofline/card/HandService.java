@@ -7,6 +7,7 @@ import java.util.Random;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.endofline.card.exceptions.OnlyChangeHandOneTime;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.Game;
 import org.springframework.samples.endofline.game.GameMode;
@@ -52,31 +53,36 @@ public class HandService {
     }
 
 
-    public void generateChangeHand(Deck deck) throws PlayCardWhitHandSizeLessThanFive{
-        Hand hand= findHandByDeck(deck);
-        // String userName=deck.getUser().toString();
-        // Turn turn= turnService.getByUsername(userName);
-        // Round round= turn.getRound();
-        if(hand.getCards().size()<5){
-            throw new PlayCardWhitHandSizeLessThanFive();
-        }
-        else{
-        List<Card> listHand= new ArrayList<>();
-        listHand.addAll(hand.getCards());
-        Random random= new Random();
-        for(Card card:listHand){
-            deck.getCards().add(card);
-            hand.getCards().remove(card);
-            save(hand);  
-        }
-        while(hand.getCards().size()<5){
-            Integer rand= random.nextInt(deck.getCards().size());
-            Card card=deck.getCards().get(rand);
-            hand.getCards().add(card);
-            deck.getCards().remove(card);
-            deckService.save(deck); 
-        }
-        save(hand);
+    public void generateChangeHand(Deck deck, Integer count) throws PlayCardWhitHandSizeLessThanFive, OnlyChangeHandOneTime{
+        
+        if(count>1){
+            throw new OnlyChangeHandOneTime();
+        }else{
+            Hand hand= findHandByDeck(deck);
+            // String userName=deck.getUser().toString();
+            // Turn turn= turnService.getByUsername(userName);
+            // Round round= turn.getRound();
+            if(hand.getCards().size()<5){
+                throw new PlayCardWhitHandSizeLessThanFive();
+            }
+            else{
+            List<Card> listHand= new ArrayList<>();
+            listHand.addAll(hand.getCards());
+            Random random= new Random();
+            for(Card card:listHand){
+                deck.getCards().add(card);
+                hand.getCards().remove(card);
+                save(hand);  
+            }
+            while(hand.getCards().size()<5){
+                Integer rand= random.nextInt(deck.getCards().size());
+                Card card=deck.getCards().get(rand);
+                hand.getCards().add(card);
+                deck.getCards().remove(card);
+                deckService.save(deck); 
+            }
+            save(hand);
+            }
         }
     }
 

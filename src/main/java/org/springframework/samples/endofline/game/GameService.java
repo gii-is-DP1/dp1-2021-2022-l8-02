@@ -139,14 +139,6 @@ public class GameService {
                 }
             }
             currentGame.getPlayers().remove(player);
-            if(currentGame.getGameState() != GameState.LOBBY){
-            
-            currentGame.getRound().getPlayers().remove(player);
-            currentGame.getRound().getTurns().remove(player.getTurn());
-            roundService.save(currentGame.getRound());
-            player.setTurn(null);
-            userService.save(player);
-        }
             if(currentGame.getPlayers().size() == 0) {
                 //GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
                 //copyGameBoardToDb(currentGame, aux);
