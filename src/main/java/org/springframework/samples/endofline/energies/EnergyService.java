@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
-import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.game.Round;
 import org.springframework.samples.endofline.game.RoundService;
 import org.springframework.samples.endofline.power.Power;
