@@ -122,6 +122,8 @@ public class GameController {
         }
         
         response.addHeader("Refresh", "5");
+
+
         
         if(game.getGameState() == GameState.LOBBY){
             model.addAttribute("logged", getLoggedUser().getUsername());
@@ -293,6 +295,12 @@ public class GameController {
        
         return "redirect:/games/currentGame";
     }
+
+    // @GetMapping("/{gameId}/end")
+    // public String endGame(@PathVariable("gameId") Game game, Model model){
+
+    //     return "redirect:/principal";
+    // }
 
     @GetMapping("/listGames/{gameState}")
     public String listGamesByState(@PathVariable("gameState") String gameState, Model model){

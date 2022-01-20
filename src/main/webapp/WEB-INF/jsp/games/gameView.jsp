@@ -26,9 +26,9 @@
     <div class="row text-center">
         <eol:board board="${board}"></eol:board>
     </div>
-<div class="row">
+    <div class="row">
         <eol:hand cards="${hand.cards}"></eol:hand>
-</div>
+    </div>
 
     <c:if test="${game.round.number == 1}">
         <form:form method="POST" modelAttribute="hand" action="/games/newHand">

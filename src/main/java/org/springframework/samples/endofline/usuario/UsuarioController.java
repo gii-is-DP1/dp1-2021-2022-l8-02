@@ -93,7 +93,7 @@ public class UsuarioController {
 			BeanUtils.copyProperties(modifiedUsuario, usuario.get(), "username");
 			usuarioService.save(usuario.get());
 			model.addAttribute("message", "User updated succesfully!");
-			return listUsuarios(model, 0);
+			return "redirect:/usuarios";
 		}
 	}
 
