@@ -18,11 +18,16 @@ import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.CardService;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.card.DeckService;
+import org.springframework.samples.endofline.card.Hand;
 import org.springframework.samples.endofline.card.HandService;
 import org.springframework.samples.endofline.energies.EnergyService;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
+import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
 import org.springframework.samples.endofline.game.exceptions.GameNotFoundException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
+import org.springframework.samples.endofline.gameStorage.GameStorage;
+import org.springframework.samples.endofline.gameStorage.GameStorageRepository;
+import org.springframework.samples.endofline.gameStorage.GameStorageService;
 import org.springframework.samples.endofline.power.PowerService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
@@ -43,9 +48,11 @@ public class GameService {
     private PowerService powerService;
 
     private UsuarioService userService;
+    private GameStorageService gameStorageService;
+
 
     @Autowired
-    public GameService(PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService) {
+    public GameService(PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService, GameStorageService gameStorageService) {
 
 
         this.gameRepository = gameRepository;
@@ -58,12 +65,14 @@ public class GameService {
         this.energyService = energyService;
         this.powerService = powerService;
         this.userService = userService;
+        this.gameStorageService = gameStorageService;
 
     }
 
     public Collection<Game> getGames() {
         return gameRepository.findAll();
     }
+   
 
     public List<Game> getVersusGames() {
         return gameRepository.findByGameMode(GameMode.VERSUS);
@@ -98,16 +107,18 @@ public class GameService {
     }
 
     @Transactional
-    public void joinGame(Game game, Usuario player) {
+    public void joinGame(Game game, Usuario player) throws GameIsFullException {
         if(game.getGameMode() != GameMode.VERSUS && game.getPlayers().size() >= 1)  return;
-        leaveGame(player);
-        game.getPlayers().add(player);
-        gameRepository.save(game);
-
-        // Inizializacion de datos para poder jugar la partida de forma correcta
-        player.setInicialListCardsByPlayer(new ArrayList<>());
-        player.setGameEnded(false);
-        userService.save(player);
+        if(game.getPlayers().size()==8) throw new GameIsFullException();
+            leaveGame(player);
+            game.getPlayers().add(player);
+            gameRepository.save(game);
+    
+            // Inizializacion de datos para poder jugar la partida de forma correcta
+            player.setInicialListCardsByPlayer(new ArrayList<>());
+            player.setGameEnded(false);
+            userService.save(player);
+        
     }
 
     @Transactional
@@ -116,11 +127,27 @@ public class GameService {
         if(currentGame != null) {
             currentGame.getPlayers().remove(player);
             if(currentGame.getPlayers().size() == 0) {
+                GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
+                copyGameBoardToDb(currentGame, aux);
                 gameRepository.delete(currentGame);
             } else {
                 gameRepository.save(currentGame);
             }
         }
+    }
+
+    private void copyGameBoardToDb(Game currentGame, GameStorage g) {
+        g.setBoard(currentGame.getBoard());
+        gameStorageService.save(g);
+    }
+
+    private void copyGameToDb(Game currentGame) {
+        
+        GameStorage g = new GameStorage();
+        g.setName(currentGame.getName());
+        g.setPlayers(new ArrayList<>(currentGame.getPlayers()));
+        g.setGameMode(currentGame.getGameMode());
+        gameStorageService.save(g);
     }
 
     @Transactional
@@ -144,6 +171,9 @@ public class GameService {
                 break;
             default:
             /*INICIALIZAR ENERGIA A CADA JUGADOR*/
+            if(game.getPlayers().size()==1){
+                throw new TwoPlayersAtLeastException();
+            }
                 energyService.initEnergy(game.getPlayers(), powerService.findAll());
                 boardService.generateVersusBoard(board);
         }
@@ -232,7 +262,7 @@ public class GameService {
         game.setGameState(GameState.PLAYING);
         gameRepository.save(game);
 
-
+        copyGameToDb(game);
     }
 
     public List<Game> getGameByState(GameState state) {
@@ -241,7 +271,7 @@ public class GameService {
 
     public List<Usuario> checkLostVS(Game game){
         List<Usuario> out = new ArrayList<>();
-        List<Usuario> players = new ArrayList<>(game.getPlayers());
+        List<Usuario> players = new ArrayList<>(NotEndedPlayers(game.getPlayers()));
         for(Usuario p : players){
             Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(p).getCards().get(0).getColor().ordinal());
             List<Tile> occupiedTiles = path.getOccupiedTiles();
@@ -271,12 +301,13 @@ public class GameService {
                 out= true;
             }
         }
+        
         return out;
     }
 
     public Boolean checkDrawVS(Game game){
         Boolean out = true;
-        List<Usuario> restPlayers = new ArrayList<>(game.getPlayers());
+        List<Usuario> restPlayers = new ArrayList<>(NotEndedPlayers(game.getPlayers()));
         for(int i = 0; i < restPlayers.size(); i++){
             Path path = game.getBoard().getPaths().get(deckService.getDeckFromPlayer(restPlayers.get(i)).getCards().get(0).getColor().ordinal());
             List<Tile> occupiedTiles = path.getOccupiedTiles();
@@ -297,5 +328,31 @@ public class GameService {
         gameRepository.save(game);
     }
 
+    @Transactional
+    public Integer getScore(Usuario player){
+        Integer score = 0;
+        Deck deck = deckService.getDeckFromPlayer(player);
+        Hand hand = handService.findHandByDeck(deck);
+        for (Card card : deck.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        for(Card card: hand.getCards()){
+            score+= card.getCardType().getIniciative();
+        }
+        score+=player.getEnergy().getCounter();
+        /*player.setScore(score);
+        userService.save(player);*/
+        return score;
+    }
+
+    public List<Usuario> NotEndedPlayers(List<Usuario> allPlayers){
+        List<Usuario> players= new ArrayList<>();
+        for(Usuario u: allPlayers){
+            if(!u.getGameEnded()){
+                players.add(u);
+            }
+        }
+        return players;
+    }
 
 }
