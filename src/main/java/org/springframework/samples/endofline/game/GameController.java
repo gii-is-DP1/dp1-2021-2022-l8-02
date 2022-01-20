@@ -23,8 +23,10 @@ import org.springframework.samples.endofline.card.Card;
 import org.springframework.samples.endofline.card.CardColor;
 import org.springframework.samples.endofline.card.Deck;
 import org.springframework.samples.endofline.energies.EnergyService;
+import org.springframework.samples.endofline.energies.exception.DontUsePowerBeforeThirdRound;
 import org.springframework.samples.endofline.energies.exception.DontUsePowerInTheSameRound;
 import org.springframework.samples.endofline.card.HandService;
+import org.springframework.samples.endofline.card.exceptions.OnlyChangeHandOneTime;
 import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSizeLessThanFive;
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
@@ -70,6 +72,8 @@ public class GameController {
     private PowerService powerService;
     private TurnService turnService;
     private HandService handService;
+
+    Integer count=0; //para ver la ronda de cambio de mano
 
     
     @Autowired
@@ -172,17 +176,21 @@ public class GameController {
             return "redirect:/games/currentGame";
         }
         Deck deck = boardService.deckFromPlayers(getLoggedUser());
+        count+=1;
         try{
-        handService.generateChangeHand(deck);
+        handService.generateChangeHand(deck, count);
         }catch(PlayCardWhitHandSizeLessThanFive v){
-        model.addAttribute("message", "No puedes hacer esto recula");
-        return getGame(session, model, response);
+        session.setAttribute("errorMessage", "No puedes hacer esto recula");
+        return "redirect:/games/currentGame";
+        }catch(OnlyChangeHandOneTime c){
+            session.setAttribute("errorMessage", "No puedes cambiar de mano mas de una vez");
+        return "redirect:/games/currentGame";
         }
         return "redirect:/games/currentGame";
     }
 
     @PostMapping("/usePower")
-    public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response){
+    public String usePowerInGame(@RequestParam("name") String powerName,  Model model, HttpServletResponse response, HttpSession session){
         Game game = gameService.getGameByPlayer(getLoggedUser());
         try{
             if(getLoggedUser().equals(game.getRound().getTurns().get(0).getUsuario()) && 
@@ -190,24 +198,31 @@ public class GameController {
             energyService.usePower(getLoggedUser(), powerService.findByName(powerName).getId());
             }
         }catch(DontUsePowerInTheSameRound v){
-            model.addAttribute("message", "No puedes usar mas de un punto de energía en la misma ronda");
+            session.setAttribute("errorMessage", "No puedes usar mas de un punto de energía en la misma ronda");
+            return "redirect:/games/currentGame";
+        }catch(DontUsePowerBeforeThirdRound c){
+            session.setAttribute("errorMessage", "No puedes usar poder antes de la ronda 3");
+            return "redirect:/games/currentGame";
         }
 
         return  "redirect:/games/currentGame";
     }
 
     @PostMapping("/currentGame")
-    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response) {
+    public String getAction(@RequestParam("x") Integer x, @RequestParam("y") Integer y, @RequestParam("cardId") Card card, Model model, HttpServletResponse response, HttpSession session) {
         System.out.println(gameService.getGameByPlayer(getLoggedUser()).getBoard().getTiles());
         try {
             Tile tile = boardService.tileByCoords(gameService.getGameByPlayer(getLoggedUser()).getBoard(), x, y);
             boardService.playCard(getLoggedUser(),card, tile);
         } catch (InvalidMoveException e) {
-            model.addAttribute("message", "No puedes realizar esa acción");
+            session.setAttribute("errorMessage", "No puedes realizar esa acción");
+            return "redirect:/games/currentGame";
         } catch (NotUrTurnException n){
-            model.addAttribute("message", "No es tu turno");
+            session.setAttribute("errorMessage", "No es tu turno");
+            return "redirect:/games/currentGame";
         } catch(TimeOutException t){
-            model.addAttribute("message", "Se acabo el tiempo para realizar el turno");
+            session.setAttribute("errorMessage", "Se acabo el tiempo para realizar el turno");
+            return "redirect:/games/currentGame";
         }
         //return getGame(model, response);
         return "redirect:/games/currentGame";
