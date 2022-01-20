@@ -46,13 +46,13 @@ public class GameService {
     private RoundService roundService;
     private EnergyService energyService;
     private PowerService powerService;
-
+    private TurnService turnService;
     private UsuarioService userService;
     private GameStorageService gameStorageService;
 
 
     @Autowired
-    public GameService(PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService, GameStorageService gameStorageService) {
+    public GameService(TurnService turnService, PowerService powerService, EnergyService energyService, GameRepository gameRepository, BoardService boardService, DeckService deckService, TileService tileService, CardService cardService, RoundService roundService, HandService handService, UsuarioService userService, GameStorageService gameStorageService) {
 
 
         this.gameRepository = gameRepository;
@@ -65,6 +65,7 @@ public class GameService {
         this.energyService = energyService;
         this.powerService = powerService;
         this.userService = userService;
+        this.turnService = turnService;
         this.gameStorageService = gameStorageService;
 
     }
@@ -125,6 +126,16 @@ public class GameService {
     public void leaveGame(Usuario player) {
         Game currentGame = gameRepository.getGameByPlayerUsername(player.getUsername());
         if(currentGame != null) {
+            if(currentGame.getGameState() != GameState.LOBBY) {
+                currentGame.getRound().getPlayers().remove(player);
+                currentGame.getRound().getTurns().remove(player.getTurn());
+                roundService.save(currentGame.getRound());
+                player.setGameEnded(true);
+                userService.save(player);
+                if(player.getTurn()!=null){
+                    roundService.refreshRound(currentGame, player);
+                }
+            }
             currentGame.getPlayers().remove(player);
             if(currentGame.getPlayers().size() == 0) {
                 GameStorage aux = gameStorageService.getStorageByName(currentGame.getName());
