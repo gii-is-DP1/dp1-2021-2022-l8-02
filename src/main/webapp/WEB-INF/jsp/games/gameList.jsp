@@ -17,7 +17,9 @@
             <th style="width: 40%;"><p>${game.name} </p>
                 <p>${game.gameMode}</p>
                 <p>${game.getPlayers().size()}</p></th>
+            <c:if test= "${game.gameState == 'LOBBY' }">
             <th style="width: 20%;" ><a href="/games/join/${game.id}"style="font-size: 20px"  class="neon-button">Unirse</a></th>
+            </c:if>
         </tr>
        
         

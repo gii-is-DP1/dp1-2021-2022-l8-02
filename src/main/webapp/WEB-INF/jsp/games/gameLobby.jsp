@@ -50,9 +50,7 @@
                     <a href="/games/${game.id}/start" class="neon-button" style="font-size: 25px;">Comenzar partida</a>                
         
                 </th>
-                <th style="width: 20%; margin-right: 20%;">
-                    <a href="#" class="neon-button" style="font-size: 25px;">Invitar jugadores</a>
-                </th>
+                
            </tr>
        </table>
     </div>
