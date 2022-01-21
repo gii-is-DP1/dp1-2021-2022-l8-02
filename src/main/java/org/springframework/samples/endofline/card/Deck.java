@@ -32,4 +32,6 @@ public class Deck extends BaseEntity {
     @OneToOne(cascade = CascadeType.ALL)
     private Usuario user;
     
+
+    private Integer count=0; //para ver las veces usado el cambio de mano
 }
