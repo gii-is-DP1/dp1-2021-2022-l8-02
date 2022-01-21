@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.samples.endofline.game.GameService;
+import org.springframework.samples.endofline.gameStorage.GameStorageService;
 import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,6 +53,9 @@ public class UsuarioController {
 
 	@Autowired
 	GameService gameService;
+
+	@Autowired
+	GameStorageService gameStorageService;
 
 	@InitBinder
 	public void setAllowedFields(WebDataBinder dataBinder) {
@@ -186,7 +190,10 @@ public class UsuarioController {
 	public String profileLoggedUser(ModelMap model){
 		model.addAttribute("usuario", getLoggedUser());
 		/*para ver el listado de juegos por usuario*/
-		model.addAttribute("games", gameService.getGameByPlayer(getLoggedUser()));
+		model.addAttribute("admin", usuarioService.isAdmin(getLoggedUser()));
+		model.addAttribute("myGames", gameStorageService.myGames(getLoggedUser()));
+		model.addAttribute("allGames", gameStorageService.findAll());
+		model.addAttribute("gameActives", gameService.getGames());
 		/*List<Game> allGameByPlayer = gameService.getGamesByPlayer(getLoggedUser());
 		model.addAttribute("games", allGameByPlayer);*/
         

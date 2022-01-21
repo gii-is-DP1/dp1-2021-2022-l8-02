@@ -19,7 +19,7 @@
                     <form:input path="name" class=""/>
                 </eol:input>
             </div>
-            <div class="row" style="margin-bottom:20px;text-align: center;">
+            <div class="row" style=" display:none ;margin-bottom:20px;text-align: center;">
         <eol:input label="Sala oculta" name="hidden">
             <form:checkbox path="hidden" value="boolean" class=""/>
         </eol:input>

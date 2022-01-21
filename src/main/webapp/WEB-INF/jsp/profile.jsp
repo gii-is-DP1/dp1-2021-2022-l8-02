@@ -16,54 +16,78 @@
                 <th style="width: 20%;" ><a href="/profile/${usuario.username}/edit"style="font-size: 17px"  class="neon-button">Editar perfil</a></th>
 
             </div>
-            <table style=" margin-bottom: 10px; min-width:1000px; max-width: 70%; ">
+            <table style=" margin-bottom: 10px; min-width:1000px; max-width: 90%; ">
                 <th style="width:30% ;">
-            <div class=" align-items-center scroll" style="text-align: center!important; ">
+            <div class=" align-items-center scroll text-center" style="text-align: center!important; ">
                 <div class="scroll" style="border: solid; border-radius: 20px; height: 500px;
                 max-height: 600px;">
-                    <p style="font-size:25px;  text-decoration:underline; ">Lista de partidas</p>
-                    <c:forEach items="${games}" var="game">
-                    <table style="border: solid; border-radius: 10px; margin-bottom: 10px; min-width:300px; max-width: 70%; margin-left: 22px;">
-                        <tr>
-                            <th style="width: 20%;"><img style="max-width: 150px; max-height: 150px;" src="\resources\images\descarga.jpg"></th>
-                            <th style="width: 40%;"><p>${game.name} </p>
-                                <p>${game.gameMode}</p>
-                                <p>${game.getPlayers().size()}</p></th>
-                        </tr>
-                       
-                        
-                    </table>
+                    
+                    <p style="font-size:25px;  text-decoration:underline; ">Partidas creadas por mi</p>
+                    <c:forEach items="${myGames}" var="game">
+                        <table style="border: solid; border-radius: 10px; margin-bottom: 10px; min-width:80%;  margin-left: 10%; margin-right: 10%;">
+                            <tr>
+                                <th style="width: 40%;">
+                                    <p>Nombre: ${game.name} </p>
+                                    <p>Modo de juego: ${game.gameMode}</p>
+                                    <c:forEach items="${game.getPlayers()}" var="player">
+                                        <p>${player}</p>
+                                    </c:forEach> 
+                                    
+                            </tr>
+                           
+                            
+                        </table>
                     </c:forEach>
-
                 </div>
             </th>
+            <c:if test="${admin }">
             <th style="width:30% ;">
                 <div class="scroll" style="border: solid; border-radius: 20px;  border-spacing: 10px; height: 500px;
                 max-height: 600px;">
-                    <p style="font-size:25px;  text-decoration:underline;  ">Estad&ntilde;isticas</p>
-                    <p>sdkjaskd</p>
-                    <p>sdkjaskd</p>
-                    <p>sdkjaskd</p>
-                    <p>sdkjaskd</p>
+                    <p style="font-size:25px;  text-decoration:underline;  ">Partidas en curso</p>
+                    <c:forEach items="${gameActives}" var="game">
+                        <table style="border: solid; border-radius: 10px; margin-bottom: 10px; min-width:80%;  margin-left: 10%; margin-right: 10%;">
+                            <tr>
+                                <th style="width: 40%;">
+                                    <p>Nombre: ${game.name} </p>
+                                    <p>Modo de juego: ${game.gameMode}</p>
+                                    <p>Participantes:</p>
+                                    <c:forEach items="${game.getPlayers()}" var="player">
+                                        <p>${player.username}</p>
+                                    </c:forEach> 
+                                    
+                                </th>
+                            </tr>
+                           
+                            
+                        </table>
+                    </c:forEach>
                 </div>
                 </th>
                 <th style="width:30% ;">
                 <div class="scroll" style="border: solid; border-radius: 20px; border-spacing: 10px; height: 500px;
                 max-height: 600px;">
-                    <p style="font-size:25px;  text-decoration:underline; "> L&oacute;gros</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
-                    <p>sdkjaskd</p><p>sdkjaskd</p><p>sdkjaskd</p>
+                    <p style="font-size:25px;  text-decoration:underline; "> Partidas jugadas</p>
+                    <c:forEach items="${allGames}" var="game">
+                        <table style="border: solid; border-radius: 10px; margin-bottom: 10px; min-width:80%;  margin-left: 10%; margin-right: 10%;">
+                            <tr>
+                                <th style="width: 40%;">
+                                    <p>Nombre: ${game.name} </p>
+                                    <p>Modo de juego: ${game.gameMode}</p>
+                                    <p>Participantes:
+                                        <c:forEach items="${game.getPlayers()}" var="player">
+                                        <p>${player}</p>
+                                    </c:forEach> </p>
+                                    
+                                    
+                            </tr>
+                           
+                            
+                        </table>
+                    </c:forEach>
                 </div>
             </th>
-          
+        </c:if>
 
         </table>
 

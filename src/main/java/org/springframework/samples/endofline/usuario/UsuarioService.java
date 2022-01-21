@@ -72,4 +72,11 @@ public class UsuarioService {
       return result;
     }
 
+    public Boolean isAdmin(Usuario user){
+      Boolean res=false;
+      if(authorities(user).contains("admin")){
+        res=true;
+      }
+      return res;
+    }
 }
