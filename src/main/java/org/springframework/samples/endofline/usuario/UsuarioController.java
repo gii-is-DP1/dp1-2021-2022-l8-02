@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.samples.endofline.game.GameService;
 import org.springframework.samples.endofline.gameStorage.GameStorageService;
-import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -47,9 +46,6 @@ public class UsuarioController {
 
 	@Autowired
 	AuthoritiesService authoritiesSer;
-
-	@Autowired
-	StatisticsService statisticsService;
 
 	@Autowired
 	GameService gameService;
@@ -164,7 +160,6 @@ public class UsuarioController {
 		 else {
 			this.usuarioService.save(usuario);
 			this.authoritiesSer.saveAuthorities(usuario.getUsername(), "jugador");
-			statisticsService.initStatistics(usuario);
 			return "redirect:/lobby";
 		}
 	}

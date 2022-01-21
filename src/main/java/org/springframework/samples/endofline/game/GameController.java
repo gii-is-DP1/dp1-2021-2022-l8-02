@@ -34,8 +34,6 @@ import org.springframework.samples.endofline.card.exceptions.PlayCardWhitHandSiz
 import org.springframework.samples.endofline.game.exceptions.DuplicatedGameNameException;
 import org.springframework.samples.endofline.game.exceptions.GameIsFullException;
 import org.springframework.samples.endofline.game.exceptions.TwoPlayersAtLeastException;
-import org.springframework.samples.endofline.statistics.Statistics;
-import org.springframework.samples.endofline.statistics.StatisticsService;
 import org.springframework.samples.endofline.usuario.Usuario;
 import org.springframework.samples.endofline.usuario.UsuarioService;
 import org.springframework.samples.endofline.power.Power;
@@ -70,7 +68,6 @@ public class GameController {
     private GameService gameService;
     private UsuarioService userService;
     private BoardService boardService;
-    private StatisticsService statisticsService;
     private EnergyService energyService;
     private PowerService powerService;
     private TurnService turnService;
@@ -80,11 +77,10 @@ public class GameController {
 
     
     @Autowired
-    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, StatisticsService statisticsService, HandService handService){
+    public GameController(TurnService turnService, EnergyService energyService, PowerService powerService, GameService gameService, UsuarioService userService,BoardService boardService, HandService handService){
         this.gameService = gameService;
         this.userService = userService;
         this.boardService = boardService;
-        this.statisticsService = statisticsService;
         this.powerService = powerService;
         this.energyService = energyService; 
         this.handService = handService;
@@ -297,11 +293,6 @@ public class GameController {
         if(game.getPlayers().get(0).equals(getLoggedUser())) {
             try{
                 gameService.startGame(game);
-
-                Statistics s = statisticsService.findByUser(getLoggedUser());
-                s.setNumGames(s.getNumGames()+1);
-                s.setNumPlayers(game.getPlayers().size());
-                statisticsService.save(s);
                 
             }catch(TwoPlayersAtLeastException t){
                 String errorMsg = "Para comenzar una partida se necesitan mínimo 2 jugadores.";

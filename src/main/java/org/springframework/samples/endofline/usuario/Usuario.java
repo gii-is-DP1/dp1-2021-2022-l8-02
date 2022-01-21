@@ -18,7 +18,6 @@ import org.springframework.samples.endofline.game.Turn;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.samples.endofline.achievements.Achievement;
 import org.springframework.samples.endofline.energies.Energy;
 import lombok.Getter;
 import lombok.Setter;
@@ -52,10 +51,6 @@ public class Usuario{
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
 	private Set<Authorities> authorities;
-    
-    @ElementCollection
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Achievement> achievements;
     
     @OneToOne(mappedBy = "usuario")
     private Turn turn;
