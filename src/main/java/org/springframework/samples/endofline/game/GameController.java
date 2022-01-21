@@ -1,6 +1,8 @@
 package org.springframework.samples.endofline.game;
 
 
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -166,8 +168,12 @@ public class GameController {
 
         if(game.getRound().getTurns().size() > 0) {
             model.addAttribute("miTurn", game.getRound().getTurns().get(0).getUsuario().getUsername());
+            LocalTime start = LocalTime.ofSecondOfDay(game.getRound().getTurns().get(0).getStartTime());
+            LocalTime end = start.plusSeconds(300);
+            model.addAttribute("timer", Duration.between(LocalTime.now(), end).toSeconds());
         } else {
             model.addAttribute("miTurn", getLoggedUser().getUsername());
+            model.addAttribute("timer", "Indefinido");
         }
         
         return GAME_VIEW;

@@ -9,6 +9,7 @@
 <eol:layoutEOL pageName="${game.name}">
     <h2>${game.name}</h2>
     <h2>Es el turno de: ${miTurn}</h2>
+    <h2>Tiempo restante: ${timer}</h2>
     <h2>Energ&iacutea: ${energy.counter}</h2>
     <c:if test="${logged == miTurn}">
         <form:form method="POST" modelAttribute="power" id="poder" class="form-horizontal" action="/games/usePower">
