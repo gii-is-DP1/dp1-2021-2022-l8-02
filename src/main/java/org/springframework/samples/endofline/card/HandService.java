@@ -53,9 +53,9 @@ public class HandService {
     }
 
 
-    public void generateChangeHand(Deck deck, Integer count) throws PlayCardWhitHandSizeLessThanFive, OnlyChangeHandOneTime{
+    public void generateChangeHand(Deck deck) throws PlayCardWhitHandSizeLessThanFive, OnlyChangeHandOneTime{
         
-        if(count>1){
+        if(deck.getCount()>1){
             throw new OnlyChangeHandOneTime();
         }else{
             Hand hand= findHandByDeck(deck);

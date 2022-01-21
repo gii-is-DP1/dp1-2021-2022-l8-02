@@ -74,7 +74,7 @@ public class GameController {
     private TurnService turnService;
     private HandService handService;
 
-    Integer count=0; //para ver la ronda de cambio de mano
+    
 
     
     @Autowired
@@ -179,9 +179,10 @@ public class GameController {
             return "redirect:/games/currentGame";
         }
         Deck deck = boardService.deckFromPlayers(getLoggedUser());
-        count+=1;
+        deck.setCount(deck.getCount()+1);
+        
         try{
-        handService.generateChangeHand(deck, count);
+        handService.generateChangeHand(deck);
         }catch(PlayCardWhitHandSizeLessThanFive v){
         session.setAttribute("errorMessage", "No puedes hacer esto recula");
         return "redirect:/games/currentGame";
@@ -260,7 +261,6 @@ public class GameController {
         }
 
         gameService.joinGame(game, getLoggedUser());
-
         return "redirect:/games/currentGame";
     }
 
